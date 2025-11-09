@@ -1,0 +1,13 @@
+{
+  "name": "database",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "migrate": "echo 'Running Supabase migrations...' && supabase db push",
+    "seed": "echo 'Seeding database...' && node scripts/seed.js",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5"
+  }
+}

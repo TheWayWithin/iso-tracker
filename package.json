@@ -1,0 +1,31 @@
+{
+  "name": "iso-tracker",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Evidence-based analysis platform for interstellar objects",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jamiewatters/iso-tracker.git"
+  },
+  "author": "Jamie Watters",
+  "license": "MIT",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "pnpm --filter web dev",
+    "build": "pnpm --filter web build",
+    "start": "pnpm --filter web start",
+    "lint": "pnpm --recursive lint",
+    "type-check": "pnpm --recursive type-check",
+    "test": "pnpm --recursive test",
+    "db:migrate": "pnpm --filter database migrate",
+    "db:seed": "pnpm --filter database seed"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@8.15.0"
+}
