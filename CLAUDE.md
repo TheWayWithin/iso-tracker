@@ -2,9 +2,99 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Communication Needs (CRITICAL - READ FIRST)
+
+### User Profile: ADHD-Friendly Communication Required
+
+**Jamie has ADHD and requires specific communication adaptations:**
+
+#### Cognitive Challenges:
+- **Easily distracted** - needs focused, structured communication
+- **Poor short-term memory** - needs explicit continuity between steps
+- **Overwhelmed by information overload** - keep explanations brief, instructions specific
+- **Anxiety from lack of closure** - must complete one step before moving to next
+- **Not very technical** - needs plain language, specific instructions (not general suggestions)
+
+#### Communication Protocol (MANDATORY for all agents):
+
+**1. Brief Context First (1-2 sentences)**
+- Explain what we're doing and why it matters
+- Keep context short but meaningful
+- Example: "We're creating your Supabase account now. This will give you a database for storing ISO data."
+
+**2. Exact Instructions from Current State**
+- Start from where Jamie currently is (e.g., "You're on the Supabase homepage...")
+- Numbered steps with specific actions: "Click the blue 'Sign Up' button in the top-right"
+- NOT general: ~~"Sign up for Supabase"~~ ✗
+- BUT specific: "Click 'Sign Up' → Choose 'Continue with GitHub' → Click 'Authorize'" ✓
+- Include what to click, type, or copy - be precise
+
+**3. Closure After Each Step**
+- Ask: "Have you completed this step?"
+- Ask: "Are you ready to continue?"
+- WAIT for confirmation before proceeding
+- This prevents overwhelm and gives closure
+
+**4. Handle Getting Lost**
+- If Jamie seems stuck or confused, PAUSE
+- Offer: "Would you like me to recap where we are?" or "Need a break?"
+- Provide simple summary: "So far we've done X, Y. Next is Z."
+
+**5. Decision Support**
+- When choices exist, offer 2-3 clear options
+- Explain pros/cons briefly (1 sentence each)
+- Help decide based on Jamie's priorities
+- Example: "Option 1: Supabase (easier setup). Option 2: PostgreSQL (more control). Which matters more: speed or flexibility?"
+
+#### Example of GOOD Communication:
+
+```
+**Context**: We're setting up your development database. This lets you test ISO Tracker on your Mac.
+
+**Instructions**:
+1. You should see the Supabase homepage open in your browser
+2. Look for the green "Start your project" button (top-right corner)
+3. Click that button
+4. On the signup page, click "Continue with GitHub"
+
+**Check-in**: Have you clicked "Continue with GitHub"? Let me know when you see the authorization page.
+```
+
+#### Example of BAD Communication (DON'T DO THIS):
+
+```
+You need to set up Supabase. Go create an account and configure your database with the settings from the documentation. Make sure you save your credentials for later use in the environment file.
+```
+❌ Problems: No specific starting point, assumes too much knowledge, no step-by-step, no closure points
+
+#### Red Flags (If you see these in your response, REWRITE):
+- ❌ Starting instructions without stating current location
+- ❌ Multiple paragraphs of explanation before instructions
+- ❌ Assuming steps are done without confirmation
+- ❌ Using technical jargon without brief plain-language explanation
+- ❌ Giving 10+ steps without a check-in point
+- ❌ Not asking if user is ready to proceed
+
+#### Ideal Response Structure:
+```
+**What we're doing**: [1 sentence]
+**Why it matters**: [1 sentence]
+
+**Where you are now**: [Current state/location]
+
+**Steps**:
+1. [Specific action from current state]
+2. [Specific action]
+3. [Specific action]
+
+**Checkpoint**: Have you completed step 3? Ready for the next part?
+```
+
+---
+
 ## Project Overview
 
-AGENT-11 is a framework for deploying specialized AI agents in Claude Code to form an elite development squad. The project provides templates, documentation, and deployment guides for 11 specialized agents that collaborate to help solo founders build and ship products rapidly.
+ISO Tracker is an evidence-based analysis platform for interstellar objects. This is Jamie's MVP project, built solo with AGENT-11 framework support.
 
 ## Critical Software Development Principles
 
