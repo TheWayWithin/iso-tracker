@@ -390,55 +390,139 @@ Phase 0 in progress (20% complete - 1 of 5 tasks done). GitHub repository create
 
 ---
 
-### **Sprint 3: Collaboration & Debate (Weeks 5-6)**
-**PRD References**: Sections 4.3 (Debate System), 3.2.2 (Debater Lifecycle)
-**Tier**: Mixed - Event Pass ($4.99/mo) for voting, Evidence Analyst ($19/mo) for debate threads
+### **Sprint 3: Evidence Framework Dashboard (Weeks 5-6)** 🎯 PRIMARY FEATURE
+**PRD References**: Sections 4.2 (Evidence Framework), 4.2.1 (Quality Score), 4.2.2 (Evidence Submission)
+**Tier**: Mixed - Spectator (view), Event Pass ($4.99/mo) for submission, Evidence Analyst ($19/mo) for assessment
 **Status**: 🟢 Not Started
+**Priority**: P0 (Must-Have for MVP) - Core Competitive Differentiator
 
 **Sprint Goals**:
-- Voting and consensus mechanisms (Event Pass tier)
-- Debate threads on evidence (Evidence Analyst tier)
-- Notification system (including Q4 2025 observation window alerts)
-- Community guidelines foundation
+- Evidence Framework Dashboard (Community Sentiment vs Scientific Consensus visualization)
+- Evidence Quality Score system (0-100 transparent algorithm)
+- Evidence submission workflow (Event Pass tier, 10 per ISO limit)
+- Assessment interface (Evidence Analyst quality evaluation)
+- Real-time consensus updates (Supabase Realtime, <5s latency)
 
-**New Tasks (not in sections below - to be added)**:
-- Voting System (upvote/downvote on evidence) - Event Pass tier
-- Debate Threads (comments on evidence chains) - Evidence Analyst tier
-- Email Notification System (replies, new evidence, observation alerts)
-- Observation Window Alerts (prep for Q4 2025 3I/ATLAS event)
-- Community Guidelines display
+**Phase 3.1: Database Schema & Architecture (Days 1-2)**
+- [ ] **Task 3.1.1**: Evidence table schema (iso_id, submitter_id, evidence_type, title, description, methodology, source_url, quality_score)
+- [ ] **Task 3.1.2**: Evidence assessments table (evidence_id, assessor_id, expertise_score, methodology_score, peer_review_score, overall_score)
+- [ ] **Task 3.1.3**: Consensus snapshot materialized view (community_sentiment, scientific_consensus, evidence_count, last_updated)
+- [ ] **Task 3.1.4**: Quality score calculation function (0-100 algorithm with auto-recalculation triggers)
+
+**Phase 3.2: Evidence Submission & Quality Scoring (Days 3-5)**
+- [ ] **Task 3.2.1**: Evidence submission API route (POST /api/evidence, Event Pass tier required)
+- [ ] **Task 3.2.2**: Evidence assessment API route (POST /api/evidence/:id/assess, Evidence Analyst tier required)
+- [ ] **Task 3.2.3**: Evidence submission form component (structured form with validation, tier-based access)
+- [ ] **Task 3.2.4**: Evidence assessment interface (3 sliders with real-time quality preview, Evidence Analyst only)
+
+**Phase 3.3: Consensus Dashboard & Visualization (Days 6-9)**
+- [ ] **Task 3.3.1**: Consensus data API route (GET /api/isos/:id/consensus, 5-minute cache)
+- [ ] **Task 3.3.2**: Evidence list API route (GET /api/isos/:id/evidence, paginated 20 per page)
+- [ ] **Task 3.3.3**: Sentiment vs Consensus chart component (Recharts dual-line, blue vs green)
+- [ ] **Task 3.3.4**: Evidence timeline component (vertical timeline with quality badges, color-coded)
+- [ ] **Task 3.3.5**: Evidence Dashboard integration (integrate all components into ISO detail page, responsive layout)
+
+**Phase 3.4: Real-time Updates & Polish (Days 10-12)**
+- [ ] **Task 3.4.1**: Real-time evidence updates (Supabase Realtime subscriptions, <5s latency)
+- [ ] **Task 3.4.2**: Evidence submission rate limiting (Event Pass 10/ISO, Evidence Analyst unlimited)
+- [ ] **Task 3.4.3**: Evidence quality validation (HTML sanitization, URL validation, profanity filter)
+- [ ] **Task 3.4.4**: Mobile optimization & accessibility (375px width, WCAG 2.1 AA compliance)
+- [ ] **Task 3.4.5**: Performance optimization (consensus query <100ms, chart <2s, bundle <500KB)
 
 **Success Criteria**:
-- [ ] Event Pass users can vote on evidence
-- [ ] Evidence Analysts can create debate threads
-- [ ] Users receive email notifications for replies
-- [ ] Observation window alerts functional (test with mock event)
+- [ ] Evidence Dashboard displays on every ISO detail page
+- [ ] Community vs Scientific consensus charts render in <2s
+- [ ] Evidence quality scores calculate consistently (0-100 algorithm)
+- [ ] Event Pass users can submit evidence (10 per ISO limit enforced)
+- [ ] Evidence Analysts can assess evidence (scores update in real-time <5s)
+- [ ] Spectators view-only (cannot submit/assess, see "Upgrade to Event Pass" CTA)
+- [ ] RLS policies prevent unauthorized access (tested with all tier accounts)
+- [ ] Consensus query executes in <100ms (materialized view performance)
+- [ ] Mobile experience tested on iOS Safari + Android Chrome (375px width)
+- [ ] Accessibility audit passed (WCAG 2.1 AA, 0 critical violations)
+- [ ] Security review completed (RLS, input validation, XSS prevention)
+- [ ] User stories validated (5 beta testers confirm acceptance criteria)
+
+**Quality Score Algorithm**:
+```
+Quality Score = Expertise Factor + Methodology Factor + Peer Review Factor
+
+Expertise Factor (0-40 points):
+- Event Pass: 20 points (base contributor)
+- Evidence Analyst: 40 points (expert contributor)
+
+Methodology Factor (0-30 points):
+- Average of methodology_scores from all assessments
+- 0 points if no assessments yet (pending review)
+
+Peer Review Factor (0-30 points):
+- Average of peer_review_scores from all assessments
+- 0 points if no assessments yet (pending review)
+
+Total: 0-100 (integer, transparent, testable)
+```
+
+**Tier Boundaries**:
+- **Spectators**: View Evidence Dashboard, see all evidence/scores (cannot submit/assess)
+- **Event Pass**: Submit evidence (10 per ISO limit), view all content (cannot assess)
+- **Evidence Analyst**: Assess evidence quality (unlimited), submit evidence (unlimited)
+
+**Deliverables**:
+- Database migrations: evidence table, assessments table, materialized view, triggers
+- API routes: POST /api/evidence, POST /api/evidence/:id/assess, GET /api/isos/:id/consensus, GET /api/isos/:id/evidence
+- Frontend components: SentimentConsensusChart, EvidenceTimeline, EvidenceSubmissionForm, EvidenceAssessmentForm, EvidenceDashboard
+- RLS policies: Tier-based access enforcement at database level
+- Real-time updates: Supabase Realtime subscriptions for live consensus
+- Mobile optimization: Responsive design, 375px width tested
+- Accessibility: WCAG 2.1 AA compliance, keyboard navigation, screen reader support
+
+**Timeline**: 12 days (Jan 13-27, 2025) + 2-day buffer for testing/polish
+
+**Sprint 3 Exit Criteria**:
+- [ ] All 18 tasks verified complete (not just marked, but deliverables exist and tested)
+- [ ] Evidence Framework Dashboard fully functional (PRIMARY DIFFERENTIATOR shipped)
+- [ ] Quality scoring system transparent and testable (algorithm documented)
+- [ ] Tier boundaries enforced at database + API levels (defense in depth)
+- [ ] Performance targets met (consensus <100ms, chart <2s, mobile responsive)
+- [ ] Security review passed (RLS, validation, XSS prevention verified)
+- [ ] Accessibility audit complete (0 critical WCAG violations)
+- [ ] User acceptance testing (5 beta testers validate user stories)
+- [ ] handoff-notes.md updated with Sprint 3 findings and Sprint 4 prep
+- [ ] progress.md updated with Sprint 3 lessons learned
 
 ---
 
-### **Sprint 4: Event Tracking & Advanced Features (Weeks 7-8)**
-**PRD References**: Sections 4.1.3 (Events), 4.2.3 (Advanced Evidence), 3.2.3 (Expert)
-**Tier**: Evidence Analyst ($19/mo) + Expert Recognition (future)
+### **Sprint 4: Collaboration & Community Features (Weeks 7-8)**
+**PRD References**: Sections 4.3 (Debate System), 4.4 (Notifications), 3.2.2 (Debater Lifecycle)
+**Tier**: Mixed - Event Pass ($4.99/mo) for voting, Evidence Analyst ($19/mo) for debate threads
 **Status**: 🟢 Not Started
+**Dependencies**: Sprint 3 complete (Evidence Framework must exist before collaboration on evidence)
 
 **Sprint Goals**:
-- ISO event timeline (approach, perihelion, departure)
-- Peer review system for evidence
-- Data export for researchers
-- Expert badge foundation
+- Voting system on evidence (upvote/downvote, Event Pass tier)
+- Debate threads on evidence entries (Evidence Analyst tier)
+- Notification system (email alerts for replies, new evidence, assessments)
+- Observation window alerts (Q4 2025 3I/ATLAS event preparation)
+- Community guidelines and moderation tools
 
-**New Tasks (not in sections below - to be added)**:
-- Event Timeline (ISO lifecycle events: discovery, approach, perihelion, departure)
-- Event-driven notifications (connect to Sprint 3 notification system)
-- Peer Review System (review queue, status tracking, reviewer reputation)
-- Data Export (CSV/JSON export for evidence chains, rate-limited API)
-- Expert Badge Foundation (reputation calculation based on quality + reviews)
+**Tasks**:
+- [ ] Voting system (upvote/downvote on evidence entries, Event Pass tier)
+- [ ] Vote aggregation (display vote counts, trending evidence)
+- [ ] Debate threads (threaded comments on evidence, Evidence Analyst tier)
+- [ ] Reply notifications (email alerts when someone replies to your evidence/comment)
+- [ ] Email notification system (SendGrid/Resend integration)
+- [ ] Observation window alerts (notify users when ISO enters observable period)
+- [ ] Community guidelines page (acceptable use, evidence standards)
+- [ ] Comment moderation tools (flag inappropriate content, admin review queue)
 
 **Success Criteria**:
-- [ ] Event timeline shows all ISO lifecycle stages
-- [ ] Peer review queue functional
-- [ ] CSV export works for evidence chains
-- [ ] Expert badges appear for top contributors
+- [ ] Event Pass users can vote on evidence (upvote/downvote)
+- [ ] Vote counts display correctly on evidence timeline
+- [ ] Evidence Analysts can create debate threads
+- [ ] Users receive email notifications for replies within 5 minutes
+- [ ] Observation window alerts functional (tested with mock ISO event)
+- [ ] Community guidelines accessible from all evidence pages
+- [ ] Flagged content enters moderation queue (admin dashboard)
 
 ---
 
