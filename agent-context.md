@@ -3,16 +3,17 @@
 ## Mission Overview
 **Mission Code**: MVP-ISO-TRACKER-001
 **Started**: 2025-11-09
-**Current Phase**: Phase 0 - Strategic Planning
-**Overall Status**: IN_PROGRESS
+**Current Phase**: Phase 0 - Environment Setup & Architecture
+**Overall Status**: IN_PROGRESS (40% complete)
 
 ## Mission Objectives
 Primary objectives from mission briefing:
-- [ ] Create comprehensive implementation plan in project-plan.md
-- [ ] Define complete development environment setup (Dev, Staging, Production)
-- [ ] Plan GitHub repository structure and setup
-- [ ] Establish phase-based implementation roadmap aligned with PRD
-- [ ] Ensure strict adherence to foundation documents and PRD requirements
+- [x] Create comprehensive implementation plan in project-plan.md ✅ COMPLETE
+- [ ] Define complete development environment setup (Dev, Staging, Production) - 🟡 PARTIALLY COMPLETE
+- [x] Plan GitHub repository structure and setup ✅ COMPLETE
+- [x] Establish phase-based implementation roadmap aligned with PRD ✅ COMPLETE
+- [x] Ensure strict adherence to foundation documents and PRD requirements ✅ COMPLETE
+- [x] Create comprehensive technical architecture documentation ✅ COMPLETE
 
 ## Critical Constraints
 Important limitations and requirements to maintain:
@@ -47,22 +48,59 @@ Important limitations and requirements to maintain:
 - agent-context.md (this file)
 - handoff-notes.md (for agent communication)
 - progress.md (changelog and learning repository)
+- project-plan.md (12-month implementation roadmap)
+- PHASE-0-STATUS.md (Phase 0 tracking and instructions)
+- GitHub repository (https://github.com/TheWayWithin/iso-tracker)
+- architecture.md (35,000+ word technical architecture document)
+- evidence-repository.md (artifacts and decision tracking)
 
 ## Technical Context
 
-### Architecture Decisions
-- PWA-first approach: Mobile-first responsive design, no native apps in MVP
-- Backend: Firebase/Supabase (no-code backend for rapid deployment)
-- Hosting: Vercel/Netlify (free tier, instant deploy)
-- Data source: NASA JPL Horizons API (authoritative ephemeris data)
+### Architecture Decisions (FINALIZED)
+**Core Technology Stack**:
+- **Frontend**: Next.js 14 (App Router with React Server Components)
+- **Backend**: **Supabase** (PostgreSQL + Auth + Realtime + Edge Functions) ✅ CHOSEN
+- **Payments**: **Stripe** (Checkout + Billing + Webhooks) ✅ CHOSEN
+- **Hosting**: **Vercel** (Edge deployment, preview environments) ✅ CHOSEN
+- **Data Source**: NASA JPL Horizons API (astronomical context)
+- **Community**: Discord API (tier-based access, Phase 1-2)
+- **AR**: A-Frame + AR.js (web-based AR, Phase 4)
 
-### Technology Stack
-- Framework: React/Next.js (PWA architecture)
-- Database: Firestore or Supabase PostgreSQL
-- Payments: Stripe Checkout or Gumroad
-- Community: Discord API (tier-based access)
-- Analytics: Firebase Analytics + Mixpanel
-- AR: A-Frame + AR.js (web-based AR, Phase 4)
+### Architecture Principles
+**Security-First** (Non-Negotiable):
+- Row-Level Security (RLS) on ALL database tables
+- Content Security Policy with nonces (no unsafe-inline)
+- Stripe webhook signature verification
+- Defense in depth: Database → API → Client
+
+**Performance-First**:
+- React Server Components (~40% JS reduction)
+- Incremental Static Regeneration (ISR)
+- Materialized views for expensive queries (3000ms → <100ms)
+- Multi-layer caching (Browser, CDN, Database, Client)
+
+**Evidence-First**:
+- Evidence Assessment Framework is PRIMARY feature (not just tracking)
+- 3-tier rubric system (Chain of Custody, Witness Credibility, Technical Analysis)
+- Community vs Scientific Consensus tracking
+- Materialized view for consensus calculation
+
+### Database Architecture
+**Core Tables** (7 total):
+- `users` - Extended Supabase auth.users
+- `subscriptions` - Tier, status, Stripe integration
+- `isos` - UAP sighting events
+- `evidence` - Evidence linked to ISOs
+- `evidence_assessments` - Heart of platform (3-tier rubric, JSONB scores)
+- `consensus_snapshot` - Materialized view for performance
+- `news_articles` - Community-contributed content
+
+**Critical Features**:
+- RLS policies enforce subscription tier access
+- JSONB for flexible assessment criteria (evolves over time)
+- Materialized view refreshes on assessment insert (CONCURRENTLY)
+- Geographic indexes for location-based queries
+- Immutable assessments (soft-delete only for audit trail)
 
 ### Implementation Patterns
 - Evidence-first framework: Amateur-accessible methodology
@@ -93,11 +131,12 @@ None yet
 
 ## Next Steps Queue
 Priority-ordered tasks for upcoming phases:
-1. **High Priority**: Delegate to strategist for comprehensive implementation plan creation
-2. **High Priority**: Architect to design technical architecture aligned with PRD
-3. **High Priority**: Operator to set up development environments (Dev, Staging, Prod)
-4. **High Priority**: Create GitHub repository structure
-5. **Medium Priority**: Developer environment configuration and tooling setup
+1. ✅ **COMPLETE**: Comprehensive implementation plan (project-plan.md)
+2. ✅ **COMPLETE**: Technical architecture design (architecture.md)
+3. ✅ **COMPLETE**: GitHub repository structure created
+4. 🔵 **IN PROGRESS**: User manual environment setup (Supabase, Vercel, GitHub secrets)
+5. 🔵 **NEXT**: Developer Phase 1 implementation (Week 1-2: Core Infrastructure)
+6. **Pending**: Production deployment after Phase 1 complete
 
 ## Risk Register
 | Risk | Probability | Impact | Mitigation |
@@ -115,10 +154,58 @@ Priority-ordered tasks for upcoming phases:
 
 ## Handoff History
 Record of all agent handoffs in this mission:
-1. **Mission initiated by coordinator** (2025-11-09)
-   - Context preservation initialized
-   - Foundation documents loaded
-   - Ready for strategic planning delegation
+
+### 2025-11-09 11:45 - Architecture Complete (architect → developer)
+**Agent**: architect (via coordinator Task delegation)
+**Deliverables**:
+- architecture.md (35,000+ words)
+- Updated handoff-notes.md with developer onboarding
+- Updated evidence-repository.md with architectural decisions
+
+**Key Findings**:
+- Security-first architecture with RLS on all tables
+- Evidence Assessment Framework as PRIMARY feature
+- Materialized view for consensus (performance optimization)
+- Complete database schema with ERD and RLS policy examples
+- API specifications with security and validation patterns
+- 6 ADRs documenting key architectural decisions
+
+**Handoff Notes**:
+- Developer ready to start Phase 1 implementation
+- All technical decisions documented with rationale
+- Critical warnings and gotchas documented in handoff-notes.md
+- 10-week Phase 1 timeline with clear priorities
+
+### 2025-11-09 11:00 - GitHub Repository Setup (operator)
+**Agent**: operator (automated via coordinator)
+**Deliverables**:
+- GitHub repository: https://github.com/TheWayWithin/iso-tracker
+- Monorepo structure with /apps/web and /packages
+- CI/CD workflow (.github/workflows/ci.yml)
+- Complete documentation (README, setup guide, status report)
+
+**Key Findings**:
+- Monorepo enables code sharing between packages
+- pnpm workspaces for package management
+- GitHub Actions CI validates PRs (lint, type-check, build)
+- Setup guide reduces onboarding time to 30 minutes
+
+### 2025-11-09 10:30 - Project Plan Creation (coordinator)
+**Agent**: coordinator (direct implementation after strategist failure)
+**Deliverables**: project-plan.md with 12-month implementation roadmap
+
+**Key Findings**:
+- 4 phases: Phase 0 (Environment), Phase 1 (Core MVP), Phase 2 (Education), Phase 3 (Community), Phase 4 (Advanced)
+- Technology stack decisions: Supabase, Stripe, Vercel
+- Phase 0 includes 6 tasks (1 complete, 5 manual setup required)
+- Clear task ownership and success criteria
+
+### 2025-11-09 10:00 - Mission initiated by coordinator
+**Agent**: coordinator
+**Actions**:
+- Context preservation initialized
+- Foundation documents loaded
+- Ready for strategic planning delegation
 
 ---
 *This document is continuously updated throughout the mission. Each agent must read this before starting their task and update it with their findings before completing their work.*
