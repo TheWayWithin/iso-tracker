@@ -8,6 +8,60 @@
 
 ## 📦 Deliverables
 
+### 2025-01-10 - Sprint 3 Strategic Restructure COMPLETE
+**Created by**: @strategist (with @coordinator approval)
+**Type**: Strategic Planning & PRD Alignment
+**Files**: `project-plan.md` (Sprint 3 restructured), `handoff-notes.md` (Sprint 3 implementation plan)
+
+**Description**:
+Major strategic correction to Sprint 3 priorities. Strategist discovered Sprint 3 plan focused on Collaboration & Debate (Section 4.3) instead of Evidence Framework Dashboard (Section 4.2, marked P0 in PRD). User approved restructure to prioritize PRIMARY differentiator.
+
+**Critical Finding**:
+- ❌ **Misalignment**: Sprint 3 plan focused on collaboration features (voting, debates, notifications)
+- ✅ **PRD Priority**: Evidence Framework Dashboard is P0 (must-have for MVP) - Section 4.2
+- 🎯 **Strategic Correction**: Swap Sprint 3 (Evidence Framework) and Sprint 4 (Collaboration)
+
+**User Decision**: Approved Option 1 - Evidence Framework in Sprint 3, Collaboration in Sprint 4
+
+**New Sprint 3: Evidence Framework Dashboard** (12 days, 18 tasks, 4 phases):
+1. **Phase 3.1** (Days 1-2): Database schema, materialized view, quality scoring function
+2. **Phase 3.2** (Days 3-5): Evidence submission + assessment (API + frontend)
+3. **Phase 3.3** (Days 6-9): Dashboard visualization (chart, timeline, integration)
+4. **Phase 3.4** (Days 10-12): Real-time updates, rate limiting, accessibility, performance
+
+**Key Features Prioritized**:
+- Community Sentiment vs Scientific Consensus visualization (dual-line chart)
+- 0-100 Evidence Quality Score (Expertise 40% + Methodology 30% + Peer Review 30%)
+- Evidence submission workflow (Event Pass: 10/ISO, Evidence Analyst: unlimited)
+- Assessment interface (Evidence Analyst tier, 3-component scoring)
+- Real-time consensus updates (Supabase Realtime, <5s latency)
+
+**Impact**:
+- ✅ **PRD Alignment**: Section 4.2 Evidence Framework now Sprint 3 (was missing/deferred)
+- ✅ **Logical Dependency**: Evidence Framework before collaboration (debates reference evidence)
+- ✅ **Market Differentiation**: Core competitive advantage shipped first (not "just another NASA wrapper")
+- ✅ **Reduced Risk**: Validate PRIMARY value proposition early (before social features)
+- ✅ **Clear MVP Scope**: P0 features (Evidence Framework) before P1 features (Collaboration)
+
+**Sprint 4 Updated**: Collaboration & Community Features
+- Voting, debate threads, notifications deferred until after Evidence Framework exists
+- Makes logical sense: users debate evidence quality, vote on evidence usefulness
+- Dependencies clear: Sprint 4 requires Sprint 3 complete
+
+**Timeline**:
+- Sprint 3 kickoff: Jan 13, 2025 (estimated)
+- Sprint 3 completion: Jan 27, 2025 (12 days + 2-day buffer)
+- Sprint 4 kickoff: Jan 28, 2025 (after Sprint 3 validated)
+
+**Next Steps**:
+- @architect: Security review (RLS policies) + performance review (materialized view strategy)
+- @designer: UX wireframes (Evidence Dashboard, submission form, assessment interface, chart)
+- @developer: Phase 3.1 implementation (database schema - critical path)
+
+**See**: `project-plan.md` lines 393-491 for complete Sprint 3 plan, `handoff-notes.md` for detailed implementation guide
+
+---
+
 ### 2025-01-09 - Phase 1 Sprint Plan with PRD Validation COMPLETE
 **Created by**: coordinator (with architect + strategist validation)
 **Type**: Strategic Planning
