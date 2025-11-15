@@ -72,7 +72,7 @@ iso_horizons_cache (id, iso_object_id, coordinate_type, raw_data, cached_at, exp
 
 -- Evidence Framework (Core Differentiator)
 evidence (id, iso_object_id, submitter_id, evidence_type, title, description, methodology, source_url, quality_score)
-evidence_assessments (id, evidence_id, assessor_id, expertise_score, methodology_score, peer_review_score, overall_score)
+evidence_assessments (id, evidence_id, assessor_id, chain_of_custody_score, witness_credibility_score, technical_analysis_score, verdict, confidence, overall_score)
 
 -- Collaboration
 debate_threads (id, iso_object_id, author_id, title, content, created_at)
@@ -91,25 +91,42 @@ moderation_flags (id, content_type, content_id, reporter_id, reason, status, cre
 moderation_actions (id, flag_id, admin_id, action_type, notes, created_at)
 ```
 
-### Evidence Quality Scoring Algorithm
+### Evidence Assessment Process (Two-Step)
 
+**Step 1: Quality Rubric (3-Tier Assessment)**
 ```sql
-Quality Score = (Expertise Factor + Methodology Factor + Peer Review Factor)
+Each Evidence Analyst scores evidence on three dimensions (1-5 scale each):
 
-Expertise Factor (0-40 points):
-- Event Pass tier: 20 points (base contributor)
-- Evidence Analyst tier: 40 points (expert contributor)
+Chain of Custody Score (1-5):
+- Source reliability and data provenance
+- How traceable is the evidence to its origin?
 
-Methodology Factor (0-30 points):
-- Average of methodology_scores from all assessments
-- 0 points if no assessments yet
+Witness Credibility Score (1-5):
+- Observer expertise and potential bias
+- What are the observer's qualifications?
 
-Peer Review Factor (0-30 points):
-- Average of peer_review_scores from all assessments
-- 0 points if no assessments yet
+Technical Analysis Score (1-5):
+- Methodology rigor and data quality
+- How sound is the analytical approach?
 
-Total: 0-100 (integer, transparent algorithm)
+Rubric Total: 3-15 (sum of three scores)
+Quality Score: 0-100 (weighted average across all assessments)
 ```
+
+**Step 2: Verdict and Confidence**
+```sql
+After completing the rubric, user casts their verdict:
+
+Verdict: alien | natural | uncertain
+Confidence: 1-10 (how sure are they?)
+
+These verdicts aggregate into Community Sentiment:
+- % who voted "alien"
+- % who voted "natural"
+- % who voted "uncertain"
+```
+
+This two-step process separates objective evidence quality assessment from subjective interpretation, forcing users to think critically before forming opinions.
 
 ### User Tier System
 
