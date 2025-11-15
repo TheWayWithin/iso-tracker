@@ -1,0 +1,19 @@
+# ISO Tracker - Robots.txt
+# Allow all search engines to crawl public pages
+
+User-agent: *
+Allow: /
+Allow: /iso-objects
+Allow: /guidelines
+
+# Block admin and API routes
+Disallow: /admin/
+Disallow: /api/
+Disallow: /auth/
+
+# Block user-specific pages
+Disallow: /dashboard
+Disallow: /settings/
+
+# Sitemap location
+Sitemap: https://iso-tracker.app/sitemap.xml
