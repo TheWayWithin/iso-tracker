@@ -528,6 +528,8 @@ The following were in the original architecture but are NOT implemented:
 6. **Educational Content Library** - Phase 2 feature
 7. **API Access for Researchers** - Phase 4 feature
 8. **Rate Limiting** - Implemented for emails only, not API routes
+9. **Community Sentiment Visualization** - Schema supports verdicts, but UI aggregation/display not built (P0 for Sprint 6)
+10. **Evidence Assessment UI Update** - Schema corrected (migration 014), but EvidenceAssessmentForm.tsx still uses old fields
 
 ---
 
