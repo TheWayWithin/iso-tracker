@@ -46,6 +46,37 @@
 
 ## 📦 Deliverables
 
+### 2025-11-15 - PRD Alignment Fix #1: Event Pass Evidence Permissions ✅
+**Type**: Strategic Correction (PRD Compliance)
+**Status**: ✅ FIXED
+**Files Created**: `database/migrations/013_fix_evidence_tier_permissions.sql`
+**Files Modified**: `architecture.md` (tier table corrected)
+
+**The Issue**:
+Implementation allowed Event Pass users ($4.99/mo) to submit evidence (10 per ISO), but PRD Section 4.1 lines 213-218 explicitly states Event Pass has VIEW-ONLY access to evidence framework. Evidence submission is the core value proposition of Evidence Analyst tier ($19/mo).
+
+**Root Cause**:
+Sprint 3 implementation misinterpreted "Basic evidence framework access" as submission capability. PRD is clear: Event Pass users can VIEW evidence and consensus, but cannot CONTRIBUTE.
+
+**The Fix**:
+1. Created migration 013 to update RLS policy: INSERT on evidence table now requires `evidence_analyst` tier (was `event_pass`)
+2. Updated architecture.md tier table: Event Pass "View only" (was "10 per ISO")
+3. Updated RLS description to reflect Evidence Analyst-only submission
+
+**Strategic Rationale**:
+- Event Pass VIEW-ONLY creates strong upsell incentive to Evidence Analyst tier
+- Protects the $19/mo value proposition (evidence submission is the core upgrade benefit)
+- Aligns with PRD monetization strategy: Spectator sees value → upgrades to participate
+- Maintains scientific consensus integrity (only paid experts contribute)
+
+**Migration Deployment Required**:
+```bash
+supabase db push
+```
+This will apply migration 013 to restrict evidence submission to Evidence Analyst only.
+
+---
+
 ### 2025-11-15 - Sprint 5: PWA & Polish COMPLETE ✅
 **Type**: Feature Development (Production Readiness)
 **Status**: ✅ COMPLETE
