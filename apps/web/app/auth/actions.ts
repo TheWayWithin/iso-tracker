@@ -117,7 +117,8 @@ export async function signOut() {
   const { error } = await supabase.auth.signOut()
 
   if (error) {
-    return { error: 'Failed to sign out' }
+    // Log error but still redirect (user is signed out locally)
+    console.error('Sign out error:', error)
   }
 
   revalidatePath('/', 'layout')

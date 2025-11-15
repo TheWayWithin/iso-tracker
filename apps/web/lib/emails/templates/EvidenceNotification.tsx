@@ -37,7 +37,7 @@ export function EvidenceNotification({
         <Text style={evidenceLabel}>
           {evidenceType.toUpperCase()}
         </Text>
-        <Text style={evidenceTitle}>{evidenceTitle}</Text>
+        <Text style={evidenceTitleStyle}>{evidenceTitle}</Text>
       </div>
 
       <Link href={evidenceUrl} style={button}>
@@ -77,7 +77,7 @@ const evidenceLabel = {
   margin: '0 0 8px',
 };
 
-const evidenceTitle = {
+const evidenceTitleStyle = {
   color: '#1f2937',
   fontSize: '16px',
   fontWeight: '600',

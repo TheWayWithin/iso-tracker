@@ -16,7 +16,7 @@ const CACHE_TTL = 5 * 60 * 1000; // 5 minutes in milliseconds
  */
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
 
     // Verify authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -187,7 +187,7 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
 
     // Verify authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();

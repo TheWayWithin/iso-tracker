@@ -25,7 +25,7 @@ export async function sendReplyNotification(params: {
   unsubscribeToken: string;
 }): Promise<SendEmailResult> {
   try {
-    const html = render(
+    const html = await render(
       ReplyNotification({
         recipientName: params.recipientName,
         replierName: params.replierName,
@@ -72,7 +72,7 @@ export async function sendEvidenceNotification(params: {
   unsubscribeToken: string;
 }): Promise<SendEmailResult> {
   try {
-    const html = render(
+    const html = await render(
       EvidenceNotification({
         recipientName: params.recipientName,
         submitterName: params.submitterName,
@@ -120,7 +120,7 @@ export async function sendObservationWindowAlert(params: {
   unsubscribeToken: string;
 }): Promise<SendEmailResult> {
   try {
-    const html = render(
+    const html = await render(
       ObservationWindowAlert({
         recipientName: params.recipientName,
         isoName: params.isoName,
