@@ -75,7 +75,13 @@ Launch ISO Tracker MVP as the world's first evidence-based analysis platform for
 - [ ] Create favicon.ico (32x32)
 - [ ] Verify manifest.json icons are valid
 
-### Phase 6.5: Pre-Launch QA
+### Phase 6.5: PRD Alignment Fixes (Code Updates)
+- [ ] Deploy migrations 013 & 014 to production: `supabase db push`
+- [ ] Update EvidenceAssessmentForm.tsx to use new schema (Chain of Custody, Witness Credibility, Technical Analysis + verdict/confidence)
+- [ ] Update any API routes that reference old assessment fields
+- [ ] Test evidence assessment flow with new two-step process
+
+### Phase 6.6: Pre-Launch QA
 - [ ] Run production build locally: `pnpm build`
 - [ ] Deploy to Vercel production
 - [ ] Run Lighthouse audit (target: Performance >90, Accessibility >90)
@@ -87,7 +93,7 @@ Launch ISO Tracker MVP as the world's first evidence-based analysis platform for
 - [ ] Test admin moderation workflow
 - [ ] Security scan (OWASP headers, CSP validation)
 
-### Phase 6.6: Launch Preparation
+### Phase 6.7: Launch Preparation
 - [ ] Set up monitoring alerts (Sentry, Vercel analytics)
 - [ ] Configure backup strategy for Supabase
 - [ ] Document rollback procedure
