@@ -46,6 +46,45 @@
 
 ## 📦 Deliverables
 
+### 2025-11-15 - Strategic Decision: Complete Evidence Framework Architecture
+**Type**: Strategic Clarification (Architecture Decision Record)
+**Status**: ✅ DOCUMENTED
+
+**The Question**:
+PRD describes evidence CLASSIFICATION (Observation/Hypothesis/Theory) while architecture implements QUALITY SCORING (Chain of Custody/Witness Credibility/Technical Analysis rubric). Are these contradictory approaches?
+
+**The Decision**: Use BOTH systems together.
+
+These are complementary, not contradictory:
+1. **PRD's Classification** (System-Defined): WHAT is this evidence?
+   - Validation Level: Observation (direct data) vs Hypothesis (speculation) vs Theory (validated model)
+   - Collection Method: spectroscopy, astrometry, photometry, radar, etc.
+
+2. **Architecture's Rubric** (User-Performed): HOW GOOD is this evidence?
+   - Chain of Custody Score (1-5): source verification, provenance
+   - Witness Credibility Score (1-5): observer qualifications, bias
+   - Technical Analysis Score (1-5): methodology rigor, data quality
+
+3. **User Verdict** (Opinion): WHAT DOES IT MEAN?
+   - Verdict: alien | natural | uncertain
+   - Confidence: 1-10 scale
+
+**Rationale**:
+- The PRD described the high-level vision
+- The architecture evolved this into a more robust, defensible system
+- Both are required: classify the evidence type, THEN assess its quality, THEN form an opinion
+- This two-layer system is ISO Tracker's core differentiator - no competitor has this depth
+
+**Files Updated**:
+- `product-description.md` - Added Evidence Classification Hierarchy section
+- `architecture.md` - Already correct with both concepts
+- `project-plan.md` - Added task to implement validation_level field
+
+**Key Insight**:
+Product visions evolve and sharpen as they move from PRD (high-level requirements) to architecture (detailed design). The more detailed vision is correct when it fulfills the original intent with greater rigor.
+
+---
+
 ### 2025-11-15 - PRD Alignment Fix #2: Evidence Assessment Schema ✅
 **Type**: Strategic Correction (PRD Compliance)
 **Status**: ✅ MIGRATION CREATED (deployment pending)
