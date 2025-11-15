@@ -79,6 +79,10 @@ Launch ISO Tracker MVP as the world's first evidence-based analysis platform for
 - [ ] Deploy migrations 013 & 014 to production: `supabase db push`
 - [ ] Update EvidenceAssessmentForm.tsx to use new schema (Chain of Custody, Witness Credibility, Technical Analysis + verdict/confidence)
 - [ ] Update any API routes that reference old assessment fields
+- [ ] **P0: Build Community Sentiment visualization** (core differentiator)
+  - [ ] Update consensus_snapshot view to aggregate verdict percentages (% alien, % natural, % uncertain)
+  - [ ] Create CommunitySentiment UI component showing percentages with progress bars
+  - [ ] Display side-by-side with Scientific Consensus on Evidence Dashboard
 - [ ] Test evidence assessment flow with new two-step process
 
 ### Phase 6.6: Pre-Launch QA
