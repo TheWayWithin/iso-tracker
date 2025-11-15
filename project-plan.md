@@ -83,6 +83,7 @@ Launch ISO Tracker MVP as the world's first evidence-based analysis platform for
   - [ ] Update consensus_snapshot view to aggregate verdict percentages (% alien, % natural, % uncertain)
   - [ ] Create CommunitySentiment UI component showing percentages with progress bars
   - [ ] Display side-by-side with Scientific Consensus on Evidence Dashboard
+- [ ] Add `validation_level` field to evidence table (Observation/Hypothesis/Theory per PRD hierarchy)
 - [ ] Test evidence assessment flow with new two-step process
 
 ### Phase 6.6: Pre-Launch QA

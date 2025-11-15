@@ -55,9 +55,18 @@ We create a NEW category by being the only platform exclusively dedicated to ISO
 
 ### The Evidence Framework (Primary Differentiator)
 
-**Two-Step Assessment Process:**
+**Evidence Classification Hierarchy (System-Defined):**
 
-Evidence Analysts use a structured two-step process:
+Each piece of evidence is classified by its epistemic level:
+- **Observation** (highest confidence): Direct measurements (trajectory, brightness, spectroscopy data)
+- **Hypothesis** (testable speculation): Proposed explanations for observations
+- **Theory** (validated framework): Well-supported scientific models
+
+Evidence is also tagged by collection method: observation, spectroscopy, astrometry, photometry, radar, theoretical, simulation, literature.
+
+**Two-Step Assessment Process (User-Performed):**
+
+Evidence Analysts assess EACH piece of evidence:
 
 **Step 1: Quality Rubric (1-5 scale each)**
 
@@ -82,7 +91,7 @@ Evidence Analysts use a structured two-step process:
 **Step 2: Verdict and Confidence**
 
 After completing the quality rubric:
-- **Verdict:** alien | natural | uncertain (user's opinion)
+- **Verdict:** alien | natural | uncertain (user's opinion on the ISO)
 - **Confidence:** 1-10 scale (how certain they are)
 
 **Dual Consensus Tracking:**
@@ -90,7 +99,7 @@ After completing the quality rubric:
 - **Community Sentiment:** Aggregate of user verdicts (% alien vs % natural vs % uncertain)
 - **Scientific Consensus:** Quality scores from Evidence Analysts (weighted assessments)
 
-This creates a unique "Debate Dashboard" showing how public perception compares to evidence-based analysis—our most compelling differentiation. The two-step process forces users to assess evidence quality objectively BEFORE casting their subjective verdict.
+This creates a unique "Debate Dashboard" showing how public perception compares to evidence-based analysis—our most compelling differentiation. The system classifies WHAT the evidence is; users assess HOW GOOD it is and WHAT IT MEANS.
 
 ---
 
