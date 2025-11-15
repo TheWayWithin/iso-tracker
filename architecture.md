@@ -116,7 +116,7 @@ Total: 0-100 (integer, transparent algorithm)
 | Tier | Cost | Evidence Submission | Evidence Assessment | Observation Alerts | Admin Access |
 |------|------|--------------------|--------------------|-------------------|--------------|
 | Guest (Free) | $0 | View only | No | No | No |
-| Event Pass | $4.99/mo | 10 per ISO | No | Yes | No |
+| Event Pass | $4.99/mo | View only | No | Yes | No |
 | Evidence Analyst | $19/mo | Unlimited | Yes | Yes | No |
 | Admin | Internal | Unlimited | Yes | Yes | Yes |
 
@@ -124,7 +124,7 @@ Total: 0-100 (integer, transparent algorithm)
 
 All tables have RLS enabled with policies enforcing:
 - Users can only read/write their own data (profiles, subscriptions)
-- Tier-based access for evidence submission (Event Pass+) and assessment (Evidence Analyst only)
+- Tier-based access for evidence submission and assessment (Evidence Analyst only)
 - Admin-only access for moderation actions (database-level role check)
 - Public read access for ISO data, evidence, and community content
 
