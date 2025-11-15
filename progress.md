@@ -46,6 +46,42 @@
 
 ## 📦 Deliverables
 
+### 2025-11-15 - PRD Alignment Fix #2: Evidence Assessment Schema ✅
+**Type**: Strategic Correction (PRD Compliance)
+**Status**: ✅ MIGRATION CREATED (deployment pending)
+**Files Created**: `database/migrations/014_fix_evidence_assessment_schema.sql`
+**Files Modified**: `architecture.md` (assessment process corrected)
+
+**The Issue**:
+Implementation used wrong scoring labels (Expertise, Methodology, Peer Review) instead of PRD-defined rubric (Chain of Custody, Witness Credibility, Technical Analysis). Also missing the verdict/confidence system for users to cast their opinion.
+
+**Root Cause**:
+Sprint 3 implementation conflated evidence QUALITY assessment with USER OPINION. PRD requires both as a two-step sequential process: first assess the evidence quality objectively, then cast your subjective verdict.
+
+**The Fix**:
+1. Created migration 014 to restructure evidence_assessments table:
+   - Removed: expertise_score, methodology_score, peer_review_score
+   - Added: chain_of_custody_score (1-5), witness_credibility_score (1-5), technical_analysis_score (1-5)
+   - Added: verdict (alien/natural/uncertain), confidence (1-10)
+2. Updated architecture.md with correct two-step assessment process documentation
+
+**Two-Step Assessment Process (PRD-Aligned)**:
+- **Step 1 - Quality Rubric**: User scores evidence on Chain of Custody (1-5), Witness Credibility (1-5), Technical Analysis (1-5)
+- **Step 2 - Verdict**: User casts opinion (alien/natural/uncertain) with confidence (1-10)
+
+This separates objective evidence quality from subjective interpretation - core to ISO Tracker's differentiation.
+
+**Migration Deployment Required**:
+```bash
+supabase db push
+```
+
+**UI Updates Required** (NOT YET DONE):
+- EvidenceAssessmentForm.tsx - Update to use new rubric labels + add verdict/confidence UI
+- Consensus visualization - Aggregate verdicts into Community Sentiment percentages
+
+---
+
 ### 2025-11-15 - PRD Alignment Fix #1: Event Pass Evidence Permissions ✅
 **Type**: Strategic Correction (PRD Compliance)
 **Status**: ✅ FIXED
