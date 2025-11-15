@@ -3,8 +3,8 @@
 ## Mission Overview
 **Mission Code**: MVP-ISO-TRACKER-001
 **Started**: 2025-11-09
-**Current Phase**: Phase 0 - Environment Setup & Architecture
-**Overall Status**: IN_PROGRESS (40% complete)
+**Current Phase**: Sprint 4 - Collaboration & Community Features
+**Overall Status**: IN_PROGRESS (Sprint 3 Complete, Sprint 4 Starting)
 
 ## Mission Objectives
 Primary objectives from mission briefing:
@@ -130,13 +130,13 @@ None yet
 - GitHub repository must exist before code development begins
 
 ## Next Steps Queue
-Priority-ordered tasks for upcoming phases:
-1. ✅ **COMPLETE**: Comprehensive implementation plan (project-plan.md)
-2. ✅ **COMPLETE**: Technical architecture design (architecture.md)
-3. ✅ **COMPLETE**: GitHub repository structure created
-4. 🔵 **IN PROGRESS**: User manual environment setup (Supabase, Vercel, GitHub secrets)
-5. 🔵 **NEXT**: Developer Phase 1 implementation (Week 1-2: Core Infrastructure)
-6. **Pending**: Production deployment after Phase 1 complete
+Priority-ordered tasks for Sprint 4:
+1. ✅ **COMPLETE**: Sprint 3 Evidence Framework Dashboard (PRIMARY DIFFERENTIATOR SHIPPED)
+2. 🔵 **STARTING NOW**: Sprint 4 Phase 4.1 - Voting System (database + RLS + API + UI)
+3. **Next**: Sprint 4 Phase 4.2 - Debate Threads (Evidence Analyst tier)
+4. **Next**: Sprint 4 Phase 4.3 - Email Notifications (replies, observation windows)
+5. **Next**: Sprint 4 Phase 4.4 - Community Guidelines & Moderation
+6. **Pending**: Sprint 4 Phase 4.5 - Testing & Polish
 
 ## Risk Register
 | Risk | Probability | Impact | Mitigation |

@@ -27,6 +27,9 @@ export async function signUp(formData: FormData) {
     password,
     options: {
       emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+      data: {
+        display_name: email.split('@')[0],
+      },
     },
   })
 
@@ -35,6 +38,49 @@ export async function signUp(formData: FormData) {
   if (error) {
     console.log('Signup error:', error.message)
     return
+  }
+
+  // Create profile, subscription, and notification_preferences records
+  // (Database triggers on auth.users don't work in Supabase - create records manually)
+  if (data.user) {
+    const userId = data.user.id
+
+    // 1. Create profile
+    const { error: profileError } = await supabase.from('profiles').insert({
+      id: userId,
+      email: email,
+      display_name: email.split('@')[0],
+    })
+
+    if (profileError) {
+      console.error('Profile creation error:', profileError)
+      // Note: User is created in auth, but profile failed - they'll need to retry or we need cleanup
+    }
+
+    // 2. Create subscription (free tier by default)
+    const { error: subscriptionError } = await supabase.from('subscriptions').insert({
+      user_id: userId,
+      tier: 'guest',
+      status: 'active',
+    })
+
+    if (subscriptionError) {
+      console.error('Subscription creation error:', subscriptionError)
+    }
+
+    // 3. Create notification preferences
+    const { error: prefsError } = await supabase.from('notification_preferences').insert({
+      user_id: userId,
+      email: email,
+      unsubscribe_token: crypto.randomUUID(),
+      reply_notifications: true,
+      evidence_notifications: true,
+      observation_window_alerts: false,
+    })
+
+    if (prefsError) {
+      console.error('Notification preferences creation error:', prefsError)
+    }
   }
 
   console.log('Signup successful, redirecting to dashboard...')

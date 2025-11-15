@@ -702,6 +702,26 @@ Export Data (API Access)  │  ❌  │     ❌     │        ✅
 Discord Analyst Channel   │  ❌  │     ❌     │        ✅
 ```
 
+**User Signup Flow:**
+
+When a new user signs up, the system creates three database records in the application layer (NOT via database triggers, as Supabase doesn't reliably support custom triggers on `auth.users`):
+
+1. **Auth User** - Created by Supabase Auth (`auth.users` table)
+2. **Profile** - Created by signup action (`profiles` table)
+   - ID matches auth user ID
+   - Display name derived from email (before @ symbol)
+   - Email stored for reference
+3. **Subscription** - Created by signup action (`subscriptions` table)
+   - Default tier: `guest` (free tier)
+   - Status: `active`
+4. **Notification Preferences** - Created by signup action (`notification_preferences` table)
+   - All notifications enabled by default
+   - Unsubscribe token generated
+
+**Implementation**: `apps/web/app/auth/actions.ts` - `signUp()` function
+
+**Architectural Decision**: Application-level record creation provides better error handling, explicit control flow, and avoids Supabase auth schema limitations compared to database triggers.
+
 ### Security Measures
 
 #### Content Security Policy (CSP)
@@ -1208,6 +1228,8 @@ pnpm build:staging      # Build with staging env vars
 #### Database Migrations (Supabase)
 
 **Tool**: Supabase CLI + SQL migration files
+
+**Important**: Do NOT use database triggers on `auth.users` table. Supabase doesn't reliably support custom triggers on auth schema. Handle user record creation in application code instead (see User Signup Flow in Authentication section).
 
 **Process**:
 ```bash
