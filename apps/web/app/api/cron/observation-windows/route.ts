@@ -7,6 +7,9 @@ import {
 } from '@/lib/notifications/helpers';
 import { sendObservationWindowAlert } from '@/lib/emails/send';
 
+// Force dynamic rendering (uses headers for auth)
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/cron/observation-windows
  * Cron job to send observation window alerts
