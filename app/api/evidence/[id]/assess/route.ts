@@ -3,12 +3,13 @@ import { NextRequest, NextResponse } from 'next/server';
 
 /**
  * POST /api/evidence/[id]/assess
- * Submit quality assessment for evidence
+ * Submit quality assessment for evidence (PRD-aligned two-step process)
  *
  * Requirements:
  * - User must be authenticated
- * - User must have Evidence Analyst tier
- * - Scores: expertise (0|20|40), methodology (0-30), peer_review (0-30)
+ * - User must have Evidence Analyst tier ($19/mo)
+ * - Step 1: Quality Rubric (chain_of_custody, witness_credibility, technical_analysis) - 1-5 scale
+ * - Step 2: Personal Verdict (verdict + confidence)
  */
 export async function POST(
   request: NextRequest,
@@ -31,55 +32,77 @@ export async function POST(
     // 2. Parse request body
     const body = await request.json();
     const {
-      expertise_score,
-      methodology_score,
-      peer_review_score,
+      chain_of_custody_score,
+      witness_credibility_score,
+      technical_analysis_score,
+      verdict,
+      confidence,
       notes,
     } = body;
 
     // 3. Validate required fields
     if (
-      expertise_score === undefined ||
-      methodology_score === undefined ||
-      peer_review_score === undefined
+      chain_of_custody_score === undefined ||
+      witness_credibility_score === undefined ||
+      technical_analysis_score === undefined ||
+      verdict === undefined ||
+      confidence === undefined
     ) {
       return NextResponse.json(
-        { error: 'Missing required fields: expertise_score, methodology_score, peer_review_score' },
+        { error: 'Missing required fields: chain_of_custody_score, witness_credibility_score, technical_analysis_score, verdict, confidence' },
         { status: 400 }
       );
     }
 
-    // 4. Validate score ranges
-    if (![0, 20, 40].includes(expertise_score)) {
+    // 4. Validate score ranges (1-5 for quality rubric)
+    if (chain_of_custody_score < 1 || chain_of_custody_score > 5 || !Number.isInteger(chain_of_custody_score)) {
       return NextResponse.json(
-        { error: 'expertise_score must be 0, 20, or 40' },
+        { error: 'chain_of_custody_score must be an integer between 1 and 5' },
         { status: 400 }
       );
     }
 
-    if (methodology_score < 0 || methodology_score > 30) {
+    if (witness_credibility_score < 1 || witness_credibility_score > 5 || !Number.isInteger(witness_credibility_score)) {
       return NextResponse.json(
-        { error: 'methodology_score must be between 0 and 30' },
+        { error: 'witness_credibility_score must be an integer between 1 and 5' },
         { status: 400 }
       );
     }
 
-    if (peer_review_score < 0 || peer_review_score > 30) {
+    if (technical_analysis_score < 1 || technical_analysis_score > 5 || !Number.isInteger(technical_analysis_score)) {
       return NextResponse.json(
-        { error: 'peer_review_score must be between 0 and 30' },
+        { error: 'technical_analysis_score must be an integer between 1 and 5' },
         { status: 400 }
       );
     }
 
-    // 5. Insert assessment (RLS policies enforce Evidence Analyst tier requirement)
+    // 5. Validate verdict (alien, natural, uncertain)
+    if (!['alien', 'natural', 'uncertain'].includes(verdict)) {
+      return NextResponse.json(
+        { error: 'verdict must be one of: alien, natural, uncertain' },
+        { status: 400 }
+      );
+    }
+
+    // 6. Validate confidence (1-10)
+    if (confidence < 1 || confidence > 10 || !Number.isInteger(confidence)) {
+      return NextResponse.json(
+        { error: 'confidence must be an integer between 1 and 10' },
+        { status: 400 }
+      );
+    }
+
+    // 7. Insert assessment (RLS policies enforce Evidence Analyst tier requirement)
     const { data: assessment, error: insertError } = await supabase
       .from('evidence_assessments')
       .insert({
         evidence_id,
         assessor_id: user.id,
-        expertise_score,
-        methodology_score,
-        peer_review_score,
+        chain_of_custody_score,
+        witness_credibility_score,
+        technical_analysis_score,
+        verdict,
+        confidence,
         notes: notes || null,
       })
       .select()
@@ -110,7 +133,7 @@ export async function POST(
       );
     }
 
-    // 6. Return success with created assessment
+    // 8. Return success with created assessment
     return NextResponse.json(
       {
         message: 'Assessment submitted successfully',

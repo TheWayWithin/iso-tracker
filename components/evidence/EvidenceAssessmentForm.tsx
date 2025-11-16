@@ -7,33 +7,37 @@ import { Textarea } from '@/components/ui/textarea';
 import { Slider } from '@/components/ui/slider';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 interface EvidenceAssessmentFormProps {
   evidenceId: string;
   evidenceTitle: string;
-  submitterTier: 'event_pass' | 'evidence_analyst';
   onSuccess?: () => void;
 }
 
 export function EvidenceAssessmentForm({
   evidenceId,
   evidenceTitle,
-  submitterTier,
   onSuccess,
 }: EvidenceAssessmentFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  // Auto-set expertise score based on submitter tier
-  const expertiseScore = submitterTier === 'evidence_analyst' ? 40 : 20;
+  // Step 1: Quality Rubric (1-5 scale each)
+  const [chainOfCustodyScore, setChainOfCustodyScore] = useState<number>(3);
+  const [witnessCredibilityScore, setWitnessCredibilityScore] = useState<number>(3);
+  const [technicalAnalysisScore, setTechnicalAnalysisScore] = useState<number>(3);
 
-  const [methodologyScore, setMethodologyScore] = useState<number>(15);
-  const [peerReviewScore, setPeerReviewScore] = useState<number>(15);
+  // Step 2: Personal Verdict
+  const [verdict, setVerdict] = useState<'alien' | 'natural' | 'uncertain'>('uncertain');
+  const [confidence, setConfidence] = useState<number>(5);
+
+  // Optional notes
   const [notes, setNotes] = useState('');
 
-  // Calculate overall score
-  const overallScore = expertiseScore + methodologyScore + peerReviewScore;
+  // Calculate overall quality score (3-15)
+  const overallScore = chainOfCustodyScore + witnessCredibilityScore + technicalAnalysisScore;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,9 +50,11 @@ export function EvidenceAssessmentForm({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          expertise_score: expertiseScore,
-          methodology_score: methodologyScore,
-          peer_review_score: peerReviewScore,
+          chain_of_custody_score: chainOfCustodyScore,
+          witness_credibility_score: witnessCredibilityScore,
+          technical_analysis_score: technicalAnalysisScore,
+          verdict,
+          confidence,
           notes: notes || null,
         }),
       });
@@ -82,95 +88,163 @@ export function EvidenceAssessmentForm({
         </CardHeader>
       </Card>
 
-      {/* Expertise Score (auto-calculated) */}
+      {/* STEP 1: Quality Rubric */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-sm">
-            Expertise Factor: {expertiseScore} / 40 points
-          </CardTitle>
+          <CardTitle className="text-base">Step 1: Quality Rubric</CardTitle>
           <CardDescription>
-            Based on submitter tier (
-            {submitterTier === 'evidence_analyst'
-              ? 'Evidence Analyst = 40 points'
-              : 'Event Pass = 20 points'}
-            )
+            Evaluate the evidence quality objectively (1-5 scale)
           </CardDescription>
         </CardHeader>
+        <CardContent className="space-y-6">
+          {/* Chain of Custody Score */}
+          <div className="space-y-2">
+            <Label htmlFor="chain_of_custody">
+              Chain of Custody: {chainOfCustodyScore} / 5
+            </Label>
+            <Slider
+              id="chain_of_custody"
+              min={1}
+              max={5}
+              step={1}
+              value={[chainOfCustodyScore]}
+              onValueChange={(value) => setChainOfCustodyScore(value[0])}
+              className="w-full"
+            />
+            <p className="text-sm text-muted-foreground">
+              How well-documented is the evidence trail? Is the source verifiable?
+            </p>
+            <div className="text-xs text-muted-foreground space-y-1 pl-4 border-l-2">
+              <p><strong>1:</strong> No provenance, unverified source</p>
+              <p><strong>3:</strong> Partial documentation, some verification</p>
+              <p><strong>5:</strong> Complete chain of custody, fully verifiable</p>
+            </div>
+          </div>
+
+          {/* Witness Credibility Score */}
+          <div className="space-y-2">
+            <Label htmlFor="witness_credibility">
+              Witness Credibility: {witnessCredibilityScore} / 5
+            </Label>
+            <Slider
+              id="witness_credibility"
+              min={1}
+              max={5}
+              step={1}
+              value={[witnessCredibilityScore]}
+              onValueChange={(value) => setWitnessCredibilityScore(value[0])}
+              className="w-full"
+            />
+            <p className="text-sm text-muted-foreground">
+              How reliable is the observer/source? Any bias or credibility concerns?
+            </p>
+            <div className="text-xs text-muted-foreground space-y-1 pl-4 border-l-2">
+              <p><strong>1:</strong> Unknown source, clear bias</p>
+              <p><strong>3:</strong> Known source, some expertise</p>
+              <p><strong>5:</strong> Expert observer, no bias, established credibility</p>
+            </div>
+          </div>
+
+          {/* Technical Analysis Score */}
+          <div className="space-y-2">
+            <Label htmlFor="technical_analysis">
+              Technical Analysis: {technicalAnalysisScore} / 5
+            </Label>
+            <Slider
+              id="technical_analysis"
+              min={1}
+              max={5}
+              step={1}
+              value={[technicalAnalysisScore]}
+              onValueChange={(value) => setTechnicalAnalysisScore(value[0])}
+              className="w-full"
+            />
+            <p className="text-sm text-muted-foreground">
+              How rigorous is the methodology? Is the data quality sound?
+            </p>
+            <div className="text-xs text-muted-foreground space-y-1 pl-4 border-l-2">
+              <p><strong>1:</strong> No methodology, poor data quality</p>
+              <p><strong>3:</strong> Adequate methodology, reasonable data</p>
+              <p><strong>5:</strong> Rigorous methodology, high-quality data</p>
+            </div>
+          </div>
+
+          {/* Overall Quality Score */}
+          <div className="pt-4 border-t">
+            <div className="flex justify-between items-center mb-2">
+              <span className="font-medium">Overall Quality Score</span>
+              <span className="text-lg font-bold">{overallScore} / 15</span>
+            </div>
+            <div className="w-full bg-secondary rounded-full h-3">
+              <div
+                className="bg-primary h-3 rounded-full transition-all"
+                style={{ width: `${(overallScore / 15) * 100}%` }}
+              />
+            </div>
+          </div>
+        </CardContent>
       </Card>
 
-      {/* Methodology Score Slider */}
-      <div className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="methodology">
-            Methodology Quality: {methodologyScore} / 30 points
-          </Label>
-          <Slider
-            id="methodology"
-            min={0}
-            max={30}
-            step={1}
-            value={[methodologyScore]}
-            onValueChange={(value) => setMethodologyScore(value[0])}
-            className="w-full"
-          />
-          <p className="text-sm text-muted-foreground">
-            How sound is the methodology used to collect or analyze this evidence?
-          </p>
-        </div>
-
-        {/* Methodology scale guide */}
-        <div className="text-xs text-muted-foreground space-y-1 pl-4 border-l-2">
-          <p><strong>0-10:</strong> Poor methodology, significant flaws</p>
-          <p><strong>11-20:</strong> Adequate methodology, some limitations</p>
-          <p><strong>21-30:</strong> Rigorous methodology, well-documented</p>
-        </div>
-      </div>
-
-      {/* Peer Review Score Slider */}
-      <div className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="peer_review">
-            Peer Review Quality: {peerReviewScore} / 30 points
-          </Label>
-          <Slider
-            id="peer_review"
-            min={0}
-            max={30}
-            step={1}
-            value={[peerReviewScore]}
-            onValueChange={(value) => setPeerReviewScore(value[0])}
-            className="w-full"
-          />
-          <p className="text-sm text-muted-foreground">
-            Has this evidence been peer-reviewed or independently verified?
-          </p>
-        </div>
-
-        {/* Peer review scale guide */}
-        <div className="text-xs text-muted-foreground space-y-1 pl-4 border-l-2">
-          <p><strong>0-10:</strong> No peer review, unverified claims</p>
-          <p><strong>11-20:</strong> Limited review, informal verification</p>
-          <p><strong>21-30:</strong> Peer-reviewed, published, replicated</p>
-        </div>
-      </div>
-
-      {/* Overall Score Preview */}
-      <Card className="bg-muted">
+      {/* STEP 2: Personal Verdict */}
+      <Card>
         <CardHeader>
-          <CardTitle className="text-xl">
-            Overall Quality Score: {overallScore} / 100
-          </CardTitle>
+          <CardTitle className="text-base">Step 2: Your Verdict</CardTitle>
           <CardDescription>
-            Expertise ({expertiseScore}) + Methodology ({methodologyScore}) +
-            Peer Review ({peerReviewScore})
+            Based on this evidence, what is your opinion?
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="w-full bg-secondary rounded-full h-4">
-            <div
-              className="bg-primary h-4 rounded-full transition-all"
-              style={{ width: `${overallScore}%` }}
+        <CardContent className="space-y-6">
+          {/* Verdict Selection */}
+          <div className="space-y-3">
+            <Label>Classification</Label>
+            <RadioGroup
+              value={verdict}
+              onValueChange={(value) => setVerdict(value as 'alien' | 'natural' | 'uncertain')}
+              className="space-y-2"
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="alien" id="alien" />
+                <Label htmlFor="alien" className="cursor-pointer">
+                  Alien Technology / Non-Natural Origin
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="natural" id="natural" />
+                <Label htmlFor="natural" className="cursor-pointer">
+                  Natural Phenomenon
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="uncertain" id="uncertain" />
+                <Label htmlFor="uncertain" className="cursor-pointer">
+                  Uncertain / Insufficient Evidence
+                </Label>
+              </div>
+            </RadioGroup>
+          </div>
+
+          {/* Confidence Level */}
+          <div className="space-y-2">
+            <Label htmlFor="confidence">
+              Confidence Level: {confidence} / 10
+            </Label>
+            <Slider
+              id="confidence"
+              min={1}
+              max={10}
+              step={1}
+              value={[confidence]}
+              onValueChange={(value) => setConfidence(value[0])}
+              className="w-full"
             />
+            <p className="text-sm text-muted-foreground">
+              How confident are you in your verdict?
+            </p>
+            <div className="text-xs text-muted-foreground space-y-1 pl-4 border-l-2">
+              <p><strong>1-3:</strong> Low confidence, many unknowns</p>
+              <p><strong>4-6:</strong> Moderate confidence, some uncertainty</p>
+              <p><strong>7-10:</strong> High confidence, strong conviction</p>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -198,8 +272,7 @@ export function EvidenceAssessmentForm({
       {success && (
         <Alert>
           <AlertDescription>
-            Assessment submitted successfully! The evidence quality score will
-            update automatically.
+            Assessment submitted successfully! Your verdict has been recorded.
           </AlertDescription>
         </Alert>
       )}
@@ -211,8 +284,7 @@ export function EvidenceAssessmentForm({
 
       {/* Info note */}
       <p className="text-xs text-muted-foreground text-center">
-        Your assessment will be visible to all users and will contribute to the
-        overall quality score calculation.
+        Your assessment contributes to the Community Sentiment. Only Evidence Analysts can submit assessments.
       </p>
     </form>
   );
