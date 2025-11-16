@@ -87,8 +87,8 @@ Launch ISO Tracker MVP as the world's first evidence-based analysis platform for
 - [ ] Create OG image for social sharing (1200x630)
 - [ ] Create favicon.ico (32x32)
 - [ ] Verify manifest.json icons are valid
-- [ ] Update main landing page content (currently shows Phase 0 text)
-- [ ] Create /3i-atlas landing page (for viral campaign)
+- [x] Update main landing page content (marketing hero, pricing, features)
+- [x] Create /3i-atlas landing page (for viral campaign)
 
 ### Phase 6.5: PRD Alignment Fixes (Code Updates)
 - [ ] Deploy migrations 013 & 014 to production: `supabase db push`
@@ -239,12 +239,12 @@ Launch ISO Tracker MVP as the world's first evidence-based analysis platform for
 **Mission Status**: Sprint 6 IN PROGRESS - Infrastructure Complete, QA & Content Remaining
 
 **Next Actions**:
-1. Update main landing page content
-2. Create /3i-atlas viral landing page
-3. Generate actual app icons (replace placeholders)
-4. Deploy database migrations
-5. Build Community Sentiment visualization (P0)
-6. Run full QA test suite
+1. Generate actual app icons (replace ASCII placeholders with real PNGs)
+2. Create OG image for social sharing
+3. Deploy database migrations 013 & 014 to production
+4. Build Community Sentiment visualization (P0)
+5. Update EvidenceAssessmentForm for new schema
+6. Run full QA test suite (Lighthouse, PWA install, email notifications)
 
 ---
 

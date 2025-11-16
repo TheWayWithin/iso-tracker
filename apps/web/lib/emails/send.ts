@@ -4,7 +4,18 @@ import { ReplyNotification } from './templates/ReplyNotification';
 import { EvidenceNotification } from './templates/EvidenceNotification';
 import { ObservationWindowAlert } from './templates/ObservationWindowAlert';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy-load Resend client to avoid build-time initialization errors
+let resendClient: Resend | null = null;
+
+function getResendClient(): Resend {
+  if (!resendClient) {
+    if (!process.env.RESEND_API_KEY) {
+      throw new Error('RESEND_API_KEY environment variable is not set');
+    }
+    resendClient = new Resend(process.env.RESEND_API_KEY);
+  }
+  return resendClient;
+}
 
 interface SendEmailResult {
   success: boolean;
@@ -36,7 +47,7 @@ export async function sendReplyNotification(params: {
       })
     );
 
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResendClient().emails.send({
       from: 'ISO Tracker <notifications@isotracker.app>',
       to: params.to,
       subject: `${params.replierName} replied to your comment on ${params.isoName}`,
@@ -84,7 +95,7 @@ export async function sendEvidenceNotification(params: {
       })
     );
 
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResendClient().emails.send({
       from: 'ISO Tracker <notifications@isotracker.app>',
       to: params.to,
       subject: `New ${params.evidenceType} evidence submitted for ${params.isoName}`,
@@ -137,7 +148,7 @@ export async function sendObservationWindowAlert(params: {
       ? `⚠️ Observation window starts tomorrow for ${params.isoName}`
       : `Observation window in ${params.daysUntilWindow} days for ${params.isoName}`;
 
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResendClient().emails.send({
       from: 'ISO Tracker <alerts@isotracker.app>',
       to: params.to,
       subject,
