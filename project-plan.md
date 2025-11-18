@@ -1,9 +1,9 @@
 # ISO Tracker MVP - Project Implementation Plan
 
-**Mission**: ISO Tracker MVP Development - Evidence-Based Analysis Platform
+**Mission**: ISO Tracker Development - Evidence-Based Analysis Platform
 **Commander**: coordinator
 **Started**: 2025-11-09
-**Status**: ✅ COMPLETE - Sprint 6 DONE (Production Live & QA Passed)
+**Status**: 🟢 Active - Sprint 7 PLANNED (Orbital Visualization)
 **Last Updated**: 2025-11-17
 
 ---
@@ -162,6 +162,225 @@ Launch ISO Tracker MVP as the world's first evidence-based analysis platform for
 
 ---
 
+## 🎯 SPRINT 7: Orbital Visualization & NASA API Integration
+
+**PRD References**: Section 4.2 (Data Integration), 3.2 (User Experience)
+**Status**: 📋 PLANNED
+**Dependencies**: Sprint 6 complete ✅
+**Estimated Time**: 6-8 hours (hybrid approach)
+
+**Mission Objective**:
+Transform ISO Tracker from static data platform to dynamic tracking system by integrating NASA Horizons API and visualizing interstellar object trajectories in real-time.
+
+**Current Gap**:
+- ✅ Users can see ISO metadata (name, designation, discovery date)
+- ✅ Users can submit evidence assessments
+- ✅ Users can view Community Sentiment
+- ❌ **No orbital visualization** - the "tracker" in "ISO Tracker" doesn't track yet
+- ❌ **No NASA API integration** - data is static seed data
+- ❌ **No ephemeris data** - position, velocity, observation windows
+
+**What This Enables**:
+- Visual understanding of object trajectories (hyperbolic paths for interstellar objects)
+- Observation window planning (when objects are visible from Earth)
+- Scientific data for evidence analysis (distance, magnitude, phase angle)
+- Compelling visual engagement (differentiate from text-only platforms)
+
+### Phase 7.1: NASA Horizons API Integration ⏳
+**Goal**: Fetch real ephemeris data from JPL Horizons system
+
+- [ ] Research NASA Horizons API endpoints
+  - [ ] Identify correct API for ephemeris queries
+  - [ ] Understand query parameters (object ID, date range, observer location)
+  - [ ] Review rate limits and caching requirements
+- [ ] Create Horizons API client (`lib/nasa/horizons-api.ts`)
+  - [ ] Function: `fetchEphemeris(objectId, startDate, endDate)`
+  - [ ] Function: `fetchOrbitalElements(objectId)`
+  - [ ] Error handling for API failures
+  - [ ] Type definitions for ephemeris data
+- [ ] Set up data caching strategy
+  - [ ] Cache ephemeris data in database (new table: `ephemeris_cache`)
+  - [ ] TTL: 7 days (orbital data changes slowly)
+  - [ ] Background refresh job (optional for Sprint 7)
+- [ ] Create API routes
+  - [ ] `GET /api/iso/[id]/ephemeris` - returns cached/fresh ephemeris data
+  - [ ] `GET /api/iso/[id]/orbital-elements` - returns orbital parameters
+- [ ] Test with 1I/'Oumuamua, 2I/Borisov, 3I/ATLAS
+
+**Success Criteria**:
+- [ ] Successfully fetch ephemeris data from NASA Horizons
+- [ ] Data cached in database with timestamps
+- [ ] API routes return JSON data for visualization
+
+### Phase 7.2: Ephemeris Data Table ⏳
+**Goal**: Display observation data in table format
+
+- [ ] Create `EphemerisTable` component (`components/visualization/EphemerisTable.tsx`)
+  - [ ] Columns: Date/Time, RA, Dec, Distance (AU), Magnitude, Phase Angle
+  - [ ] Sortable columns
+  - [ ] Responsive design (horizontal scroll on mobile)
+  - [ ] Date range selector (default: ±30 days from now)
+- [ ] Integrate into ISO detail page
+  - [ ] Add below NASA Horizons Data section
+  - [ ] Loading state while fetching
+  - [ ] Error state if API fails
+- [ ] Add explanatory tooltips
+  - [ ] RA/Dec: celestial coordinates
+  - [ ] AU: Astronomical Units (distance)
+  - [ ] Magnitude: brightness (lower = brighter)
+  - [ ] Phase Angle: Sun-Object-Earth angle
+
+**Success Criteria**:
+- [ ] Table displays real NASA data
+- [ ] Users can understand observation windows
+- [ ] Data updates based on date range selection
+
+### Phase 7.3: 2D Orbital Visualization ⏳
+**Goal**: Interactive top-down view of solar system with object trajectory
+
+**Technology Stack**:
+- **Visualization**: D3.js or React-based charting library
+- **Alternative**: Canvas API for performance
+- **Fallback**: SVG for simplicity
+
+**Implementation**:
+- [ ] Create `OrbitalPlot2D` component (`components/visualization/OrbitalPlot2D.tsx`)
+  - [ ] Render Sun at center
+  - [ ] Plot planetary orbits (Mercury through Jupiter for scale)
+  - [ ] Draw object's hyperbolic trajectory
+  - [ ] Mark current position with animated dot
+  - [ ] Show Earth's position
+  - [ ] Distance scale indicators
+- [ ] Interactive features
+  - [ ] Zoom controls (+/-)
+  - [ ] Pan with mouse drag
+  - [ ] Hover tooltips (show date, distance at any point on trajectory)
+  - [ ] Time scrubbing (slider to show position at different dates)
+- [ ] Visual design
+  - [ ] Color code: Planets (gray), Object trajectory (gold), Current position (blue)
+  - [ ] Background: dark space theme matching brand
+  - [ ] Responsive: full width on desktop, scrollable on mobile
+- [ ] Integrate into ISO detail page
+  - [ ] Replace "NASA API Integration Coming Soon" placeholder
+  - [ ] Add Geocentric/Heliocentric view toggle
+  - [ ] Loading skeleton while data fetches
+
+**Success Criteria**:
+- [ ] Visual shows object's path through solar system
+- [ ] Users can see hyperbolic trajectory (proof of interstellar origin)
+- [ ] Interactive controls work smoothly
+- [ ] Responsive on mobile devices
+
+### Phase 7.4: Data Pipeline & Performance ⏳
+**Goal**: Efficient data loading and caching
+
+- [ ] Create database migration for ephemeris cache
+  ```sql
+  CREATE TABLE ephemeris_cache (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    iso_object_id UUID REFERENCES iso_objects(id),
+    date TIMESTAMPTZ NOT NULL,
+    ra NUMERIC(10,6),
+    dec NUMERIC(10,6),
+    distance_au NUMERIC(10,6),
+    magnitude NUMERIC(5,2),
+    phase_angle NUMERIC(6,2),
+    cached_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(iso_object_id, date)
+  );
+  ```
+- [ ] Implement cache-first data fetching
+  - [ ] Check database cache first
+  - [ ] If cache miss or stale (>7 days), fetch from NASA API
+  - [ ] Store new data in cache
+  - [ ] Return to client
+- [ ] Optimize API responses
+  - [ ] Limit ephemeris data to requested date range
+  - [ ] Compress large responses
+  - [ ] Add pagination for long date ranges
+- [ ] Add loading states
+  - [ ] Skeleton loader for visualization
+  - [ ] Progress indicator for API calls
+  - [ ] Error boundaries for graceful failures
+
+**Success Criteria**:
+- [ ] Page loads in <3 seconds with cached data
+- [ ] First API call completes in <5 seconds
+- [ ] Subsequent views load instantly from cache
+- [ ] No UI blocking during data fetch
+
+### Phase 7.5: UI/UX Polish ⏳
+**Goal**: Professional, informative presentation
+
+- [ ] Update ISO detail page layout
+  - [ ] Move visualization above Community Sentiment (primary content)
+  - [ ] Add tab navigation: Overview | Orbital Data | Evidence | Community
+  - [ ] Improve visual hierarchy
+- [ ] Add educational content
+  - [ ] "What is a hyperbolic orbit?" tooltip
+  - [ ] "How to read this chart" guide
+  - [ ] Link to NASA JPL Horizons documentation
+- [ ] Mobile optimization
+  - [ ] Test visualization on iPhone/Android
+  - [ ] Ensure touch controls work (pinch zoom, pan)
+  - [ ] Responsive table with horizontal scroll
+- [ ] Accessibility
+  - [ ] Alt text for visualization
+  - [ ] Keyboard navigation for controls
+  - [ ] Screen reader support for data table
+
+**Success Criteria**:
+- [ ] Visualization is primary focus of detail page
+- [ ] Users understand what they're seeing
+- [ ] Works smoothly on mobile devices
+- [ ] Accessible to users with disabilities
+
+### Phase 7.6: Testing & QA ⏳
+**Goal**: Validate all features work correctly
+
+- [ ] Unit tests
+  - [ ] NASA API client functions
+  - [ ] Ephemeris data parsing
+  - [ ] Cache hit/miss logic
+- [ ] Integration tests
+  - [ ] API routes return valid data
+  - [ ] Database caching works
+  - [ ] UI components render with real data
+- [ ] Manual testing
+  - [ ] Test with all 3 ISOs (1I, 2I, 3I)
+  - [ ] Verify orbital paths look correct
+  - [ ] Test date range changes
+  - [ ] Test zoom/pan controls
+  - [ ] Test on mobile devices
+- [ ] Performance testing
+  - [ ] Measure initial load time
+  - [ ] Measure cache performance
+  - [ ] Check memory usage with large datasets
+
+**Success Criteria**:
+- [ ] All automated tests pass
+- [ ] Manual QA checklist complete
+- [ ] No critical bugs
+- [ ] Performance within targets (<3s load)
+
+**Success Criteria (Overall Sprint 7)**:
+- [ ] NASA Horizons API integration working
+- [ ] Ephemeris data table displaying real observations
+- [ ] 2D orbital visualization showing trajectories
+- [ ] Data cached efficiently for performance
+- [ ] Mobile-responsive and accessible
+- [ ] Users can visually track interstellar objects
+
+**Post-Sprint 7 Enhancements** (Future):
+- 3D visualization with Three.js
+- Animated time-lapse of object movement
+- Observation planning tool (best viewing dates)
+- Export ephemeris data to CSV
+- Compare multiple objects on same chart
+- Integration with telescope control systems
+
+---
+
 ## 📦 COMPLETED SPRINTS (Archived)
 
 | Sprint | Focus | Files | Lines | Time | Key Achievement |
@@ -266,25 +485,35 @@ Launch ISO Tracker MVP as the world's first evidence-based analysis platform for
 
 ---
 
-**Mission Status**: ✅ SPRINT 6 COMPLETE - MVP LIVE IN PRODUCTION
+**Mission Status**: 🟢 SPRINT 7 PLANNED - Orbital Visualization & NASA API Integration
 
 **Deployment URL**: https://www.isotracker.org
 
-**What Was Accomplished**:
+**Sprint 6 Accomplishments** (MVP Complete):
 - ✅ Database migrations deployed and tested
 - ✅ PRD-aligned Evidence Assessment UI implemented
-- ✅ Community Sentiment feature built and working
+- ✅ Community Sentiment feature built and working (P0 core differentiator)
 - ✅ All core user flows tested and verified
 - ✅ Production issues identified and fixed (6 critical bugs resolved)
 - ✅ PWA icons generated and deployed
 
-**Post-Launch Tasks** (deferred to operational phase):
+**Sprint 7 Focus** (Next Phase):
+🎯 **Primary Goal**: Add orbital visualization to fulfill the "tracking" promise of ISO Tracker
+- NASA Horizons API integration for real ephemeris data
+- 2D orbital plot showing hyperbolic trajectories
+- Ephemeris data table (RA, Dec, distance, magnitude)
+- Cache strategy for performance
+- Mobile-responsive visualization
+- **Estimated Time**: 6-8 hours
+
+**Post-Sprint 7 Tasks** (deferred):
 1. Lighthouse performance optimization
 2. PWA install testing on mobile devices
 3. Email notification production testing
 4. Admin moderation workflow testing
 5. Marketing content and social media setup
 6. 3I/ATLAS observation window campaign planning
+7. Stripe payment integration (subscription upgrades)
 
 ---
 
