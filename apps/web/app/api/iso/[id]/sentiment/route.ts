@@ -22,7 +22,7 @@ export async function GET(
     const { data: evidenceList, error: evidenceError } = await supabase
       .from('evidence')
       .select('id')
-      .eq('iso_id', iso_id)
+      .eq('iso_object_id', iso_id)
       .is('deleted_at', null);
 
     if (evidenceError) {
