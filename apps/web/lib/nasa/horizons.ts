@@ -3,11 +3,15 @@
  * Fetches orbital data for interstellar objects
  */
 
+import { createClient } from '@/lib/supabase/server'
+
 export interface ISOData {
-  object_id: string
+  id: string
+  nasa_id: string
   name: string
   designation: string
   discovery_date: string
+  object_type: string
   // Will be populated from NASA API in future
   orbital_data?: any
 }
@@ -16,40 +20,44 @@ export interface ISOData {
  * Fetch ISO objects from database
  */
 export async function getISOObjects() {
-  // This will be implemented with actual Supabase calls
-  // For now, return mock data to get pages working
-  return [
-    {
-      id: '1',
-      nasa_id: '1I',
-      name: "1I/'Oumuamua",
-      designation: 'A/2017 U1',
-      discovery_date: '2017-10-19',
-      object_type: 'interstellar'
-    },
-    {
-      id: '2',
-      nasa_id: '2I',
-      name: '2I/Borisov',
-      designation: 'C/2019 Q4',
-      discovery_date: '2019-08-30',
-      object_type: 'interstellar'
-    },
-    {
-      id: '3',
-      nasa_id: '3I',
-      name: '3I/ATLAS',
-      designation: 'A/2025 O1',
-      discovery_date: '2025-07-01',
-      object_type: 'interstellar'
-    }
-  ]
+  const supabase = await createClient()
+
+  const { data: objects, error } = await supabase
+    .from('iso_objects')
+    .select('id, nasa_id, name, designation, discovery_date, object_type')
+    .order('discovery_date', { ascending: false })
+
+  if (error) {
+    console.error('Failed to fetch ISO objects:', error)
+    return []
+  }
+
+  return objects || []
 }
 
 /**
- * Fetch single ISO by ID
+ * Fetch single ISO by ID (supports both UUID and numeric lookup)
  */
 export async function getISOById(id: string) {
-  const objects = await getISOObjects()
-  return objects.find(obj => obj.id === id)
+  const supabase = await createClient()
+
+  // Try UUID lookup first
+  const { data: object, error } = await supabase
+    .from('iso_objects')
+    .select('id, nasa_id, name, designation, discovery_date, object_type')
+    .eq('id', id)
+    .single()
+
+  if (object) {
+    return object
+  }
+
+  // If UUID lookup failed, try numeric lookup by nasa_id (for backward compatibility)
+  const { data: objectByNasa, error: nasaError } = await supabase
+    .from('iso_objects')
+    .select('id, nasa_id, name, designation, discovery_date, object_type')
+    .eq('nasa_id', `${id}I`)
+    .single()
+
+  return objectByNasa || null
 }
