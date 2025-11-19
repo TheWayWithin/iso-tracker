@@ -1,340 +1,356 @@
-# Phase 4.3 - Email Notifications Implementation REQUIRED
+# Sprint 7: Orbital Visualization & NASA API Integration
 
-**Status**: 🔴 NOT STARTED (Previous session documentation was incorrect)
-**Date**: 2025-01-12
-**Critical Issue**: System crash in previous session caused documentation to be written but actual implementation files were NEVER created
-
----
-
-## Current Actual State (Verified)
-
-### ✅ What Actually Exists:
-
-1. **Documentation Only**:
-   - `/docs/deployment/vercel-cron-setup.md` ✅
-   - `/docs/testing/phase-4-3-testing.md` ✅
-   - `/docs/testing/phase-4-3-testing-summary.md` ✅
-   - `vercel.json` ✅ (pushed to GitHub in commit 5085277)
-
-2. **Sprint 3 Files** (Evidence Framework - unrelated to Phase 4.3):
-   - Evidence API routes in `app/api/evidence/` ✅
-   - Evidence components in `components/evidence/` ✅
-   - Validation utilities in `lib/validation.ts` ✅
-
-### ❌ What Does NOT Exist (MUST BE CREATED):
-
-**All Phase 4.3 implementation files are missing:**
-
-1. **Database Migration**:
-   - `database/migrations/007_email_notifications.sql` ❌
-
-2. **Email System** (`apps/web/lib/emails/`):
-   - `send.ts` - Resend client wrapper ❌
-   - `components/EmailLayout.tsx` - Shared email layout ❌
-   - `templates/ReplyNotification.tsx` ❌
-   - `templates/EvidenceNotification.tsx` ❌
-   - `templates/ObservationWindowAlert.tsx` ❌
-
-3. **Notification Logic** (`apps/web/lib/notifications/`):
-   - `helpers.ts` - Rate limiting, tier validation, JWT ❌
-
-4. **API Routes** (`apps/web/app/api/`):
-   - `notifications/preferences/route.ts` (GET/POST) ❌
-   - `notifications/unsubscribe/route.ts` (GET) ❌
-   - `cron/observation-windows/route.ts` (GET) ❌
-   - `comments/route.ts` (POST with reply notifications) ❌
-
-5. **UI Components**:
-   - `apps/web/components/isos/FollowButton.tsx` ❌
-   - `apps/web/app/settings/notifications/page.tsx` ❌
-
-6. **Modifications Needed**:
-   - Modify `apps/web/app/iso/[id]/page.tsx` to add Follow button
-   - Modify navigation to add Notifications link
+**Mission**: Transform ISO Tracker from static data platform to dynamic tracking system
+**Status**: 🔵 READY TO START
+**Date**: 2025-11-17
+**Estimated Time**: 6-8 hours total
 
 ---
 
-## Implementation Requirements
+## Context: Where We Are
 
-### Phase 4.3.1: Database + Resend Setup (2h estimate)
+### ✅ Sprint 6 Complete (MVP Live at https://www.isotracker.org)
+- Database migrations deployed (013 & 014)
+- Community Sentiment visualization working
+- Evidence Assessment framework functional
+- Authentication and user flows tested
+- PWA icons deployed and displaying
+- 36 QA tests passed, 0 failures
 
-**Migration Schema** (`007_email_notifications.sql`):
+### ❌ Current Gap: No Orbital Visualization
+**The "tracker" in "ISO Tracker" doesn't track yet!**
 
-```sql
--- 3 new tables needed:
-1. notification_preferences (user settings for 3 notification types)
-2. notification_log (sent email tracking, 90-day retention)
-3. iso_follows (user-ISO follow relationships)
+Users can see:
+- ✅ ISO metadata (name, designation, discovery date)
+- ✅ Evidence assessments and Community Sentiment
+- ✅ NASA Horizons Data section (placeholder)
 
--- Add to iso_objects table:
-- observation_window_start TIMESTAMPTZ
-- observation_window_end TIMESTAMPTZ
-- visibility_notes TEXT
+Users CANNOT see:
+- ❌ Orbital trajectories (hyperbolic paths proving interstellar origin)
+- ❌ Real ephemeris data from NASA API
+- ❌ Position/velocity/observation windows
+- ❌ Visual representation of object movement
 
--- RLS policies with tier validation
--- Rate limiting function: get_user_daily_email_count()
+---
+
+## Sprint 7 Goal
+
+**Add orbital visualization to make ISO Tracker truly track interstellar objects.**
+
+This includes:
+1. NASA Horizons API integration for real ephemeris data
+2. Ephemeris data table (RA, Dec, distance, magnitude)
+3. 2D orbital plot showing hyperbolic trajectories
+4. Database caching for performance
+5. Mobile-responsive visualization
+6. Educational tooltips for non-astronomers
+
+---
+
+## Implementation Plan
+
+### Phase 7.1: NASA Horizons API Integration (2 hours)
+**Objective**: Fetch real ephemeris data from JPL Horizons system
+
+**Tasks**:
+1. Create API client: `apps/web/lib/nasa/horizons-api.ts`
+   - Function: `fetchEphemeris(objectId, startDate, endDate, stepSize?)`
+   - Function: `fetchOrbitalElements(objectId)`
+   - Error handling with graceful fallback
+
+2. Database migration: `supabase/migrations/015_ephemeris_cache.sql`
+   - Table: `ephemeris_cache` with columns for RA, Dec, distance, magnitude, phase angle
+   - Index on (iso_object_id, observation_date)
+   - Cache TTL: 7 days
+
+3. API route: `apps/web/app/api/iso/[id]/ephemeris/route.ts`
+   - Check cache first (7-day TTL)
+   - Fetch from NASA if cache miss/stale
+   - Store in database
+   - Return JSON for visualization
+
+**Success Criteria**:
+- [ ] NASA API client fetches data for 1I/'Oumuamua
+- [ ] Data cached in database with indexes
+- [ ] API route returns ephemeris JSON
+
+---
+
+### Phase 7.2: Ephemeris Data Table (1 hour)
+**Objective**: Display observation data in user-friendly table
+
+**Tasks**:
+1. Create component: `apps/web/components/visualization/EphemerisTable.tsx`
+   - Columns: Date/Time, RA, Dec, Distance (AU), Magnitude, Phase Angle
+   - Sortable columns
+   - Date range selector (default: ±30 days)
+   - Responsive: horizontal scroll on mobile
+
+2. Add educational tooltips:
+   - RA/Dec: "Celestial coordinates (like lat/lon in space)"
+   - AU: "Astronomical Units (Earth-Sun distance)"
+   - Magnitude: "Brightness (lower = brighter)"
+   - Phase Angle: "Sun-Object-Earth angle"
+
+3. Integrate into ISO detail page
+   - Replace "NASA API Integration Coming Soon" placeholder
+   - Add to "NASA Horizons Data" section
+
+**Success Criteria**:
+- [ ] Table displays real NASA data
+- [ ] Date range changes update data
+- [ ] Tooltips explain astronomy terms
+- [ ] Mobile-responsive
+
+---
+
+### Phase 7.3: 2D Orbital Visualization (2-3 hours)
+**Objective**: Interactive solar system plot showing hyperbolic trajectory
+
+**Technology**: Canvas API for performance + full control
+
+**Tasks**:
+1. Create component: `apps/web/components/visualization/OrbitalPlot2D.tsx`
+   - Canvas layers: Background grid → Planetary orbits → Object trajectory → Current positions → Labels
+   - Sun at center (0,0) in heliocentric view
+   - Planets as reference points (Mercury through Jupiter)
+   - Object's hyperbolic trajectory (golden curve)
+   - Current position (animated pulsing dot)
+
+2. Interactive features:
+   - Zoom: Mouse wheel or +/- buttons (0.5x to 5x scale)
+   - Pan: Click-drag to move view
+   - Hover: Tooltip with date/distance on trajectory
+   - Time scrubbing: Slider to show object at any date
+   - Reset button to default view
+
+3. Visual design:
+   - Background: Cosmic blue (#0A1628)
+   - Sun: Yellow (#FFD700)
+   - Planets: Gray circles (#9CA3AF)
+   - Object trajectory: Golden (#FFB84D, 2px line)
+   - Current position: Blue pulsing dot (#2E5BFF)
+   - Grid lines: Subtle gray (#374151, opacity 0.2)
+
+4. Responsive design:
+   - Desktop: Max 800px width
+   - Mobile: Full width with touch controls (pinch zoom, drag pan)
+
+**Success Criteria**:
+- [ ] Visualization shows Sun, planets, object trajectory
+- [ ] Hyperbolic path clearly visible
+- [ ] Interactive controls work smoothly
+- [ ] 60 FPS on desktop, 30+ FPS on mobile
+- [ ] Touch controls work on iPad/iPhone
+
+---
+
+### Phase 7.4: Data Pipeline & Performance (0.5 hours)
+**Objective**: Optimize data loading and caching
+
+**Tasks**:
+1. Cache strategy:
+   - Check database cache first
+   - If cache hit AND < 7 days old: return cached
+   - If cache miss OR stale: fetch from NASA
+   - Store new data with `cached_at = NOW()`
+
+2. Performance optimizations:
+   - Limit ephemeris queries to 90 days max
+   - React.memo for visualization component
+   - Debounce date range changes (500ms)
+   - Lazy load visualization (render when scrolled to)
+
+3. Loading states:
+   - Skeleton loader for table
+   - Canvas placeholder for visualization
+   - Progress bar if NASA API > 2 seconds
+   - Error boundary with retry button
+
+**Success Criteria**:
+- [ ] First load: < 5 seconds
+- [ ] Cached loads: < 1 second
+- [ ] No UI blocking during fetch
+- [ ] Graceful error handling
+
+---
+
+### Phase 7.5: UI/UX Polish (0.5 hours)
+**Objective**: Professional presentation and usability
+
+**Tasks**:
+1. Page layout update:
+   - Move "NASA Horizons Data" section to top
+   - Tab navigation: Overview | Orbital Data | Evidence | Community
+   - Visualization as primary content
+
+2. Educational content:
+   - Info icon next to "Hyperbolic Trajectory"
+   - Tooltip explaining hyperbolic orbit = proof of interstellar origin
+   - Link to NASA JPL Horizons documentation
+   - "How to read this chart" expandable section
+
+3. Mobile optimization:
+   - Test on iPhone Safari and Android Chrome
+   - Pinch-zoom works on visualization
+   - Table scrolls horizontally without breaking layout
+   - Touch-friendly controls (44px minimum tap targets)
+
+4. Accessibility:
+   - Alt text for visualization
+   - Keyboard navigation for zoom controls
+   - ARIA labels for interactive elements
+   - Screen reader announcement when loaded
+   - High contrast mode support
+
+**Success Criteria**:
+- [ ] Visualization visually prominent
+- [ ] Non-technical users understand what they're seeing
+- [ ] Works smoothly on mobile devices
+- [ ] Passes WCAG 2.1 AA standards
+
+---
+
+### Phase 7.6: Testing & QA (1 hour)
+**Objective**: Validate all features work correctly
+
+**Tasks**:
+1. Manual testing checklist:
+   - [ ] 1I/'Oumuamua: Hyperbolic trajectory visible
+   - [ ] 2I/Borisov: Data loads correctly
+   - [ ] 3I/ATLAS: Future predictions work
+   - [ ] Date range change updates table/visualization
+   - [ ] Zoom in/out smooth without artifacts
+   - [ ] Pan dragging works correctly
+   - [ ] Time scrubbing slider updates position
+   - [ ] Tooltip shows date/distance on hover
+   - [ ] Mobile pinch zoom and drag work
+   - [ ] Error handling displays friendly message
+
+2. Performance testing:
+   - Measure time to first render: < 3 seconds
+   - Cache vs non-cache load time comparison
+   - Memory usage < 50MB for visualization
+   - Test with Fast 3G network simulation
+
+3. Cross-browser testing:
+   - [ ] Chrome (desktop and mobile)
+   - [ ] Safari (desktop and iOS)
+   - [ ] Firefox (desktop)
+   - [ ] Edge (desktop)
+
+**Success Criteria**:
+- [ ] Manual QA checklist 100% complete
+- [ ] No critical bugs or regressions
+- [ ] Performance within targets
+
+---
+
+## Files to Create
+
+**New Files** (7 total):
+1. `apps/web/lib/nasa/horizons-api.ts` - NASA API client
+2. `apps/web/lib/nasa/coordinates.ts` - Coordinate transformations
+3. `apps/web/components/visualization/EphemerisTable.tsx` - Data table
+4. `apps/web/components/visualization/OrbitalPlot2D.tsx` - 2D canvas viz
+5. `apps/web/app/api/iso/[id]/ephemeris/route.ts` - Ephemeris API
+6. `supabase/migrations/015_ephemeris_cache.sql` - Database schema
+7. `apps/web/lib/nasa/horizons-api.test.ts` - Unit tests (optional)
+
+**Modified Files** (2 total):
+1. `apps/web/app/iso-objects/[id]/page.tsx` - Integrate visualization
+2. `apps/web/lib/nasa/horizons.ts` - Update to use real API (already uses real data)
+
+---
+
+## Critical Warnings
+
+### 🚨 Security-First Development (CRITICAL)
+Per CLAUDE.md Critical Software Development Principles:
+- ✅ **NEVER compromise security for convenience**
+- ✅ **Root cause analysis before fixes**
+- ✅ **Understand design intent before changing**
+- ✅ **Maintain all security requirements**
+
+### 🚨 NASA API Specifics
+**Object IDs for Horizons API**:
+- 1I/'Oumuamua: COMMAND='A2017 U1' or DES=2017001
+- 2I/Borisov: COMMAND='C2019 Q4' or DES=2019002
+- 3I/ATLAS: COMMAND='A2025 O1' or DES=2025001
+
+**API Endpoint**:
+```
+https://ssd.jpl.nasa.gov/api/horizons.api?
+  format=text&
+  COMMAND='A2017 U1'&
+  MAKE_EPHEM='YES'&
+  EPHEM_TYPE='OBSERVER'&
+  CENTER='500@10'&  (Sun)
+  START_TIME='2025-11-01'&
+  STOP_TIME='2025-12-01'&
+  STEP_SIZE='1d'&
+  QUANTITIES='1,9,20,23,24'
 ```
 
-**Environment Variables Needed**:
-```bash
-RESEND_API_KEY=<from Resend account>
-JWT_SECRET=<64-byte hex for unsubscribe tokens>
-CRON_SECRET=<32-byte hex for cron authentication>
-NEXT_PUBLIC_APP_URL=http://localhost:3003
+### 🚨 Database Architecture Rule
+Per CLAUDE.md Database Architecture Principles:
+- ❌ **NEVER create triggers on `auth.users` table**
+- ✅ **Always handle auth-related records in application layer**
+- ✅ **User records created in application code, not triggers**
+
+### 🚨 File Persistence Verification
+Per CLAUDE.md File Persistence Bug Protocol:
+- ⚠️ **NEVER mark task [x] without filesystem verification**
+- ⚠️ **After creating files, verify with `ls -lh /path/to/file`**
+- ⚠️ **Document verification timestamp in progress.md**
+
+---
+
+## Communication Protocol for Jamie (ADHD-Friendly)
+
+**MANDATORY for all agents working on Sprint 7:**
+
+### Structure Every Response:
+1. **Brief Context** (1-2 sentences): What we're doing and why it matters
+2. **Exact Instructions**: Start from current state, numbered steps with specific actions
+3. **Closure After Each Step**: Ask "Have you completed this step?" and wait for confirmation
+
+### Example of GOOD Communication:
+```
+**Context**: We're creating the NASA API client. This fetches real orbital data for visualization.
+
+**Where you are now**: You have the project open in your terminal.
+
+**Steps**:
+1. Create the file: `touch apps/web/lib/nasa/horizons-api.ts`
+2. Open it in your editor
+3. Copy the code from the developer's response
+
+**Checkpoint**: Have you created the file? Ready to add the code?
 ```
 
-**Dependencies to Install**:
-```bash
-cd apps/web
-pnpm add resend @react-email/components jsonwebtoken
-pnpm add -D @types/jsonwebtoken
-```
+### Red Flags (Rewrite if you see these):
+- ❌ Starting without stating current location
+- ❌ Multiple paragraphs before instructions
+- ❌ Assuming steps done without confirmation
+- ❌ Technical jargon without plain-language explanation
+- ❌ 10+ steps without a check-in point
 
 ---
 
-### Phase 4.3.2: Email Templates (6h estimate)
+## Next Action
 
-**Required Components**:
+**Delegate to Developer**: Phase 7.1 - NASA Horizons API Integration
 
-1. **EmailLayout.tsx** - Shared wrapper with:
-   - ISO Tracker branding header
-   - Unsubscribe footer (JWT-secured link)
-   - Mobile-responsive design
+**What Developer Needs**:
+- Read this handoff-notes.md
+- Read agent-context.md
+- Follow Critical Software Development Principles
+- Create files for Phase 7.1
+- Update handoff-notes.md with findings for Phase 7.2
 
-2. **ReplyNotification.tsx**:
-   - Subject: "[User] replied to your comment on [ISO]"
-   - Shows: Original comment excerpt + reply + link
-
-3. **EvidenceNotification.tsx**:
-   - Subject: "New evidence submitted for [ISO]"
-   - Shows: Evidence type + submitter + link
-
-4. **ObservationWindowAlert.tsx**:
-   - Subject: "Observation window opening for [ISO]"
-   - Shows: Window dates + visibility notes + link
+**Success Signal**: Developer reports "Phase 7.1 complete" with verification that files exist and API works.
 
 ---
 
-### Phase 4.3.3: Core API (8h estimate)
-
-**Notification Helpers** (`lib/notifications/helpers.ts`):
-- `checkRateLimit(userId)` - Enforce 5 emails/24hr
-- `canEnableNotification(userId, type)` - Tier validation
-- `generateUnsubscribeToken(userId, type)` - JWT with 30-day expiry
-- `verifyUnsubscribeToken(token)` - JWT verification
-
-**API Endpoints**:
-1. `GET/POST /api/notifications/preferences` - Fetch/update settings
-2. `GET /api/notifications/unsubscribe?token=xxx` - One-click unsubscribe
-3. `GET /api/cron/observation-windows` - Daily cron (CRON_SECRET auth)
-
----
-
-### Phase 4.3.4: Notification Triggers (4h estimate)
-
-**New API Routes**:
-1. `POST /api/comments` - Comment submission + reply notification trigger
-2. `POST /api/evidence` - Evidence submission + follower notification trigger
-
-**Pattern**: Non-blocking Promise handling
-```typescript
-// Send notification without blocking user response
-if (shouldNotify) {
-  sendNotification(...).catch(error => {
-    console.error('Notification failed:', error);
-  });
-}
-
-return NextResponse.json({ success: true });
-```
-
----
-
-### Phase 4.3.5: UI Components (6h estimate)
-
-**FollowButton.tsx**:
-- Location: ISO detail page header
-- Tier-gated: Evidence Analyst only
-- Shows badge for non-EA users
-- Redirects to `/pricing` for paywall
-- Redirects to `/auth/signin` for logged-out users
-- Optimistic UI updates
-
-**NotificationsPage.tsx** (`/settings/notifications`):
-- 3 toggle switches (reply, evidence, observation)
-- Tier badges (Event Pass vs Evidence Analyst)
-- Upgrade CTA for non-EA users
-- WCAG 2.1 AA accessible
-- Loading states + error handling
-
----
-
-### Phase 4.3.6: Testing & Deployment (3h estimate)
-
-**Already Complete**:
-- ✅ `vercel.json` configuration (pushed to GitHub)
-- ✅ Vercel cron setup documentation
-- ✅ 29-test comprehensive testing checklist
-
-**Still Needed**:
-- Update project-plan.md with actual completion status
-- Update progress.md with deliverable entries
-- Manual QA testing (after implementation)
-
----
-
-## Critical Guardrails for Implementation
-
-### 1. File Existence Verification Protocol
-
-**MANDATORY**: After creating EVERY file, verify it exists:
-
-```bash
-# After creating a file, immediately verify:
-ls -la apps/web/lib/emails/send.ts
-# If "No such file or directory" → File was NOT created, try again
-```
-
-**Verification Checklist** (Run after each phase):
-- Phase 4.3.1: `ls -la database/migrations/007_*.sql`
-- Phase 4.3.2: `find apps/web/lib/emails -type f`
-- Phase 4.3.3: `ls -la apps/web/lib/notifications/helpers.ts && find apps/web/app/api/notifications -type f`
-- Phase 4.3.4: `ls -la apps/web/app/api/comments/route.ts apps/web/app/api/cron/observation-windows/route.ts`
-- Phase 4.3.5: `ls -la apps/web/components/isos/FollowButton.tsx apps/web/app/settings/notifications/page.tsx`
-
-### 2. Architecture Alignment
-
-**CRITICAL**: Follow existing architecture patterns:
-
-**Database Schema Alignment**:
-- Use existing table names: `iso_objects` (NOT `isos`), `subscriptions.tier` (NOT `profiles.tier`)
-- Reference: `/database/schema.sql` and migrations `002_*.sql`, `003_*.sql`, `004_*.sql`
-
-**API Pattern Alignment**:
-- Use Supabase client: `createClient()` from `@/lib/supabase/server`
-- RLS policies: Triple-layer validation (Database + API + UI)
-- Error handling: Return `NextResponse.json({ error })` with proper status codes
-
-**Component Pattern Alignment**:
-- Use existing components: `Button` from `@/components/ui/button`
-- Tailwind CSS: Follow existing utility class patterns
-- TypeScript: Strict mode, no `any` types
-
-### 3. Security-First Development
-
-**NEVER compromise security** (per CLAUDE.md Critical Software Development Principles):
-
-- ✅ RLS policies on ALL new tables
-- ✅ Tier validation at Database + API + UI layers (defense in depth)
-- ✅ JWT tokens for unsubscribe (no plain user IDs in URLs)
-- ✅ Rate limiting enforced at database level (5 emails/24hr/user)
-- ✅ CRON_SECRET authentication for cron endpoint
-- ✅ HTML sanitization for email content (prevent XSS)
-
-### 4. Tier Boundary Enforcement
-
-**Event Pass ($4.99/mo)**:
-- ✅ Reply notifications (can enable)
-- ❌ Evidence notifications (cannot enable - show upgrade CTA)
-- ❌ Observation window alerts (cannot enable - show upgrade CTA)
-- ❌ Follow ISOs (cannot follow - redirect to /pricing)
-
-**Evidence Analyst ($19/mo)**:
-- ✅ All notification types (can enable all 3)
-- ✅ Follow ISOs (unlimited follows)
-
-**Implementation**: Check `subscriptions.tier` in database, validate in API, disable in UI
-
-### 5. Progress Tracking Requirements
-
-**After EACH phase completion**:
-
-1. **Verify files exist** (use `ls` commands above)
-2. **Mark phase complete** in project-plan.md
-3. **Document deliverables** in progress.md
-4. **Update handoff-notes.md** with findings
-
-**NEVER mark a task [x] unless**:
-- Files exist at specified paths ✅
-- Files contain actual implementation (not empty) ✅
-- Basic syntax check passes (no TypeScript errors) ✅
-
-### 6. Testing Before Moving Forward
-
-**After Phase 4.3.4** (before UI):
-- Test API endpoints with curl/Postman
-- Verify database migrations deployed
-- Test Resend email sending (sandbox mode)
-
-**After Phase 4.3.5** (before declaring complete):
-- Run dev server: `pnpm dev`
-- Verify pages load without errors
-- Test Follow button (logged out, Event Pass, Evidence Analyst)
-- Test preferences page (all scenarios)
-
----
-
-## Success Criteria (Phase 4.3 Complete When)
-
-**File Verification** (ALL must exist):
-- [ ] `database/migrations/007_email_notifications.sql` exists
-- [ ] 5 files in `apps/web/lib/emails/` exist
-- [ ] `apps/web/lib/notifications/helpers.ts` exists
-- [ ] 4 files in `apps/web/app/api/` exist (notifications/*, cron/*, comments)
-- [ ] `apps/web/components/isos/FollowButton.tsx` exists
-- [ ] `apps/web/app/settings/notifications/page.tsx` exists
-
-**Functional Verification**:
-- [ ] Database migration deploys without errors
-- [ ] Dev server runs without TypeScript errors
-- [ ] Follow button appears on ISO detail pages
-- [ ] Preferences page accessible at `/settings/notifications`
-- [ ] Tier boundaries enforced (checked via UI inspection)
-
-**Documentation Verification**:
-- [ ] project-plan.md updated with actual completion status
-- [ ] progress.md has deliverable entries for all files created
-- [ ] handoff-notes.md updated with implementation findings
-
----
-
-## Next Steps After Phase 4.3 Complete
-
-1. **User Testing** (3-4 hours):
-   - Follow testing checklist: `/docs/testing/phase-4-3-testing.md`
-   - Send test emails to personal inbox
-   - Verify mobile email rendering
-
-2. **Production Deployment** (30 minutes):
-   - Deploy database migration to production Supabase
-   - Verify Resend domain authentication
-   - Monitor email delivery (Week 1)
-
-3. **Sprint 4 Continuation**:
-   - Phase 4.4: Community Guidelines & Moderation
-   - Phase 4.5: Testing & Polish
-
----
-
-## Reference Documentation
-
-**Architecture**:
-- `/docs/architecture/phase-4-3-decisions.md` - Phase 4.3 decisions (if exists)
-- `/architecture.md` - Overall system architecture
-- `/database/schema.sql` - Base database schema
-
-**Testing**:
-- `/docs/testing/phase-4-3-testing.md` - 29-test comprehensive checklist
-
-**Deployment**:
-- `/docs/deployment/vercel-cron-setup.md` - Vercel cron configuration guide
-
-**Foundation Documents**:
-- `/CLAUDE.md` - Critical Software Development Principles (MUST FOLLOW)
-- `/foundation/prds/Product-Requirements-Document.md` - PRD Section 4.3
-
----
-
-**Current State**: Ready for Phase 4.3 implementation to begin
-**Next Action**: Implement Phase 4.3.1 (Database + Resend Setup)
-**Estimated Total Time**: 29 hours (39h original estimate - 10h documentation already done)
+*Last Updated: 2025-11-17 by coordinator*

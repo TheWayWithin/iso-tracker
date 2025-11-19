@@ -1,19 +1,21 @@
 # Agent Context Document
 
 ## Mission Overview
-**Mission Code**: MVP-ISO-TRACKER-001
-**Started**: 2025-11-09
-**Current Phase**: Sprint 4 - Collaboration & Community Features
-**Overall Status**: IN_PROGRESS (Sprint 3 Complete, Sprint 4 Starting)
+**Mission Code**: SPRINT-7-ORBITAL-VIZ
+**Started**: 2025-11-17
+**Current Phase**: Sprint 7 - Orbital Visualization & NASA API Integration
+**Overall Status**: IN_PROGRESS (Sprint 6 Complete & MVP Live, Sprint 7 Starting)
 
 ## Mission Objectives
-Primary objectives from mission briefing:
-- [x] Create comprehensive implementation plan in project-plan.md ✅ COMPLETE
-- [ ] Define complete development environment setup (Dev, Staging, Production) - 🟡 PARTIALLY COMPLETE
-- [x] Plan GitHub repository structure and setup ✅ COMPLETE
-- [x] Establish phase-based implementation roadmap aligned with PRD ✅ COMPLETE
-- [x] Ensure strict adherence to foundation documents and PRD requirements ✅ COMPLETE
-- [x] Create comprehensive technical architecture documentation ✅ COMPLETE
+Primary objectives for Sprint 7:
+- [ ] Phase 7.1: NASA Horizons API Integration (2 hours)
+- [ ] Phase 7.2: Ephemeris Data Table Component (1 hour)
+- [ ] Phase 7.3: 2D Orbital Visualization (2-3 hours)
+- [ ] Phase 7.4: Data Pipeline & Performance Optimization (0.5 hours)
+- [ ] Phase 7.5: UI/UX Polish (0.5 hours)
+- [ ] Phase 7.6: Testing & QA (1 hour)
+- [ ] Deploy to production at https://www.isotracker.org
+- [ ] Verify users can visualize orbital trajectories of interstellar objects
 
 ## Critical Constraints
 Important limitations and requirements to maintain:
@@ -130,13 +132,14 @@ None yet
 - GitHub repository must exist before code development begins
 
 ## Next Steps Queue
-Priority-ordered tasks for Sprint 4:
-1. ✅ **COMPLETE**: Sprint 3 Evidence Framework Dashboard (PRIMARY DIFFERENTIATOR SHIPPED)
-2. 🔵 **STARTING NOW**: Sprint 4 Phase 4.1 - Voting System (database + RLS + API + UI)
-3. **Next**: Sprint 4 Phase 4.2 - Debate Threads (Evidence Analyst tier)
-4. **Next**: Sprint 4 Phase 4.3 - Email Notifications (replies, observation windows)
-5. **Next**: Sprint 4 Phase 4.4 - Community Guidelines & Moderation
-6. **Pending**: Sprint 4 Phase 4.5 - Testing & Polish
+Priority-ordered tasks for Sprint 7:
+1. 🔵 **CURRENT**: Phase 7.1 - NASA Horizons API Integration
+2. **Next**: Phase 7.2 - Ephemeris Data Table Component
+3. **Next**: Phase 7.3 - 2D Orbital Visualization (Canvas API)
+4. **Next**: Phase 7.4 - Data Pipeline & Performance
+5. **Next**: Phase 7.5 - UI/UX Polish
+6. **Next**: Phase 7.6 - Testing & QA
+7. **Final**: Deploy to production
 
 ## Risk Register
 | Risk | Probability | Impact | Mitigation |
