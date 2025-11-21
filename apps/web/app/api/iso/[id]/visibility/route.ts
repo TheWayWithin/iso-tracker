@@ -8,11 +8,11 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { fetchEphemeris } from '@/lib/nasa/horizons-api';
+import { createClient } from '@/lib/supabase/server';
+import { fetchEphemeris, getHorizonsId } from '@/lib/nasa/horizons-api';
 import { generateVisibilityForecast } from '@/lib/astronomy/visibility';
 import type { ObserverLocation } from '@/lib/astronomy/coordinates';
 
-export const runtime = 'edge';
 export const revalidate = 3600; // Cache for 1 hour
 
 interface VisibilityParams {
@@ -90,10 +90,35 @@ export async function GET(
     const endDate = new Date(startDate);
     endDate.setDate(endDate.getDate() + days);
 
+    // Look up ISO object in database to get NASA Horizons ID
+    const supabase = await createClient();
+    const { data: isoObject, error: isoError } = await supabase
+      .from('iso_objects')
+      .select('id, name, nasa_id')
+      .eq('id', id)
+      .single();
+
+    if (isoError || !isoObject) {
+      return NextResponse.json(
+        { error: 'ISO object not found' },
+        { status: 404 }
+      );
+    }
+
+    // Get NASA Horizons ID for this object
+    const horizonsId = getHorizonsId(isoObject.name) || isoObject.nasa_id;
+
+    if (!horizonsId) {
+      return NextResponse.json(
+        { error: 'NASA Horizons ID not available for this object' },
+        { status: 404 }
+      );
+    }
+
     // Fetch ephemeris data from Horizons API
     // Use hourly steps for detailed visibility calculations
     const ephemeris = await fetchEphemeris(
-      id,
+      horizonsId,
       startDate,
       endDate,
       '1h' // Hourly data for accurate rise/set times
