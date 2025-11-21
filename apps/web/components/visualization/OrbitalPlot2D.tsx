@@ -113,14 +113,14 @@ export function OrbitalPlot2D({ isoId, isoName }: OrbitalPlot2DProps) {
     // Draw planetary orbits
     PLANETS.forEach(planet => {
       const radius = planet.radius / scale;
-      ctx.strokeStyle = 'rgba(75, 85, 99, 0.6)'; // Darker gray, more visible (was rgba(156, 163, 175, 0.3))
+      ctx.strokeStyle = 'rgba(209, 213, 219, 0.5)'; // Light gray for visibility on dark background
       ctx.lineWidth = 1.5;
       ctx.beginPath();
       ctx.arc(centerX + pan.x, centerY + pan.y, radius, 0, Math.PI * 2);
       ctx.stroke();
 
       // Draw planet name
-      ctx.fillStyle = '#374151'; // Darker grey for better visibility (was #9CA3AF)
+      ctx.fillStyle = '#D1D5DB'; // Light grey for readability on dark background
       ctx.font = '500 11px sans-serif'; // Include font weight in font string
       ctx.fillText(planet.name, centerX + pan.x + radius - 30, centerY + pan.y);
     });
@@ -307,7 +307,7 @@ export function OrbitalPlot2D({ isoId, isoName }: OrbitalPlot2DProps) {
 
   return (
     <div className="bg-white rounded-lg p-6 border border-gray-200">
-      <h3 className="text-lg font-bold mb-4">2D Orbital Trajectory</h3>
+      <h3 className="text-lg font-bold text-gray-900 mb-4">2D Orbital Trajectory</h3>
 
       {/* Canvas */}
       <div className="mb-4 border border-gray-300 rounded overflow-hidden">
