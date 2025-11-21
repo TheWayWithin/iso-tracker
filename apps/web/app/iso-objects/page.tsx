@@ -9,8 +9,8 @@ export default async function ISOObjectsPage() {
       <div className="max-w-7xl mx-auto py-8 px-4">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Interstellar Objects</h1>
-          <p className="text-gray-600">
+          <h1 className="text-3xl font-bold mb-2 text-gray-900">Interstellar Objects</h1>
+          <p className="text-gray-900 font-medium">
             Tracking {isos.length} confirmed interstellar object{isos.length !== 1 ? 's' : ''}
           </p>
         </div>
@@ -35,12 +35,12 @@ export default async function ISOObjectsPage() {
 
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">NASA ID:</span>
-                  <span className="font-mono font-semibold">{iso.nasa_id}</span>
+                  <span className="text-gray-700 font-medium">NASA ID:</span>
+                  <span className="font-mono font-semibold text-gray-900">{iso.nasa_id}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Discovered:</span>
-                  <span className="font-semibold">
+                  <span className="text-gray-700 font-medium">Discovered:</span>
+                  <span className="font-semibold text-gray-900">
                     {new Date(iso.discovery_date).toLocaleDateString()}
                   </span>
                 </div>
