@@ -2,7 +2,96 @@
 
 **Mission**: MVP-ISO-TRACKER-001 - Comprehensive Implementation Planning
 **Started**: 2025-11-09
-**Last Updated**: 2025-11-20 (Sprint 8 Phase 8.6 Complete - Test Suite Design)
+**Last Updated**: 2025-11-21 (Text Contrast Fixes & Lost Feature Recovery)
+
+---
+
+## 📋 Latest Updates (2025-11-21)
+
+### [2025-11-21 11:00-11:30] Text Contrast & Orbital Visualization Fixes ✅
+
+**Mission**: Fix grey text visibility issues and recover lost moving planets feature
+
+#### Issue #1: Incomplete Commit Scope - Grey Text Still Visible in Production
+**Symptom**: User reported text contrast fixes made in dev weren't visible in production
+- "2D Orbital Trajectory" heading greyed out after canvas render
+- Planet names and orbits invisible on dark canvas
+- "Ephemeris Data" and "Community Sentiment" headings still grey
+
+**Root Cause Analysis**:
+- Previous commits (0a00d23, 3507e7f) fixed some components but missed others
+- Pattern from post-mortem: incomplete commit scope, not searching for ALL instances
+- Same issue as documented in `post-mortem-dev-prod-mismatch.md`
+
+**Fixes Applied**:
+
+**Fix #1: Canvas Font Syntax Error (commit c9cb105)**
+- **Error**: `Property 'fontWeight' does not exist on type 'CanvasRenderingContext2D'`
+- **Cause**: Tried to set `ctx.fontWeight = '500'` as separate property
+- **Solution**: Changed to `ctx.font = '500 11px sans-serif'` (font weight in font string)
+- **File**: `apps/web/components/visualization/OrbitalPlot2D.tsx:124`
+
+**Fix #2: Complete Text Contrast Fixes (commit 0a00d23)**
+- **Files Modified**:
+  - `OrbitalPlot2D.tsx`: Loading states, error messages → `text-gray-900` headings, `text-gray-700 font-medium` body
+  - `EphemerisTable.tsx`: Heading and date labels → `text-gray-900 font-medium`
+  - `CommunitySentiment.tsx`: Heading and subtitle → `text-gray-900` heading, `text-gray-700 font-medium` subtitle
+
+**Fix #3: Orbital Visualization Contrast (commit 3507e7f)**
+- **Issue**: Dark colors used on dark canvas background (backwards logic)
+- **Changes**:
+  - Heading: Added `text-gray-900` to prevent greying out
+  - Planet orbits: Dark `rgba(75, 85, 99, 0.6)` → LIGHT `rgba(209, 213, 219, 0.5)`
+  - Planet labels: Dark `#374151` → LIGHT `#D1D5DB`
+- **Rationale**: Canvas has dark background (#0A1628), requires light colors for visibility
+
+#### Issue #2: Lost Feature - Moving Planet Dots Missing in Production
+**Symptom**: User reported "planets are not visible and don't move" - saw colored dots in dev but not in production
+
+**Root Cause**: Moving planet feature was never committed to git
+- Same pattern as incomplete text fixes - work done in dev, never pushed
+- No git history of planet movement code
+- Feature completely lost between dev and production
+
+**Solution: Recreated Moving Planets Feature (commit 22f60c2)**
+- **Orbital Mechanics**: Calculate planet positions using Julian Date and orbital periods
+- **Planet Positioning**:
+  - Mercury: 0.24yr period
+  - Venus: 0.62yr period
+  - Earth: 1.0yr period
+  - Mars: 1.88yr period
+  - Jupiter: 11.86yr period
+- **Visual Features**:
+  - Colored dots using PLANETS array colors (brown, yellow, blue, red, orange)
+  - Size variation (Jupiter larger at 5px, others 3-3.5px)
+  - Subtle glow effect around each planet
+  - Planet names positioned near dots (not just on orbit edge)
+  - **Time-based movement**: Planets reposition when time slider changes
+
+**Files Modified**: `apps/web/components/visualization/OrbitalPlot2D.tsx`
+- Added planet position calculation (lines 127-141)
+- Added planet dot rendering with glow (lines 143-157)
+- Updated planet label positioning (lines 159-162)
+
+#### Deployment Summary
+**Commits Pushed**:
+1. `c9cb105` - Canvas font syntax fix
+2. `0a00d23` - Complete text contrast fixes
+3. `3507e7f` - Orbital visualization contrast
+4. `22f60c2` - Moving planet dots feature
+
+**Production Status**: All changes deployed to www.isotracker.org ✅
+
+#### Lessons Learned
+1. **Always commit immediately** - Don't rely on memory of what was "fixed in dev"
+2. **Use grep to find ALL instances** - Search entire codebase before claiming fix complete
+3. **Verify on filesystem** - Check files actually exist after creation
+4. **Document as you go** - Don't batch updates to tracking files
+
+**Prevention Strategy**:
+- Reference existing `post-mortem-dev-prod-mismatch.md` for protocols
+- Use verification checklist before marking tasks complete
+- Commit each logical fix separately with clear messages
 
 ---
 
