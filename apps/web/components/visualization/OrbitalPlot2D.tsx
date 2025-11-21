@@ -121,8 +121,7 @@ export function OrbitalPlot2D({ isoId, isoName }: OrbitalPlot2DProps) {
 
       // Draw planet name
       ctx.fillStyle = '#374151'; // Darker grey for better visibility (was #9CA3AF)
-      ctx.font = '11px sans-serif';
-      ctx.fontWeight = '500';
+      ctx.font = '500 11px sans-serif'; // Include font weight in font string
       ctx.fillText(planet.name, centerX + pan.x + radius - 30, centerY + pan.y);
     });
 
