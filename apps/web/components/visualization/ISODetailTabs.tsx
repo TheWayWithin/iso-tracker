@@ -1,11 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { OrbitalPlot2D } from './OrbitalPlot2D';
 import { EphemerisTable } from './EphemerisTable';
 import { CommunitySentiment } from '../evidence/CommunitySentiment';
 import { ErrorBoundary } from '../ErrorBoundary';
 import Link from 'next/link';
+import { Eye, EyeOff } from 'lucide-react';
+
+// Observation Planning Components
+import LocationSelector from '../observation/LocationSelector';
+import VisibilityStatus from '../observation/VisibilityStatus';
+import ObservationWindows from '../observation/ObservationWindows';
+import SkyMap from '../observation/SkyMap';
+import HowToGuide from '../observation/HowToGuide';
+import { useVisibility, formatTimeUntil } from '@/hooks/useVisibility';
+import type { LocationResult } from '@/lib/location/location-service';
 
 interface ISODetailTabsProps {
   isoId: string;
@@ -24,7 +34,22 @@ export function ISODetailTabs({
   isoDiscoveryDate,
   isoDesignation,
 }: ISODetailTabsProps) {
-  const [activeTab, setActiveTab] = useState<'overview' | 'orbital' | 'evidence' | 'community'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'orbital' | 'observation' | 'evidence' | 'community'>('overview');
+  const [userLocation, setUserLocation] = useState<LocationResult | undefined>(undefined);
+
+  // Fetch visibility data
+  const { data: visibilityData, loading: visibilityLoading, error: visibilityError, refetch: refetchVisibility } = useVisibility({
+    isoId,
+    location: userLocation,
+    days: 30,
+    autoRefresh: true,
+    refreshInterval: 300000, // 5 minutes
+  });
+
+  // Handle location changes
+  const handleLocationChange = useCallback((location: LocationResult) => {
+    setUserLocation(location);
+  }, []);
 
   return (
     <div>
@@ -52,6 +77,25 @@ export function ISODetailTabs({
             aria-current={activeTab === 'orbital' ? 'page' : undefined}
           >
             Orbital Data
+          </button>
+          <button
+            onClick={() => setActiveTab('observation')}
+            className={`px-6 py-3 font-medium rounded-t-lg transition-colors flex items-center gap-2 ${
+              activeTab === 'observation'
+                ? 'bg-white text-blue-600 border-t-2 border-x border-blue-600'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+            }`}
+            aria-current={activeTab === 'observation' ? 'page' : undefined}
+          >
+            Observation
+            {/* Quick visibility indicator */}
+            {visibilityData?.forecast?.currentStatus && (
+              visibilityData.forecast.currentStatus.isVisible ? (
+                <span className="w-2 h-2 rounded-full bg-green-500" title="Currently visible" />
+              ) : (
+                <span className="w-2 h-2 rounded-full bg-gray-400" title="Not currently visible" />
+              )
+            )}
           </button>
           <button
             onClick={() => setActiveTab('evidence')}
@@ -124,6 +168,43 @@ export function ISODetailTabs({
               </div>
             </div>
 
+            {/* Quick Visibility Status */}
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex items-center justify-between flex-wrap gap-4">
+                <div className="flex items-center gap-3">
+                  {visibilityLoading ? (
+                    <div className="w-3 h-3 rounded-full bg-gray-300 animate-pulse" />
+                  ) : visibilityData?.forecast?.currentStatus?.isVisible ? (
+                    <div className="flex items-center gap-2">
+                      <Eye className="h-5 w-5 text-green-600" />
+                      <span className="font-semibold text-green-700">Currently Visible</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <EyeOff className="h-5 w-5 text-gray-500" />
+                      <span className="font-semibold text-gray-600">Not Currently Visible</span>
+                    </div>
+                  )}
+                  {visibilityData?.forecast?.nextRise && !visibilityData?.forecast?.currentStatus?.isVisible && (
+                    <span className="text-sm text-gray-600">
+                      • Next visible {formatTimeUntil(visibilityData.forecast.nextRise)}
+                    </span>
+                  )}
+                </div>
+                <button
+                  onClick={() => setActiveTab('observation')}
+                  className="text-sm font-medium text-blue-600 hover:text-blue-700 flex items-center gap-1"
+                >
+                  View Observation Details →
+                </button>
+              </div>
+              {!userLocation && !visibilityLoading && (
+                <p className="text-xs text-gray-500 mt-2">
+                  Set your location in the Observation tab to see visibility information.
+                </p>
+              )}
+            </div>
+
             {/* 2D Orbital Visualization */}
             <div>
               <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
@@ -189,6 +270,72 @@ export function ISODetailTabs({
                 <EphemerisTable isoId={isoId} />
               </ErrorBoundary>
             </div>
+          </div>
+        )}
+
+        {/* Observation Planning Tab */}
+        {activeTab === 'observation' && (
+          <div className="p-6 space-y-6">
+            {/* Location Selector */}
+            <div>
+              <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                Your Location
+                <span
+                  className="text-sm font-normal text-gray-600 cursor-help"
+                  title="Set your location to calculate when this object is visible from your position"
+                >
+                  ℹ️
+                </span>
+              </h2>
+              <ErrorBoundary>
+                <LocationSelector onLocationChange={handleLocationChange} />
+              </ErrorBoundary>
+            </div>
+
+            {/* Current Visibility Status */}
+            <div>
+              <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                Current Visibility
+                {visibilityData?.forecast?.currentStatus?.isVisible ? (
+                  <Eye className="h-5 w-5 text-green-600" />
+                ) : (
+                  <EyeOff className="h-5 w-5 text-gray-400" />
+                )}
+              </h2>
+              <ErrorBoundary>
+                <VisibilityStatus
+                  data={visibilityData}
+                  loading={visibilityLoading}
+                  error={visibilityError}
+                />
+              </ErrorBoundary>
+            </div>
+
+            {/* Sky Map */}
+            <div>
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Sky Position</h2>
+              <ErrorBoundary>
+                <SkyMap
+                  data={visibilityData}
+                  loading={visibilityLoading}
+                />
+              </ErrorBoundary>
+            </div>
+
+            {/* Upcoming Observation Windows */}
+            <div>
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Upcoming Observation Windows</h2>
+              <ErrorBoundary>
+                <ObservationWindows
+                  data={visibilityData}
+                  loading={visibilityLoading}
+                  error={visibilityError}
+                />
+              </ErrorBoundary>
+            </div>
+
+            {/* How To Guide */}
+            <HowToGuide />
           </div>
         )}
 

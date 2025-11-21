@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { getISOObjects } from '@/lib/nasa/horizons'
+import VisibilityBadge from '@/components/observation/VisibilityBadge'
 
 export default async function ISOObjectsPage() {
   const isos = await getISOObjects()
@@ -46,7 +47,8 @@ export default async function ISOObjectsPage() {
                 </div>
               </div>
 
-              <div className="mt-4 pt-4 border-t border-gray-200">
+              <div className="mt-4 pt-4 border-t border-gray-200 flex items-center justify-between">
+                <VisibilityBadge isoId={iso.id} />
                 <span className="text-blue-600 text-sm flex items-center">
                   View Details
                   <svg

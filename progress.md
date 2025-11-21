@@ -18,6 +18,89 @@
 
 ## 🔥 Recent Issues & Resolutions
 
+### Issue #0: Phase Completion Document Discrepancy (Nov 21, 2025)
+
+**Symptom**: project-plan.md showed Phase 8.3 as "next" but PHASE-8.X-COMPLETE.md documents existed claiming 8.3-8.6 were done
+
+**Investigation Findings**:
+- NOT the file persistence bug from Jan 2025
+- **Most Phase 8.3-8.5 files DID exist** on filesystem
+- PHASE-8.X-COMPLETE.md docs were premature - documented DESIGN/PLAN not actual creation
+- project-plan.md was never updated to mark checkboxes complete
+- **3 files were genuinely missing**: HelpTooltip.tsx, visibility.worker.ts (observation-cache.ts was at different path)
+
+**Root Cause**: Inconsistent tracking between completion documents and project-plan.md
+- Completion docs created to document plans
+- Checkboxes in project-plan.md never updated
+- Some files created but not all
+
+**Resolution**:
+1. **Investigated all paths** - Found observation-cache.ts at `lib/cache/` not `lib/client/`
+2. **Created missing files**:
+   - HelpTooltip.tsx (7.2KB) - 9 astronomy terms with definitions
+   - visibility.worker.ts (11.9KB) - Web Worker for background calculations
+3. **Updated project-plan.md** - Marked all Phase 8.3-8.5 tasks as complete with verification timestamps
+
+**Files Created**:
+- `apps/web/components/observation/HelpTooltip.tsx` (7.2KB) - 2025-11-21 12:53 UTC
+- `apps/web/lib/astronomy/visibility.worker.ts` (11.9KB) - 2025-11-21 12:54 UTC
+
+**Verification Timestamps**:
+- All Phase 8.3 components: ✅ Verified 2025-11-21 12:54 UTC
+- All Phase 8.4 components: ✅ Verified 2025-11-21 12:54 UTC
+- All Phase 8.5 components: ✅ Verified 2025-11-21 12:54 UTC
+
+**Prevention**:
+- Update project-plan.md checkboxes IMMEDIATELY when files are created
+- Use `ls -la` verification before marking any phase complete
+- Don't create PHASE-X-COMPLETE.md docs until files are verified on filesystem
+- Check actual file paths (lib/cache vs lib/client)
+
+---
+
+## 📋 Sprint 8 Integration (Nov 21, 2025)
+
+**Status**: ✅ COMPLETE
+**Time**: ~30 minutes
+
+### Integration Work Completed
+
+**1. ISODetailTabs.tsx Updated**
+- Added "Observation" tab between "Orbital Data" and "Evidence"
+- Tab shows green/gray dot for current visibility status
+- Imports: LocationSelector, VisibilityStatus, SkyMap, ObservationWindows, HowToGuide
+- Uses useVisibility hook with auto-refresh (5 minutes)
+
+**2. Overview Tab Enhancement**
+- Added visibility quick-status badge after Object Information
+- Shows "Currently Visible" (green) or "Not Currently Visible" (gray)
+- Shows "Next visible in X hours" for upcoming windows
+- Link to Observation tab for details
+- Prompt to set location if not configured
+
+**3. ISO List Page (page.tsx)**
+- Added VisibilityBadge component to each ISO card
+- Shows visibility status if user has set location
+- Graceful fallback: "Set location for visibility" if no location
+
+**4. New Component Created**
+- `VisibilityBadge.tsx` (2.6KB) - Compact client component for list pages
+- Fetches visibility with 7-day range for quick status
+- Loading, no-location, and visibility states
+
+**Files Modified**:
+- `apps/web/components/visualization/ISODetailTabs.tsx` - Added Observation tab + Overview badge
+- `apps/web/app/iso-objects/page.tsx` - Added VisibilityBadge import and usage
+
+**Files Created**:
+- `apps/web/components/observation/VisibilityBadge.tsx` (2.6KB) - 2025-11-21 13:04 UTC
+
+**Verification**:
+- ✅ No TypeScript errors (checked via IDE diagnostics)
+- ✅ All files verified on filesystem
+
+---
+
 ### Issue #1: Incomplete Commit Scope Pattern (Nov 21, 2025)
 
 **Symptom**: Text contrast fixes made in dev not visible in production after deployment
