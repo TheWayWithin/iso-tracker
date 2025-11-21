@@ -279,9 +279,9 @@ export function OrbitalPlot2D({ isoId, isoName }: OrbitalPlot2DProps) {
   if (isLoading) {
     return (
       <div className="bg-white rounded-lg p-6 border border-gray-200">
-        <h3 className="text-lg font-bold mb-4">2D Orbital Visualization</h3>
+        <h3 className="text-lg font-bold text-gray-900 mb-4">2D Orbital Visualization</h3>
         <div className="flex items-center justify-center h-[600px] bg-gray-100 rounded">
-          <div className="text-gray-500">Loading orbital data...</div>
+          <div className="text-gray-700 font-medium">Loading orbital data...</div>
         </div>
       </div>
     );
@@ -299,8 +299,8 @@ export function OrbitalPlot2D({ isoId, isoName }: OrbitalPlot2DProps) {
   if (data.length === 0) {
     return (
       <div className="bg-white rounded-lg p-6 border border-gray-200">
-        <h3 className="text-lg font-bold mb-2">No Orbital Data</h3>
-        <p className="text-gray-600">No orbital data available for visualization.</p>
+        <h3 className="text-lg font-bold text-gray-900 mb-2">No Orbital Data</h3>
+        <p className="text-gray-700 font-medium">No orbital data available for visualization.</p>
       </div>
     );
   }

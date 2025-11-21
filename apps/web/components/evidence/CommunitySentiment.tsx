@@ -40,7 +40,7 @@ export function CommunitySentiment({ isoId }: CommunitySentimentProps) {
   if (isLoading) {
     return (
       <div className="bg-white rounded-lg p-6 border border-gray-200">
-        <h3 className="text-lg font-bold mb-3">Community Sentiment</h3>
+        <h3 className="text-lg font-bold text-gray-900 mb-3">Community Sentiment</h3>
         <div className="animate-pulse space-y-3">
           <div className="h-4 bg-gray-200 rounded w-full"></div>
           <div className="h-4 bg-gray-200 rounded w-full"></div>
@@ -62,8 +62,8 @@ export function CommunitySentiment({ isoId }: CommunitySentimentProps) {
   if (!sentiment || sentiment.total_assessments === 0) {
     return (
       <div className="bg-white rounded-lg p-6 border border-gray-200">
-        <h3 className="text-lg font-bold mb-1">Community Sentiment</h3>
-        <p className="text-sm text-gray-500 mb-4">How Evidence Analysts classify this object</p>
+        <h3 className="text-lg font-bold text-gray-900 mb-1">Community Sentiment</h3>
+        <p className="text-sm text-gray-700 font-medium mb-4">How Evidence Analysts classify this object</p>
         <p className="text-sm text-gray-600">
           No assessments yet. Be the first Evidence Analyst to evaluate the evidence!
         </p>

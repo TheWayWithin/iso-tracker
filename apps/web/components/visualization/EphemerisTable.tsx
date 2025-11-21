@@ -136,10 +136,10 @@ export function EphemerisTable({ isoId }: EphemerisTableProps) {
   return (
     <div className="bg-white rounded-lg p-6 border border-gray-200">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-bold">Ephemeris Data</h3>
+        <h3 className="text-lg font-bold text-gray-900">Ephemeris Data</h3>
         <div className="flex gap-2 text-sm">
           <div>
-            <label className="text-gray-600 mr-2">From:</label>
+            <label className="text-gray-900 font-medium mr-2">From:</label>
             <input
               type="date"
               value={startDate}
@@ -148,7 +148,7 @@ export function EphemerisTable({ isoId }: EphemerisTableProps) {
             />
           </div>
           <div>
-            <label className="text-gray-600 mr-2">To:</label>
+            <label className="text-gray-900 font-medium mr-2">To:</label>
             <input
               type="date"
               value={endDate}
