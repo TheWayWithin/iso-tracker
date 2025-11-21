@@ -113,15 +113,16 @@ export function OrbitalPlot2D({ isoId, isoName }: OrbitalPlot2DProps) {
     // Draw planetary orbits
     PLANETS.forEach(planet => {
       const radius = planet.radius / scale;
-      ctx.strokeStyle = 'rgba(156, 163, 175, 0.3)'; // Gray, semi-transparent
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(75, 85, 99, 0.6)'; // Darker gray, more visible (was rgba(156, 163, 175, 0.3))
+      ctx.lineWidth = 1.5;
       ctx.beginPath();
       ctx.arc(centerX + pan.x, centerY + pan.y, radius, 0, Math.PI * 2);
       ctx.stroke();
 
       // Draw planet name
-      ctx.fillStyle = '#9CA3AF';
-      ctx.font = '10px sans-serif';
+      ctx.fillStyle = '#374151'; // Darker grey for better visibility (was #9CA3AF)
+      ctx.font = '11px sans-serif';
+      ctx.fontWeight = '500';
       ctx.fillText(planet.name, centerX + pan.x + radius - 30, centerY + pan.y);
     });
 
