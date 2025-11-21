@@ -110,19 +110,56 @@ export function OrbitalPlot2D({ isoId, isoName }: OrbitalPlot2DProps) {
       ctx.stroke();
     }
 
-    // Draw planetary orbits
+    // Draw planetary orbits and planets
+    const currentDate = data[currentIndex] ? new Date(data[currentIndex].calendar_date) : new Date();
+    const julianDate = currentDate.getTime() / 86400000 + 2440587.5; // Convert to Julian Date
+
     PLANETS.forEach(planet => {
       const radius = planet.radius / scale;
+
+      // Draw orbit
       ctx.strokeStyle = 'rgba(209, 213, 219, 0.5)'; // Light gray for visibility on dark background
       ctx.lineWidth = 1.5;
       ctx.beginPath();
       ctx.arc(centerX + pan.x, centerY + pan.y, radius, 0, Math.PI * 2);
       ctx.stroke();
 
-      // Draw planet name
+      // Calculate planet position along its orbit
+      // Using simplified orbital mechanics: angle based on orbital period
+      const orbitalPeriods: { [key: string]: number } = {
+        'Mercury': 0.24,
+        'Venus': 0.62,
+        'Earth': 1.0,
+        'Mars': 1.88,
+        'Jupiter': 11.86,
+      };
+      const period = orbitalPeriods[planet.name] || 1.0;
+      const angle = ((julianDate / (period * 365.25)) * 2 * Math.PI) % (2 * Math.PI);
+
+      // Calculate planet position in 2D
+      const planetX = centerX + pan.x + (radius * Math.cos(angle));
+      const planetY = centerY + pan.y + (radius * Math.sin(angle));
+
+      // Draw planet dot
+      const planetRadius = planet.name === 'Jupiter' ? 5 : planet.name === 'Earth' ? 3.5 : 3;
+      ctx.fillStyle = planet.color;
+      ctx.beginPath();
+      ctx.arc(planetX, planetY, planetRadius, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Add subtle glow
+      ctx.strokeStyle = planet.color;
+      ctx.lineWidth = 1.5;
+      ctx.globalAlpha = 0.3;
+      ctx.beginPath();
+      ctx.arc(planetX, planetY, planetRadius + 2, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.globalAlpha = 1.0;
+
+      // Draw planet name near the planet
       ctx.fillStyle = '#D1D5DB'; // Light grey for readability on dark background
-      ctx.font = '500 11px sans-serif'; // Include font weight in font string
-      ctx.fillText(planet.name, centerX + pan.x + radius - 30, centerY + pan.y);
+      ctx.font = '500 11px sans-serif';
+      ctx.fillText(planet.name, planetX + 8, planetY - 8);
     });
 
     // Draw Sun
