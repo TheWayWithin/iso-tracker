@@ -85,10 +85,10 @@ export function ISODetailTabs({
           <div className="p-6 space-y-6">
             {/* Object Information */}
             <div>
-              <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+              <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
                 Object Information
                 <span
-                  className="text-sm font-normal text-gray-500 cursor-help"
+                  className="text-sm font-normal text-gray-600 cursor-help"
                   title="Basic metadata about this interstellar object from NASA JPL"
                 >
                   ℹ️
@@ -126,10 +126,10 @@ export function ISODetailTabs({
 
             {/* 2D Orbital Visualization */}
             <div>
-              <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+              <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
                 Orbital Trajectory
                 <span
-                  className="text-sm font-normal text-gray-500 cursor-help"
+                  className="text-sm font-normal text-gray-600 cursor-help"
                   title="Interactive visualization showing the object's path through our solar system"
                 >
                   ℹ️
@@ -142,10 +142,10 @@ export function ISODetailTabs({
 
             {/* How to Read This Chart */}
             <details className="border border-gray-200 rounded-lg">
-              <summary className="px-4 py-3 cursor-pointer font-medium text-gray-700 hover:bg-gray-50 rounded-lg">
+              <summary className="px-4 py-3 cursor-pointer font-medium text-gray-900 hover:bg-gray-50 rounded-lg">
                 📖 How to read this chart
               </summary>
-              <div className="px-4 py-3 text-sm text-gray-600 space-y-2 border-t border-gray-200">
+              <div className="px-4 py-3 text-sm text-gray-700 space-y-2 border-t border-gray-200">
                 <p>
                   <strong>Sun (yellow):</strong> The center of our solar system. All distances are measured from here.
                 </p>
@@ -161,7 +161,7 @@ export function ISODetailTabs({
                 <p>
                   <strong>Controls:</strong> Zoom in/out with buttons, pan by clicking and dragging, scrub through time with the slider.
                 </p>
-                <p className="text-xs text-gray-500 mt-3">
+                <p className="text-xs text-gray-700 font-medium mt-3">
                   Data provided by{' '}
                   <a
                     href="https://ssd.jpl.nasa.gov/horizons/"
@@ -181,8 +181,8 @@ export function ISODetailTabs({
         {activeTab === 'orbital' && (
           <div className="p-6 space-y-6">
             <div>
-              <h2 className="text-xl font-bold mb-2">Ephemeris Data</h2>
-              <p className="text-sm text-gray-600 mb-4">
+              <h2 className="text-xl font-bold text-gray-900 mb-2">Ephemeris Data</h2>
+              <p className="text-sm text-gray-700 font-medium mb-4">
                 Precise position and velocity data from NASA JPL Horizons. Shows where the object is/was at different times.
               </p>
               <ErrorBoundary>
@@ -196,10 +196,10 @@ export function ISODetailTabs({
         {activeTab === 'evidence' && (
           <div className="p-6">
             <div className="bg-gray-50 rounded-lg p-6 border border-gray-200 text-center">
-              <h3 className="text-lg font-bold mb-3">Evidence Framework</h3>
-              <div className="text-sm text-gray-600 space-y-2 mb-4">
-                <p>Total evidence pieces: <span className="font-semibold">Coming soon</span></p>
-                <p>Assessment count: <span className="font-semibold">Coming soon</span></p>
+              <h3 className="text-lg font-bold text-gray-900 mb-3">Evidence Framework</h3>
+              <div className="text-sm text-gray-700 font-medium space-y-2 mb-4">
+                <p>Total evidence pieces: <span className="font-semibold text-gray-900">Coming soon</span></p>
+                <p>Assessment count: <span className="font-semibold text-gray-900">Coming soon</span></p>
               </div>
               <Link
                 href={`/iso-objects/${isoId}/evidence`}

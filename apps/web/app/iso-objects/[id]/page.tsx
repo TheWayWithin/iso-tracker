@@ -24,8 +24,8 @@ export default async function ISODetailPage({
           </Link>
           <div className="flex items-start justify-between">
             <div>
-              <h1 className="text-3xl font-bold mb-2">{iso.name}</h1>
-              <p className="text-gray-600">{iso.designation}</p>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">{iso.name}</h1>
+              <p className="text-gray-700 font-medium">{iso.designation}</p>
             </div>
           </div>
         </div>
