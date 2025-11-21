@@ -96,16 +96,16 @@ export function ISODetailTabs({
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div>
-                  <p className="text-gray-600 text-sm">NASA ID</p>
-                  <p className="font-mono font-semibold">{isoNasaId}</p>
+                  <p className="text-gray-700 text-sm font-medium">NASA ID</p>
+                  <p className="font-mono font-semibold text-gray-900">{isoNasaId}</p>
                 </div>
                 <div>
-                  <p className="text-gray-600 text-sm">Type</p>
-                  <p className="capitalize font-semibold flex items-center gap-1">
+                  <p className="text-gray-700 text-sm font-medium">Type</p>
+                  <p className="capitalize font-semibold text-gray-900 flex items-center gap-1">
                     {isoObjectType}
                     {isoObjectType === 'hyperbolic' && (
                       <span
-                        className="text-xs text-gray-500 cursor-help"
+                        className="text-xs text-gray-600 cursor-help"
                         title="A hyperbolic orbit proves this object came from outside our solar system. Unlike elliptical planetary orbits, hyperbolic paths are open-ended and pass through the solar system only once."
                       >
                         ℹ️
@@ -114,12 +114,12 @@ export function ISODetailTabs({
                   </p>
                 </div>
                 <div>
-                  <p className="text-gray-600 text-sm">Discovery Date</p>
-                  <p className="font-semibold">{new Date(isoDiscoveryDate).toLocaleDateString()}</p>
+                  <p className="text-gray-700 text-sm font-medium">Discovery Date</p>
+                  <p className="font-semibold text-gray-900">{new Date(isoDiscoveryDate).toLocaleDateString()}</p>
                 </div>
                 <div>
-                  <p className="text-gray-600 text-sm">Designation</p>
-                  <p className="font-semibold">{isoDesignation}</p>
+                  <p className="text-gray-700 text-sm font-medium">Designation</p>
+                  <p className="font-semibold text-gray-900">{isoDesignation}</p>
                 </div>
               </div>
             </div>

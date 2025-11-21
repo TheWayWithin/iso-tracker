@@ -333,26 +333,26 @@ export function OrbitalPlot2D({ isoId, isoName }: OrbitalPlot2DProps) {
         <div className="flex items-center gap-2">
           <button
             onClick={handleZoomOut}
-            className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 text-sm min-h-[44px]"
+            className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 text-sm font-medium text-gray-900 min-h-[44px]"
             aria-label="Zoom out to see more of the solar system"
           >
             − Zoom Out
           </button>
           <button
             onClick={handleZoomIn}
-            className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 text-sm min-h-[44px]"
+            className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 text-sm font-medium text-gray-900 min-h-[44px]"
             aria-label="Zoom in for closer view of trajectory"
           >
             + Zoom In
           </button>
           <button
             onClick={handleResetView}
-            className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 text-sm min-h-[44px]"
+            className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 text-sm font-medium text-gray-900 min-h-[44px]"
             aria-label="Reset view to default zoom and position"
           >
             Reset View
           </button>
-          <div className="ml-auto text-sm text-gray-600">
+          <div className="ml-auto text-sm font-medium text-gray-700">
             Click and drag to pan
           </div>
         </div>
@@ -360,8 +360,8 @@ export function OrbitalPlot2D({ isoId, isoName }: OrbitalPlot2DProps) {
         {/* Time scrubber */}
         <div>
           <div className="flex justify-between items-center mb-2">
-            <label className="text-sm font-medium text-gray-700">Time Position</label>
-            <span className="text-sm text-gray-600">
+            <label className="text-sm font-medium text-gray-900">Time Position</label>
+            <span className="text-sm font-medium text-gray-700">
               {new Date(data[currentIndex].calendar_date).toLocaleDateString('en-US', {
                 month: 'short',
                 day: 'numeric',
@@ -382,7 +382,7 @@ export function OrbitalPlot2D({ isoId, isoName }: OrbitalPlot2DProps) {
             aria-valuenow={currentIndex}
             aria-valuetext={data[currentIndex] ? new Date(data[currentIndex].calendar_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Loading'}
           />
-          <div className="flex justify-between text-xs text-gray-500 mt-1">
+          <div className="flex justify-between text-xs text-gray-700 font-medium mt-1">
             <span>
               {new Date(data[0].calendar_date).toLocaleDateString('en-US', {
                 month: 'short',
@@ -399,8 +399,8 @@ export function OrbitalPlot2D({ isoId, isoName }: OrbitalPlot2DProps) {
         </div>
 
         {/* Legend */}
-        <div className="pt-4 border-t border-gray-200 text-xs text-gray-600">
-          <p className="font-semibold mb-2">Legend:</p>
+        <div className="pt-4 border-t border-gray-200 text-xs text-gray-700">
+          <p className="font-semibold text-gray-900 mb-2">Legend:</p>
           <div className="grid grid-cols-2 gap-2">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
