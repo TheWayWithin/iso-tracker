@@ -1,11 +1,11 @@
 // apps/web/workers/visibility.worker.ts
-import type { EphemerisPoint } from '../types/nasa';
+import type { EphemerisPoint } from '../lib/nasa/horizons-api';
+import type { ObserverLocation } from '../lib/astronomy/coordinates';
 import type {
-  ObserverLocation,
   VisibilityForecast,
-  CurrentVisibilityStatus,
+  VisibilityStatus,
   VisibilityWindow
-} from '../types/visibility';
+} from '../lib/astronomy/visibility';
 
 // Import coordinate transformation utilities
 // These need to be worker-compatible (no DOM dependencies)
@@ -90,7 +90,7 @@ type WorkerResponse = {
   payload: VisibilityForecast;
 } | {
   type: 'STATUS_RESULT';
-  payload: CurrentVisibilityStatus;
+  payload: VisibilityStatus;
 } | {
   type: 'ERROR';
   payload: { message: string };
@@ -104,14 +104,14 @@ function calculateCurrentStatus(
   ephemeris: EphemerisPoint[],
   location: ObserverLocation,
   datetime: Date
-): CurrentVisibilityStatus {
+): VisibilityStatus {
   // Find closest ephemeris point
   const targetTime = datetime.getTime();
   let closestPoint = ephemeris[0];
-  let minDiff = Math.abs(new Date(closestPoint.datetime).getTime() - targetTime);
+  let minDiff = Math.abs(new Date(closestPoint.calendar_date).getTime() - targetTime);
 
   for (const point of ephemeris) {
-    const diff = Math.abs(new Date(point.datetime).getTime() - targetTime);
+    const diff = Math.abs(new Date(point.calendar_date).getTime() - targetTime);
     if (diff < minDiff) {
       minDiff = diff;
       closestPoint = point;
@@ -147,11 +147,9 @@ function calculateCurrentStatus(
     isVisible,
     altitude: coords.altitude,
     azimuth: coords.azimuth,
-    airmass: coords.airmass,
-    moonPhase: 0, // Simplified
+    apparentAltitude: coords.altitude, // Simplified - same as geometric altitude
     quality,
-    nextWindow: null, // Would calculate from windows
-    warnings: coords.airmass > 3 ? ['High airmass - atmospheric distortion likely'] : []
+    datetime
   };
 }
 
@@ -169,7 +167,7 @@ function calculateVisibilityWindows(
   let pointsProcessed = 0;
 
   for (const point of ephemeris) {
-    const datetime = new Date(point.datetime);
+    const datetime = new Date(point.calendar_date);
     if (datetime < now || datetime > endDate) continue;
 
     const coords = raDecToAltAz(
@@ -185,22 +183,22 @@ function calculateVisibilityWindows(
     if (isVisible && !currentWindow) {
       // Start new window
       currentWindow = {
-        start: point.datetime,
-        end: point.datetime,
-        peakAltitude: coords.altitude,
-        peakTime: point.datetime,
+        start: datetime,
+        end: datetime,
+        maxAltitude: coords.altitude,
         quality: coords.airmass < 2 ? 'good' : 'fair',
-        moonPhase: 0
+        duration: 0 // Will be calculated when window ends
       };
     } else if (isVisible && currentWindow) {
       // Extend window
-      currentWindow.end = point.datetime;
-      if (coords.altitude > currentWindow.peakAltitude) {
-        currentWindow.peakAltitude = coords.altitude;
-        currentWindow.peakTime = point.datetime;
+      currentWindow.end = datetime;
+      if (coords.altitude > currentWindow.maxAltitude) {
+        currentWindow.maxAltitude = coords.altitude;
       }
     } else if (!isVisible && currentWindow) {
-      // End window
+      // End window - calculate duration in minutes
+      const durationMs = currentWindow.end.getTime() - currentWindow.start.getTime();
+      currentWindow.duration = Math.round(durationMs / (1000 * 60));
       windows.push(currentWindow);
       currentWindow = null;
     }
@@ -217,18 +215,29 @@ function calculateVisibilityWindows(
 
   // Add final window if still open
   if (currentWindow) {
+    const durationMs = currentWindow.end.getTime() - currentWindow.start.getTime();
+    currentWindow.duration = Math.round(durationMs / (1000 * 60));
     windows.push(currentWindow);
   }
 
+  // Calculate visibility percentage (% of time object is visible)
+  const totalTime = endDate.getTime() - now.getTime();
+  const visibleTime = windows.reduce((sum, w) => sum + w.duration * 60 * 1000, 0);
+  const visibilityPercentage = totalTime > 0 ? (visibleTime / totalTime) * 100 : 0;
+
+  // Determine next rise/set times (simplified)
+  const nextRise = windows.length > 0 && !windows[0] ? windows[0].start : null;
+  const nextSet = windows.length > 0 ? windows[0].end : null;
+
+  // Get current status (use first ephemeris point as approximation)
+  const currentStatus = calculateCurrentStatus(ephemeris, location, now);
+
   return {
-    windows,
-    totalWindows: windows.length,
-    bestWindow: windows.length > 0 ? windows.reduce((best, w) =>
-      w.peakAltitude > best.peakAltitude ? w : best
-    ) : null,
-    averageQuality: windows.length > 0
-      ? windows.filter(w => w.quality === 'good').length / windows.length
-      : 0
+    currentStatus,
+    nextRise,
+    nextSet,
+    upcomingWindows: windows,
+    visibilityPercentage
   };
 }
 
@@ -274,9 +283,12 @@ self.onmessage = (e: MessageEvent<WorkerRequest>) => {
 };
 
 // Handle worker termination
-self.onerror = (error) => {
+self.onerror = (event) => {
+  const errorMessage = typeof event === 'string'
+    ? event
+    : (event as ErrorEvent).message || 'Unknown worker error';
   self.postMessage({
     type: 'ERROR',
-    payload: { message: `Worker error: ${error.message}` }
+    payload: { message: `Worker error: ${errorMessage}` }
   } as WorkerResponse);
 };

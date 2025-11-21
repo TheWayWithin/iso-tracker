@@ -9,10 +9,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { fetchEphemeris } from '@/lib/nasa/horizons-api';
-import {
-  generateVisibilityForecast,
-  type ObserverLocation,
-} from '@/lib/astronomy/visibility';
+import { generateVisibilityForecast } from '@/lib/astronomy/visibility';
+import type { ObserverLocation } from '@/lib/astronomy/coordinates';
 
 export const runtime = 'edge';
 export const revalidate = 3600; // Cache for 1 hour

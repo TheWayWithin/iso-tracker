@@ -146,7 +146,7 @@ export default function HowToGuide({ className = '' }: HowToGuideProps) {
           <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
             <h4 className="font-semibold text-green-900 mb-2 text-sm">💡 Pro Tips</h4>
             <ul className="space-y-1 text-xs text-green-800">
-              <li>• Best viewing: Look for "Excellent" quality windows when object is high in the sky (>60° altitude)</li>
+              <li>• Best viewing: Look for "Excellent" quality windows when object is high in the sky (&gt;60° altitude)</li>
               <li>• Dark skies: Avoid light pollution by observing from rural areas when possible</li>
               <li>• Weather: Clear skies are essential - check local weather forecasts before observing</li>
               <li>• Equipment: Brighter objects (lower magnitude numbers) are easier to see with smaller telescopes</li>

@@ -1,6 +1,7 @@
 // apps/web/lib/cache/observation-cache.ts
-import type { EphemerisPoint } from '../../types/nasa';
-import type { ObserverLocation, VisibilityForecast } from '../../types/visibility';
+import type { EphemerisPoint } from '@/lib/nasa/horizons-api';
+import type { ObserverLocation } from '@/lib/astronomy/coordinates';
+import type { VisibilityForecast } from '@/lib/astronomy/visibility';
 
 interface CacheEntry<T> {
   data: T;

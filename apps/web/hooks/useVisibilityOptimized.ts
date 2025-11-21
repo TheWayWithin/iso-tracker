@@ -101,14 +101,12 @@ export function useVisibilityOptimized({
     if (useCaching && !skipCache) {
       const cachedData = ObservationCache.loadVisibility(isoId, {
         latitude: observerLocation.latitude,
-        longitude: observerLocation.longitude,
-        altitude: observerLocation.altitude
+        longitude: observerLocation.longitude
       });
 
       if (cachedData && !ObservationCache.isVisibilityStale(isoId, {
         latitude: observerLocation.latitude,
-        longitude: observerLocation.longitude,
-        altitude: observerLocation.altitude
+        longitude: observerLocation.longitude
       })) {
         console.log('[useVisibilityOptimized] Cache hit');
         // Cast cached data to VisibilityData type
@@ -158,8 +156,7 @@ export function useVisibilityOptimized({
       if (useCaching) {
         ObservationCache.saveVisibility(isoId, {
           latitude: observerLocation.latitude,
-          longitude: observerLocation.longitude,
-          altitude: observerLocation.altitude
+          longitude: observerLocation.longitude
         }, visibilityData);
       }
 
