@@ -2,10 +2,10 @@ import Link from 'next/link'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: '3I/ATLAS - The Third Interstellar Object',
-  description: 'Track 3I/ATLAS, the third confirmed interstellar object entering our solar system. Join evidence-based analysis of this historic astronomical event.',
+  title: '3I/ATLAS - The Third Interstellar Object | Now Visible',
+  description: 'Track 3I/ATLAS, the third confirmed interstellar object now visible in our solar system. Join evidence-based analysis of this historic astronomical event.',
   openGraph: {
-    title: '3I/ATLAS - Third Interstellar Object Approaching',
+    title: '3I/ATLAS - Third Interstellar Object Now Visible',
     description: 'Be part of history. Track and analyze the third confirmed visitor from interstellar space.',
     type: 'website',
   },
@@ -17,16 +17,16 @@ export default function ThreeIAtlasPage() {
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
         <div className="text-center">
-          <div className="inline-flex items-center gap-2 bg-yellow-500/20 text-yellow-400 px-4 py-2 rounded-full mb-6">
-            <span className="animate-pulse w-2 h-2 bg-yellow-400 rounded-full"></span>
-            <span className="font-semibold">OBSERVATION WINDOW APPROACHING</span>
+          <div className="inline-flex items-center gap-2 bg-green-500/20 text-green-400 px-4 py-2 rounded-full mb-6">
+            <span className="animate-pulse w-2 h-2 bg-green-400 rounded-full"></span>
+            <span className="font-semibold">NOW VISIBLE</span>
           </div>
 
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white mb-6">
             3I/ATLAS
           </h1>
           <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-4">
-            The <span className="text-purple-400 font-semibold">third confirmed interstellar object</span> is entering our solar system.
+            The <span className="text-purple-400 font-semibold">third confirmed interstellar object</span> is passing through our solar system now.
           </p>
           <p className="text-lg text-slate-400 max-w-2xl mx-auto mb-8">
             After 1I/'Oumuamua and 2I/Borisov, this is your chance to participate in evidence-based
@@ -138,12 +138,12 @@ export default function ThreeIAtlasPage() {
 
             <div className="flex items-start gap-4">
               <div className="flex-shrink-0 w-24 text-right">
-                <span className="text-yellow-400 font-semibold">Current</span>
+                <span className="text-green-400 font-semibold">Current</span>
               </div>
-              <div className="flex-shrink-0 w-4 h-4 bg-yellow-500 rounded-full mt-1 animate-pulse"></div>
+              <div className="flex-shrink-0 w-4 h-4 bg-green-500 rounded-full mt-1 animate-pulse"></div>
               <div>
-                <h3 className="text-white font-semibold">Pre-Observation Window</h3>
-                <p className="text-slate-400">Preparing analysis frameworks and baseline data</p>
+                <h3 className="text-white font-semibold">Peak Observation Window</h3>
+                <p className="text-slate-400">Best visibility for detailed analysis and evidence submission</p>
               </div>
             </div>
 
@@ -153,8 +153,8 @@ export default function ThreeIAtlasPage() {
               </div>
               <div className="flex-shrink-0 w-4 h-4 bg-slate-600 rounded-full mt-1"></div>
               <div>
-                <h3 className="text-white font-semibold">Peak Observation Window</h3>
-                <p className="text-slate-400">Best visibility for detailed analysis and evidence submission</p>
+                <h3 className="text-white font-semibold">Post-Perihelion Analysis</h3>
+                <p className="text-slate-400">Continued tracking as object exits inner solar system</p>
               </div>
             </div>
           </div>
@@ -207,11 +207,11 @@ export default function ThreeIAtlasPage() {
       <section className="py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">
-            Don't Miss the Window
+            Track It Live
           </h2>
           <p className="text-slate-400 mb-8 max-w-2xl mx-auto">
-            Sign up now to receive alerts when the observation window opens. Be ready to analyze
-            evidence as it becomes available.
+            The observation window is open now. Join thousands of observers analyzing evidence
+            in real-time as 3I/ATLAS passes through our solar system.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
