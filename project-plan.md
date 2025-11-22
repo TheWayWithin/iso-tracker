@@ -210,6 +210,164 @@ Realign both landing pages (isotracker.org and 3i-atlas.live) with the brand str
 
 ---
 
+## 🎯 SPRINT 10: The Loeb Scale - Anomaly Assessment Engine
+
+**PRD References**: Avi Loeb Research (`ideation/ISO Tracker Avi Loeb/`)
+**Status**: 📋 PLANNED
+**Dependencies**: Sprint 9 complete ✅
+**Estimated Time**: 12-16 hours
+**Priority**: HIGH - Core differentiation feature, monetization driver
+
+### Mission Objective
+
+Implement the Loeb Scale (Interstellar Object Significance Scale - IOSS), a 0-10 classification system based on Avi Loeb's framework for evaluating ISOs. This transforms ISO Tracker from a tracking utility into an engaging, habit-forming assessment platform.
+
+### Background
+
+The Loeb Scale is a scientific framework from arXiv:2508.09167 (Eldadi, Tenenbaum, Loeb 2025) that classifies ISOs based on anomaly indicators:
+
+| Zone | Levels | Classification | Color |
+|------|--------|----------------|-------|
+| Green | 0-1 | Natural Objects | 🟢 |
+| Yellow | 2-4 | Anomalous Objects | 🟡 |
+| Orange | 5-7 | Suspected Technology | 🟠 |
+| Red | 8-10 | Confirmed Technology | 🔴 |
+
+**Current ISO Classifications:**
+- 1I/'Oumuamua: Level 4 (Anomalous)
+- 2I/Borisov: Level 0 (Natural)
+- 3I/ATLAS: Level 4 (Anomalous)
+
+### Phase 10.1: Database & API
+**Goal**: Store and serve Loeb Scale data
+
+- [ ] Create `loeb_scale_assessments` table
+  - `iso_id`, `level` (0-10), `zone` (green/yellow/orange/red)
+  - `criteria_met` (JSONB array of met criteria)
+  - `evidence_links` (JSONB array of supporting evidence)
+  - `official_score` (Galileo Project/scientific consensus)
+  - `community_score` (user voting average)
+  - `last_updated`, `updated_by`
+
+- [ ] Create `loeb_scale_votes` table (for Analyst tier)
+  - `user_id`, `iso_id`, `voted_level`, `reasoning` (optional)
+  - `created_at`, `updated_at`
+
+- [ ] Create `loeb_scale_criteria` reference table
+  - Level definitions, criteria text, observable categories
+  - Pre-populate with all 11 levels (0-10)
+
+- [ ] API endpoints:
+  - `GET /api/iso/[id]/loeb-scale` - Get current assessment
+  - `POST /api/iso/[id]/loeb-scale/vote` - Cast vote (Analyst+)
+  - `GET /api/iso/[id]/loeb-scale/history` - Score changes over time
+
+### Phase 10.2: Loeb Scale Dashboard Component
+**Goal**: Prominent UI displaying current score
+
+- [ ] Create `LoebScaleDashboard` component
+  - Large circular gauge showing 0-10 score
+  - Color-coded background matching zone (green/yellow/orange/red)
+  - Label showing classification (e.g., "Level 4 - Anomalous")
+  - Pulsing animation for scores ≥4 (potential technosignature)
+
+- [ ] Add to ISO detail page (prominent position, above fold)
+- [ ] Add mini-badge version for ISO list cards
+- [ ] Mobile-responsive design (375px primary)
+
+### Phase 10.3: Criteria Checklist UI
+**Goal**: Interactive display of assessment criteria
+
+- [ ] Create `LoebCriteriaChecklist` component
+  - Expandable accordion for each level (0-10)
+  - Checkmarks for criteria met by current ISO
+  - Evidence links for each criterion (NASA data, papers, etc.)
+  - Tooltips explaining each criterion in plain language
+
+- [ ] Observable Categories sections:
+  - Trajectory Anomalies
+  - Spectroscopic Signatures
+  - Geometric Properties
+  - Surface Composition
+  - Electromagnetic Signals
+  - Operational Indicators
+
+- [ ] "Why this score?" explainer section
+
+### Phase 10.4: Community Voting (Analyst Tier)
+**Goal**: Let paid users participate in assessment
+
+- [ ] Create `LoebScaleVoting` component
+  - Slider or button group for selecting level (0-10)
+  - Optional reasoning text field
+  - Show "Your Vote" vs "Community Consensus" vs "Official Score"
+  - Require Analyst tier ($9.99+) to vote
+
+- [ ] Community consensus calculation
+  - Weighted average of all user votes
+  - Display vote distribution histogram
+  - Show total vote count
+
+- [ ] Voting restrictions:
+  - One vote per user per ISO (can change)
+  - Must be Analyst or Professional tier
+  - Spectator/Explorer see results but can't vote
+
+### Phase 10.5: Integration & Polish
+**Goal**: Connect everything and add finishing touches
+
+- [ ] Add Loeb Scale tab to ISO detail pages
+- [ ] Homepage showcase: "Current Loeb Scores" section
+- [ ] 3I/ATLAS page: Prominent Loeb Scale display
+- [ ] Push notification hooks (future): "Score changed!"
+
+- [ ] Seed initial data:
+  - 1I/'Oumuamua: Level 4, criteria from research
+  - 2I/Borisov: Level 0, natural comet indicators
+  - 3I/ATLAS: Level 4, criteria from research
+
+### Phase 10.6: Testing & QA
+**Goal**: Validate implementation
+
+- [ ] Unit tests for Loeb Scale calculations
+- [ ] E2E tests for voting flow (Analyst tier)
+- [ ] Accessibility: Color-blind safe zone indicators
+- [ ] Mobile responsiveness testing
+- [ ] Tier restriction validation (voting locked for free users)
+
+### Success Criteria
+
+**Functionality**:
+- [ ] Loeb Scale score displayed for all ISOs
+- [ ] Criteria checklist shows evidence for each level
+- [ ] Community voting works for Analyst+ tiers
+- [ ] Score history/changes tracked
+
+**Monetization**:
+- [ ] Free users can VIEW scores
+- [ ] Analyst users can VOTE on scores
+- [ ] Professional users get expert commentary (future)
+
+**Engagement**:
+- [ ] Score visible on ISO list and detail pages
+- [ ] Color-coded zones create visual interest
+- [ ] "Why this score?" drives curiosity
+
+### Technical Notes
+
+**Color Palette for Zones:**
+- Green (0-1): `#10B981` (existing Signal Green)
+- Yellow (2-4): `#FFB84D` (existing Trajectory Gold)
+- Orange (5-7): `#F97316` (Tailwind orange-500)
+- Red (8-10): `#EF4444` (Tailwind red-500)
+
+**Reference Material:**
+- `ideation/ISO Tracker Avi Loeb/Analysis: Avi Loeb's Assessment Criteria (The Loeb Scale).md`
+- `ideation/ISO Tracker Avi Loeb/Avi Loeb's Assessment Criteria Research.md`
+- arXiv:2508.09167
+
+---
+
 ## 📋 SPRINT 7: Orbital Visualization & NASA API Integration (COMPLETE)
 
 **Status**: ✅ COMPLETE (Nov 19, 2025)
