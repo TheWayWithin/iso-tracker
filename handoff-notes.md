@@ -1,356 +1,267 @@
-# Sprint 7: Orbital Visualization & NASA API Integration
+# Handoff Notes - Sprint 9: Landing Page Alignment
 
-**Mission**: Transform ISO Tracker from static data platform to dynamic tracking system
-**Status**: 🔵 READY TO START
-**Date**: 2025-11-17
-**Estimated Time**: 6-8 hours total
-
----
-
-## Context: Where We Are
-
-### ✅ Sprint 6 Complete (MVP Live at https://www.isotracker.org)
-- Database migrations deployed (013 & 014)
-- Community Sentiment visualization working
-- Evidence Assessment framework functional
-- Authentication and user flows tested
-- PWA icons deployed and displaying
-- 36 QA tests passed, 0 failures
-
-### ❌ Current Gap: No Orbital Visualization
-**The "tracker" in "ISO Tracker" doesn't track yet!**
-
-Users can see:
-- ✅ ISO metadata (name, designation, discovery date)
-- ✅ Evidence assessments and Community Sentiment
-- ✅ NASA Horizons Data section (placeholder)
-
-Users CANNOT see:
-- ❌ Orbital trajectories (hyperbolic paths proving interstellar origin)
-- ❌ Real ephemeris data from NASA API
-- ❌ Position/velocity/observation windows
-- ❌ Visual representation of object movement
+**Mission**: Realign isotracker.org and 3i-atlas.live landing pages with brand strategy
+**Status**: 🔵 DESIGN COMPLETE - READY FOR DEVELOPMENT
+**Date**: 2025-11-22
 
 ---
 
-## Sprint 7 Goal
+## Context: What's Happening
 
-**Add orbital visualization to make ISO Tracker truly track interstellar objects.**
+### Problem (From Landing Page Review)
+The current isotracker.org homepage has:
+- ❌ Academic positioning ("Evidence-Based Analysis") instead of wonder-driven ("Track Interstellar Visitors")
+- ❌ Wrong pricing tiers (3-tier with wrong names vs. 4-tier with correct names)
+- ❌ 3i-atlas.live redirects to isotracker.org instead of being standalone email capture
 
-This includes:
-1. NASA Horizons API integration for real ephemeris data
-2. Ephemeris data table (RA, Dec, distance, magnitude)
-3. 2D orbital plot showing hyperbolic trajectories
-4. Database caching for performance
-5. Mobile-responsive visualization
-6. Educational tooltips for non-astronomers
-
----
-
-## Implementation Plan
-
-### Phase 7.1: NASA Horizons API Integration (2 hours)
-**Objective**: Fetch real ephemeris data from JPL Horizons system
-
-**Tasks**:
-1. Create API client: `apps/web/lib/nasa/horizons-api.ts`
-   - Function: `fetchEphemeris(objectId, startDate, endDate, stepSize?)`
-   - Function: `fetchOrbitalElements(objectId)`
-   - Error handling with graceful fallback
-
-2. Database migration: `supabase/migrations/015_ephemeris_cache.sql`
-   - Table: `ephemeris_cache` with columns for RA, Dec, distance, magnitude, phase angle
-   - Index on (iso_object_id, observation_date)
-   - Cache TTL: 7 days
-
-3. API route: `apps/web/app/api/iso/[id]/ephemeris/route.ts`
-   - Check cache first (7-day TTL)
-   - Fetch from NASA if cache miss/stale
-   - Store in database
-   - Return JSON for visualization
-
-**Success Criteria**:
-- [ ] NASA API client fetches data for 1I/'Oumuamua
-- [ ] Data cached in database with indexes
-- [ ] API route returns ephemeris JSON
+### Good News
+The current isotracker.org homepage is **already 80% aligned** - most changes are copy refinements, not structural rewrites.
 
 ---
 
-### Phase 7.2: Ephemeris Data Table (1 hour)
-**Objective**: Display observation data in user-friendly table
+## DESIGN SPECIFICATIONS (COMPLETE)
 
-**Tasks**:
-1. Create component: `apps/web/components/visualization/EphemerisTable.tsx`
-   - Columns: Date/Time, RA, Dec, Distance (AU), Magnitude, Phase Angle
-   - Sortable columns
-   - Date range selector (default: ±30 days)
-   - Responsive: horizontal scroll on mobile
+### Part 1: isotracker.org Updates
 
-2. Add educational tooltips:
-   - RA/Dec: "Celestial coordinates (like lat/lon in space)"
-   - AU: "Astronomical Units (Earth-Sun distance)"
-   - Magnitude: "Brightness (lower = brighter)"
-   - Phase Angle: "Sun-Object-Earth angle"
+#### Hero Section Changes
 
-3. Integrate into ISO detail page
-   - Replace "NASA API Integration Coming Soon" placeholder
-   - Add to "NASA Horizons Data" section
+**Current Headline:**
+"Track Interstellar Visitors in Real-Time"
 
-**Success Criteria**:
-- [ ] Table displays real NASA data
-- [ ] Date range changes update data
-- [ ] Tooltips explain astronomy terms
-- [ ] Mobile-responsive
+**New Headline:**
+"Are We Alone? Track the Answer."
 
----
+**Current Subheadline:**
+"Join thousands of observers tracking mysterious objects from beyond our solar system. Are we alone? The evidence is in the sky."
 
-### Phase 7.3: 2D Orbital Visualization (2-3 hours)
-**Objective**: Interactive solar system plot showing hyperbolic trajectory
+**New Subheadline:**
+"Something is passing through our solar system. Thousands are already watching. Join them."
 
-**Technology**: Canvas API for performance + full control
+**Add Star Field Background:**
+Add this CSS to `apps/web/app/globals.css`:
 
-**Tasks**:
-1. Create component: `apps/web/components/visualization/OrbitalPlot2D.tsx`
-   - Canvas layers: Background grid → Planetary orbits → Object trajectory → Current positions → Labels
-   - Sun at center (0,0) in heliocentric view
-   - Planets as reference points (Mercury through Jupiter)
-   - Object's hyperbolic trajectory (golden curve)
-   - Current position (animated pulsing dot)
-
-2. Interactive features:
-   - Zoom: Mouse wheel or +/- buttons (0.5x to 5x scale)
-   - Pan: Click-drag to move view
-   - Hover: Tooltip with date/distance on trajectory
-   - Time scrubbing: Slider to show object at any date
-   - Reset button to default view
-
-3. Visual design:
-   - Background: Cosmic blue (#0A1628)
-   - Sun: Yellow (#FFD700)
-   - Planets: Gray circles (#9CA3AF)
-   - Object trajectory: Golden (#FFB84D, 2px line)
-   - Current position: Blue pulsing dot (#2E5BFF)
-   - Grid lines: Subtle gray (#374151, opacity 0.2)
-
-4. Responsive design:
-   - Desktop: Max 800px width
-   - Mobile: Full width with touch controls (pinch zoom, drag pan)
-
-**Success Criteria**:
-- [ ] Visualization shows Sun, planets, object trajectory
-- [ ] Hyperbolic path clearly visible
-- [ ] Interactive controls work smoothly
-- [ ] 60 FPS on desktop, 30+ FPS on mobile
-- [ ] Touch controls work on iPad/iPhone
-
----
-
-### Phase 7.4: Data Pipeline & Performance (0.5 hours)
-**Objective**: Optimize data loading and caching
-
-**Tasks**:
-1. Cache strategy:
-   - Check database cache first
-   - If cache hit AND < 7 days old: return cached
-   - If cache miss OR stale: fetch from NASA
-   - Store new data with `cached_at = NOW()`
-
-2. Performance optimizations:
-   - Limit ephemeris queries to 90 days max
-   - React.memo for visualization component
-   - Debounce date range changes (500ms)
-   - Lazy load visualization (render when scrolled to)
-
-3. Loading states:
-   - Skeleton loader for table
-   - Canvas placeholder for visualization
-   - Progress bar if NASA API > 2 seconds
-   - Error boundary with retry button
-
-**Success Criteria**:
-- [ ] First load: < 5 seconds
-- [ ] Cached loads: < 1 second
-- [ ] No UI blocking during fetch
-- [ ] Graceful error handling
-
----
-
-### Phase 7.5: UI/UX Polish (0.5 hours)
-**Objective**: Professional presentation and usability
-
-**Tasks**:
-1. Page layout update:
-   - Move "NASA Horizons Data" section to top
-   - Tab navigation: Overview | Orbital Data | Evidence | Community
-   - Visualization as primary content
-
-2. Educational content:
-   - Info icon next to "Hyperbolic Trajectory"
-   - Tooltip explaining hyperbolic orbit = proof of interstellar origin
-   - Link to NASA JPL Horizons documentation
-   - "How to read this chart" expandable section
-
-3. Mobile optimization:
-   - Test on iPhone Safari and Android Chrome
-   - Pinch-zoom works on visualization
-   - Table scrolls horizontally without breaking layout
-   - Touch-friendly controls (44px minimum tap targets)
-
-4. Accessibility:
-   - Alt text for visualization
-   - Keyboard navigation for zoom controls
-   - ARIA labels for interactive elements
-   - Screen reader announcement when loaded
-   - High contrast mode support
-
-**Success Criteria**:
-- [ ] Visualization visually prominent
-- [ ] Non-technical users understand what they're seeing
-- [ ] Works smoothly on mobile devices
-- [ ] Passes WCAG 2.1 AA standards
-
----
-
-### Phase 7.6: Testing & QA (1 hour)
-**Objective**: Validate all features work correctly
-
-**Tasks**:
-1. Manual testing checklist:
-   - [ ] 1I/'Oumuamua: Hyperbolic trajectory visible
-   - [ ] 2I/Borisov: Data loads correctly
-   - [ ] 3I/ATLAS: Future predictions work
-   - [ ] Date range change updates table/visualization
-   - [ ] Zoom in/out smooth without artifacts
-   - [ ] Pan dragging works correctly
-   - [ ] Time scrubbing slider updates position
-   - [ ] Tooltip shows date/distance on hover
-   - [ ] Mobile pinch zoom and drag work
-   - [ ] Error handling displays friendly message
-
-2. Performance testing:
-   - Measure time to first render: < 3 seconds
-   - Cache vs non-cache load time comparison
-   - Memory usage < 50MB for visualization
-   - Test with Fast 3G network simulation
-
-3. Cross-browser testing:
-   - [ ] Chrome (desktop and mobile)
-   - [ ] Safari (desktop and iOS)
-   - [ ] Firefox (desktop)
-   - [ ] Edge (desktop)
-
-**Success Criteria**:
-- [ ] Manual QA checklist 100% complete
-- [ ] No critical bugs or regressions
-- [ ] Performance within targets
-
----
-
-## Files to Create
-
-**New Files** (7 total):
-1. `apps/web/lib/nasa/horizons-api.ts` - NASA API client
-2. `apps/web/lib/nasa/coordinates.ts` - Coordinate transformations
-3. `apps/web/components/visualization/EphemerisTable.tsx` - Data table
-4. `apps/web/components/visualization/OrbitalPlot2D.tsx` - 2D canvas viz
-5. `apps/web/app/api/iso/[id]/ephemeris/route.ts` - Ephemeris API
-6. `supabase/migrations/015_ephemeris_cache.sql` - Database schema
-7. `apps/web/lib/nasa/horizons-api.test.ts` - Unit tests (optional)
-
-**Modified Files** (2 total):
-1. `apps/web/app/iso-objects/[id]/page.tsx` - Integrate visualization
-2. `apps/web/lib/nasa/horizons.ts` - Update to use real API (already uses real data)
-
----
-
-## Critical Warnings
-
-### 🚨 Security-First Development (CRITICAL)
-Per CLAUDE.md Critical Software Development Principles:
-- ✅ **NEVER compromise security for convenience**
-- ✅ **Root cause analysis before fixes**
-- ✅ **Understand design intent before changing**
-- ✅ **Maintain all security requirements**
-
-### 🚨 NASA API Specifics
-**Object IDs for Horizons API**:
-- 1I/'Oumuamua: COMMAND='A2017 U1' or DES=2017001
-- 2I/Borisov: COMMAND='C2019 Q4' or DES=2019002
-- 3I/ATLAS: COMMAND='A2025 O1' or DES=2025001
-
-**API Endpoint**:
-```
-https://ssd.jpl.nasa.gov/api/horizons.api?
-  format=text&
-  COMMAND='A2017 U1'&
-  MAKE_EPHEM='YES'&
-  EPHEM_TYPE='OBSERVER'&
-  CENTER='500@10'&  (Sun)
-  START_TIME='2025-11-01'&
-  STOP_TIME='2025-12-01'&
-  STEP_SIZE='1d'&
-  QUANTITIES='1,9,20,23,24'
+```css
+.star-field {
+  background-image:
+    radial-gradient(2px 2px at 20px 30px, rgba(245, 247, 250, 0.15), transparent),
+    radial-gradient(2px 2px at 40px 70px, rgba(245, 247, 250, 0.1), transparent),
+    radial-gradient(1px 1px at 90px 40px, rgba(245, 247, 250, 0.2), transparent),
+    radial-gradient(2px 2px at 160px 120px, rgba(245, 247, 250, 0.12), transparent),
+    radial-gradient(1px 1px at 230px 80px, rgba(245, 247, 250, 0.18), transparent);
+  background-repeat: repeat;
+  background-size: 250px 200px;
+  pointer-events: none;
+}
 ```
 
-### 🚨 Database Architecture Rule
-Per CLAUDE.md Database Architecture Principles:
-- ❌ **NEVER create triggers on `auth.users` table**
-- ✅ **Always handle auth-related records in application layer**
-- ✅ **User records created in application code, not triggers**
-
-### 🚨 File Persistence Verification
-Per CLAUDE.md File Persistence Bug Protocol:
-- ⚠️ **NEVER mark task [x] without filesystem verification**
-- ⚠️ **After creating files, verify with `ls -lh /path/to/file`**
-- ⚠️ **Document verification timestamp in progress.md**
-
----
-
-## Communication Protocol for Jamie (ADHD-Friendly)
-
-**MANDATORY for all agents working on Sprint 7:**
-
-### Structure Every Response:
-1. **Brief Context** (1-2 sentences): What we're doing and why it matters
-2. **Exact Instructions**: Start from current state, numbered steps with specific actions
-3. **Closure After Each Step**: Ask "Have you completed this step?" and wait for confirmation
-
-### Example of GOOD Communication:
-```
-**Context**: We're creating the NASA API client. This fetches real orbital data for visualization.
-
-**Where you are now**: You have the project open in your terminal.
-
-**Steps**:
-1. Create the file: `touch apps/web/lib/nasa/horizons-api.ts`
-2. Open it in your editor
-3. Copy the code from the developer's response
-
-**Checkpoint**: Have you created the file? Ready to add the code?
+Then add to hero section:
+```jsx
+<div className="absolute inset-0 star-field opacity-60" />
 ```
 
-### Red Flags (Rewrite if you see these):
-- ❌ Starting without stating current location
-- ❌ Multiple paragraphs before instructions
-- ❌ Assuming steps done without confirmation
-- ❌ Technical jargon without plain-language explanation
-- ❌ 10+ steps without a check-in point
+#### Value Prop Card Copy Updates
+
+**Card 1 - Live Sky Tracking:**
+- Current: "Watch interstellar objects cross your sky in real-time with precision position data."
+- New: "Watch interstellar visitors cross your sky. Real-time positions, updated every minute."
+
+**Card 2 - Observation Planning:**
+- Current: "Know exactly when and where to look. Get alerts for optimal viewing from your location."
+- New: "Know exactly when and where to look tonight. Custom alerts for optimal viewing from your location."
+
+**Card 3 - Community Debate:**
+- Current: "Cast your vote: alien or natural? Join the discussion with evidence-based analysis."
+- New: "Cast your vote: alien or natural? Join 12,000+ observers analyzing the evidence together."
+
+#### 3I/ATLAS Section Enhancement
+
+Add live data preview after the subheadline (optional enhancement):
+
+```jsx
+<div className="flex flex-wrap justify-center gap-6 mt-6 mb-8">
+  <div className="flex items-center gap-2">
+    <span className="text-2xl font-mono font-bold text-[#FFB84D]">2.3</span>
+    <span className="text-sm text-[#94A3B8]">AU from Earth</span>
+  </div>
+  <div className="flex items-center gap-2">
+    <span className="text-2xl font-mono font-bold text-[#FFB84D]">15.2</span>
+    <span className="text-sm text-[#94A3B8]">km/s velocity</span>
+  </div>
+  <div className="flex items-center gap-2">
+    <span className="text-2xl font-mono font-bold text-[#10B981]">847</span>
+    <span className="text-sm text-[#94A3B8]">observers tracking</span>
+  </div>
+</div>
+```
 
 ---
 
-## Next Action
+### Part 2: 3i-atlas.live Standalone Page (NEW)
 
-**Delegate to Developer**: Phase 7.1 - NASA Horizons API Integration
+Create new file: `apps/web/app/atlas-landing/page.tsx`
 
-**What Developer Needs**:
-- Read this handoff-notes.md
-- Read agent-context.md
-- Follow Critical Software Development Principles
-- Create files for Phase 7.1
-- Update handoff-notes.md with findings for Phase 7.2
+This will be a standalone email capture page that can be deployed to 3i-atlas.live domain.
 
-**Success Signal**: Developer reports "Phase 7.1 complete" with verification that files exist and API works.
+#### Page Structure
+
+```jsx
+export default function AtlasLanding() {
+  return (
+    <main className="min-h-screen bg-gradient-to-b from-[#0A1628] via-[#0D1B2A] to-[#0A1628] relative overflow-hidden">
+      {/* Star field overlay */}
+      <div className="absolute inset-0 star-field opacity-50 pointer-events-none" />
+
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-12 text-center">
+        {/* Urgency Badge */}
+        <div className="inline-flex items-center gap-2 bg-[#FFB84D]/20 border border-[#FFB84D]/50 rounded-full px-6 py-2 mb-8 relative">
+          <span className="w-3 h-3 bg-[#FFB84D] rounded-full animate-ping opacity-75 absolute" />
+          <span className="w-3 h-3 bg-[#FFB84D] rounded-full relative" />
+          <span className="text-sm font-bold text-[#FFB84D] uppercase tracking-widest ml-1">Approaching Now</span>
+        </div>
+
+        {/* Headline */}
+        <h1 className="text-5xl md:text-7xl font-bold text-[#F5F7FA] font-['Space_Grotesk'] tracking-tight mb-6">
+          <span className="text-[#FFB84D]">3I/ATLAS</span>
+          <br />
+          Is Coming
+        </h1>
+
+        {/* Subheadline */}
+        <p className="text-lg md:text-xl text-[#CBD5E1] mb-10 max-w-md mx-auto leading-relaxed">
+          The third known interstellar visitor is entering our solar system.
+          <span className="text-[#F5F7FA] font-medium"> Be first to track it.</span>
+        </p>
+
+        {/* Email Form */}
+        <form className="w-full max-w-md mx-auto mb-8">
+          <div className="flex flex-col sm:flex-row gap-3">
+            <input
+              type="email"
+              placeholder="Enter your email"
+              className="flex-1 bg-[#0A1628]/80 border border-[#2E5BFF]/30 rounded-lg px-4 py-4 text-[#F5F7FA] placeholder-[#64748B] focus:border-[#2E5BFF] focus:outline-none focus:ring-2 focus:ring-[#2E5BFF]/20 text-base min-h-[48px]"
+              required
+              aria-label="Email address"
+            />
+            <button
+              type="submit"
+              className="bg-[#FFB84D] hover:bg-[#FFC978] text-[#0A1628] font-semibold px-8 py-4 rounded-lg min-h-[48px] transition-all duration-200 shadow-[0_4px_16px_rgba(255,184,77,0.3)] hover:shadow-[0_6px_20px_rgba(255,184,77,0.4)] whitespace-nowrap"
+            >
+              Notify Me
+            </button>
+          </div>
+        </form>
+
+        {/* Social Proof */}
+        <p className="text-sm text-[#64748B] mb-12">
+          Join <span className="text-[#F5F7FA] font-medium">12,000+</span> observers waiting for launch
+        </p>
+
+        {/* Explainer Section */}
+        <div className="border-t border-[#2E5BFF]/10 pt-12 max-w-lg mx-auto">
+          <h2 className="text-lg font-bold text-[#F5F7FA] mb-4 font-['Space_Grotesk']">
+            What is 3I/ATLAS?
+          </h2>
+          <p className="text-[#94A3B8] mb-6 leading-relaxed">
+            3I/ATLAS is the third confirmed interstellar object detected in our solar system -
+            an object from another star system passing through our cosmic neighborhood.
+            Our platform lets you track its journey in real-time.
+          </p>
+          <a
+            href="https://isotracker.org"
+            className="inline-flex items-center gap-2 text-[#2E5BFF] hover:text-[#4B73FF] font-medium transition-colors"
+          >
+            Learn more at isotracker.org
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </a>
+        </div>
+
+        {/* Footer */}
+        <footer className="mt-16 py-8 border-t border-[#2E5BFF]/10 text-center w-full">
+          <p className="text-xs text-[#64748B]">
+            2025 ISO Tracker. Democratizing the search for interstellar visitors.
+          </p>
+        </footer>
+      </div>
+    </main>
+  );
+}
+```
 
 ---
 
-*Last Updated: 2025-11-17 by coordinator*
+## IMPLEMENTATION CHECKLIST
+
+### Phase 1: isotracker.org Updates
+
+File: `apps/web/app/page.tsx`
+
+- [ ] Update hero H1 to "Are We Alone? Track the Answer."
+- [ ] Update hero subheadline to new copy
+- [ ] Add star field CSS to `globals.css`
+- [ ] Add star field div overlay to hero section
+- [ ] Update Card 1 description (Live Sky Tracking)
+- [ ] Update Card 2 description (Observation Planning)
+- [ ] Update Card 3 description (Community Debate)
+- [ ] (Optional) Add live data preview to 3I/ATLAS section
+
+### Phase 2: 3i-atlas.live New Page
+
+File: `apps/web/app/atlas-landing/page.tsx`
+
+- [ ] Create new file with full page component
+- [ ] Ensure star field CSS is in globals.css
+- [ ] Test on mobile (375px)
+- [ ] Verify email form styling
+- [ ] Test link to isotracker.org
+
+---
+
+## CRITICAL REQUIREMENTS
+
+### Brand Colors
+- Cosmic Deep Blue: #0A1628 (backgrounds)
+- Starlight White: #F5F7FA (primary text)
+- Soft White: #CBD5E1 (subheadlines)
+- Nebula Blue: #2E5BFF (CTAs, interactive)
+- Trajectory Gold: #FFB84D (urgency, 3I/ATLAS)
+- Signal Green: #10B981 (live indicators)
+- Asteroid Grey: #64748B (secondary text)
+- Steel Grey: #94A3B8 (card body text)
+
+### Typography
+- Headlines: Space Grotesk Bold (font-['Space_Grotesk'])
+- Body: Inter (default)
+- Data: JetBrains Mono (font-mono)
+
+### Accessibility
+- Touch targets: 44x44px minimum (min-h-[44px] min-w-[44px])
+- Contrast: WCAG AAA 7:1 minimum
+- Focus states: visible outline
+
+---
+
+## NOTES FOR DEVELOPER
+
+1. **isotracker.org is mostly aligned** - Don't over-engineer. Changes are mostly copy updates.
+
+2. **Star field is CSS-only** - No JavaScript needed. Uses pointer-events: none.
+
+3. **Email form backend** - For MVP, form can just be styled. Backend integration (Supabase table or ConvertKit) can be Phase 3.
+
+4. **3i-atlas.live deployment** - The atlas-landing page can be accessed at /atlas-landing for testing. Actual domain routing handled by Vercel/DNS configuration later.
+
+---
+
+## NEXT STEPS
+
+1. Developer implements isotracker.org homepage updates
+2. Developer creates 3i-atlas.live page
+3. Tester validates WCAG AAA compliance
+4. Operator handles domain configuration (if needed)
+
+---
+
+*Designer handoff complete. Ready for developer implementation.*
+*Date: 2025-11-22*

@@ -4,15 +4,16 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800">
       {/* Hero Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
-        <div className="text-center">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 relative">
+        {/* Star field overlay */}
+        <div className="absolute inset-0 star-field opacity-60" />
+        <div className="text-center relative z-10">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6">
-            Evidence-Based Analysis of
-            <span className="block text-blue-400">Interstellar Objects</span>
+            Are We Alone?
+            <span className="block text-blue-400">Track the Answer.</span>
           </h1>
           <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-8">
-            Join the scientific community evaluating claims about 1I/'Oumuamua, 2I/Borisov,
-            and the upcoming 3I/ATLAS. Separate hype from evidence with rigorous methodology.
+            Something is passing through our solar system. Thousands are already watching. Join them.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
@@ -39,27 +40,24 @@ export default function Home() {
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-slate-900/50 p-6 rounded-lg border border-slate-700">
-              <div className="text-blue-400 text-2xl mb-4">📊</div>
-              <h3 className="text-xl font-semibold text-white mb-3">Scientific Rigor</h3>
+              <div className="text-blue-400 text-2xl mb-4">📡</div>
+              <h3 className="text-xl font-semibold text-white mb-3">Live Sky Tracking</h3>
               <p className="text-slate-400">
-                Every piece of evidence is evaluated using chain of custody, witness credibility,
-                and technical analysis scoring.
+                Watch interstellar visitors cross your sky. Real-time positions, updated every minute.
               </p>
             </div>
             <div className="bg-slate-900/50 p-6 rounded-lg border border-slate-700">
-              <div className="text-blue-400 text-2xl mb-4">🔬</div>
-              <h3 className="text-xl font-semibold text-white mb-3">Community Consensus</h3>
+              <div className="text-blue-400 text-2xl mb-4">🔭</div>
+              <h3 className="text-xl font-semibold text-white mb-3">Observation Planning</h3>
               <p className="text-slate-400">
-                See how the scientific community weighs in: alien origin, natural phenomenon,
-                or uncertain. No echo chambers.
+                Know exactly when and where to look tonight. Custom alerts for optimal viewing from your location.
               </p>
             </div>
             <div className="bg-slate-900/50 p-6 rounded-lg border border-slate-700">
-              <div className="text-blue-400 text-2xl mb-4">🌌</div>
-              <h3 className="text-xl font-semibold text-white mb-3">Real-Time Data</h3>
+              <div className="text-blue-400 text-2xl mb-4">🗳️</div>
+              <h3 className="text-xl font-semibold text-white mb-3">Community Debate</h3>
               <p className="text-slate-400">
-                NASA JPL Horizons integration provides live orbital data for tracked
-                interstellar objects.
+                Cast your vote: alien or natural? Join 12,000+ observers analyzing the evidence together.
               </p>
             </div>
           </div>
