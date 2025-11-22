@@ -2,7 +2,7 @@
 
 **Mission**: ISO Tracker Development - Evidence-Based Analysis Platform
 **Started**: 2025-11-09
-**Status**: 🟢 Active - Sprint 9 IN PROGRESS
+**Status**: 🟢 Active - Sprint 9 COMPLETE ✅
 **Last Updated**: 2025-11-22
 
 ---
@@ -22,6 +22,8 @@
   - 3i-atlas.live standalone email capture page
   - Star field background effect
   - Updated value proposition copy
+  - **Visibility update**: Both 3i-atlas pages updated to "NOW VISIBLE" status
+  - Timeline updated: "Peak Observation Window" now current phase
 
 - ✅ **Sprint 8** (Nov 22): Observation Planning & Visibility Features
   - Location-based visibility calculations (GPS + manual city entry)
