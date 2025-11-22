@@ -6,7 +6,7 @@ import { EphemerisTable } from './EphemerisTable';
 import { CommunitySentiment } from '../evidence/CommunitySentiment';
 import { ErrorBoundary } from '../ErrorBoundary';
 import Link from 'next/link';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Scale } from 'lucide-react';
 
 // Observation Planning Components
 import LocationSelector from '../observation/LocationSelector';
@@ -16,6 +16,10 @@ import SkyMap from '../observation/SkyMap';
 import HowToGuide from '../observation/HowToGuide';
 import { useVisibility, formatTimeUntil } from '@/hooks/useVisibility';
 import type { LocationResult } from '@/lib/location/location-service';
+
+// Loeb Scale Components
+import { LoebScaleDashboard, LoebCriteriaChecklist, LoebScaleVoting } from '../loeb-scale';
+import { useLoebScale } from '@/hooks/useLoebScale';
 
 interface ISODetailTabsProps {
   isoId: string;
@@ -34,8 +38,15 @@ export function ISODetailTabs({
   isoDiscoveryDate,
   isoDesignation,
 }: ISODetailTabsProps) {
-  const [activeTab, setActiveTab] = useState<'overview' | 'orbital' | 'observation' | 'evidence' | 'community'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'orbital' | 'observation' | 'loeb-scale' | 'evidence' | 'community'>('overview');
   const [userLocation, setUserLocation] = useState<LocationResult | undefined>(undefined);
+
+  // Fetch Loeb Scale data
+  const { data: loebData, loading: loebLoading, error: loebError, refetch: refetchLoeb } = useLoebScale({
+    isoId,
+    autoRefresh: true,
+    refreshInterval: 60000,
+  });
 
   // Fetch visibility data
   const { data: visibilityData, loading: visibilityLoading, error: visibilityError, refetch: refetchVisibility } = useVisibility({
@@ -95,6 +106,31 @@ export function ISODetailTabs({
               ) : (
                 <span className="w-2 h-2 rounded-full bg-gray-400" title="Not currently visible" />
               )
+            )}
+          </button>
+          <button
+            onClick={() => setActiveTab('loeb-scale')}
+            className={`px-6 py-3 font-medium rounded-t-lg transition-colors flex items-center gap-2 ${
+              activeTab === 'loeb-scale'
+                ? 'bg-white text-blue-600 border-t-2 border-x border-blue-600'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+            }`}
+            aria-current={activeTab === 'loeb-scale' ? 'page' : undefined}
+          >
+            <Scale className="w-4 h-4" />
+            Loeb Scale
+            {/* Zone indicator */}
+            {loebData?.official_zone && (
+              <span
+                className="w-2 h-2 rounded-full"
+                style={{
+                  backgroundColor:
+                    loebData.official_zone === 'green' ? '#10B981' :
+                    loebData.official_zone === 'yellow' ? '#FFB84D' :
+                    loebData.official_zone === 'orange' ? '#F97316' : '#EF4444'
+                }}
+                title={`Level ${loebData.official_level}`}
+              />
             )}
           </button>
           <button
@@ -336,6 +372,62 @@ export function ISODetailTabs({
 
             {/* How To Guide */}
             <HowToGuide />
+          </div>
+        )}
+
+        {/* Loeb Scale Tab */}
+        {activeTab === 'loeb-scale' && (
+          <div className="p-6 space-y-8 bg-slate-900">
+            {/* Dashboard */}
+            <ErrorBoundary>
+              <LoebScaleDashboard
+                officialLevel={loebData?.official_level ?? null}
+                officialZone={loebData?.official_zone ?? null}
+                officialClassification={loebData?.official_classification ?? null}
+                communityLevel={loebData?.community_level ?? null}
+                communityZone={loebData?.community_zone ?? null}
+                communityVoteCount={loebData?.community_vote_count ?? 0}
+                isLoading={loebLoading}
+              />
+            </ErrorBoundary>
+
+            {/* Two-column layout on desktop */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Criteria Checklist */}
+              <div>
+                <h3 className="text-lg font-semibold text-slate-100 mb-4">Assessment Criteria</h3>
+                <ErrorBoundary>
+                  <LoebCriteriaChecklist
+                    currentLevel={loebData?.official_level ?? null}
+                    criteriaMet={loebData?.criteria_met ?? []}
+                    evidenceLinks={loebData?.evidence_links ?? []}
+                  />
+                </ErrorBoundary>
+              </div>
+
+              {/* Voting */}
+              <div>
+                <h3 className="text-lg font-semibold text-slate-100 mb-4">Community Voting</h3>
+                <ErrorBoundary>
+                  <LoebScaleVoting
+                    isoId={isoId}
+                    officialLevel={loebData?.official_level ?? null}
+                    onVoteSubmit={() => refetchLoeb()}
+                  />
+                </ErrorBoundary>
+              </div>
+            </div>
+
+            {/* Additional Info */}
+            {loebData?.official_reasoning && (
+              <div className="p-4 bg-slate-800/50 rounded-lg border border-slate-700">
+                <h4 className="text-sm font-semibold text-slate-300 mb-2">Official Assessment Reasoning</h4>
+                <p className="text-sm text-slate-400">{loebData.official_reasoning}</p>
+                {loebData.official_source && (
+                  <p className="text-xs text-slate-500 mt-2">Source: {loebData.official_source}</p>
+                )}
+              </div>
+            )}
           </div>
         )}
 

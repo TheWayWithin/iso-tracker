@@ -1,0 +1,100 @@
+Suspected Active
+Technology with
+Unclear Intent
+
+Level 6 criteria plus at least one of: (i) Responsive behavior to
+observations; (ii) Signals of unknown purpose; (iii) Operational
+intent that cannot be determined or appears potentially hostile.
+
+8
+
+Red
+
+Confirmed
+Technology
+(No Impact)
+
+Direct investigation confirms extraterrestrial artificial origin.
+No collision trajectory.
+
+9
+
+Red
+
+Confirmed
+Technology
+(Regional Impact)
+
+Confirmed extraterrestrial artificial origin. Impact trajectory with
+regional consequences.
+
+10
+
+Red
+
+Confirmed
+Technology
+(Global Impact)
+
+Confirmed extraterrestrial artificial origin. Impact trajectory with
+global terrestrial consequences.
+
+Note. The Loeb Scale extends the Torino Scale to address ISOs, incorporating technological
+origin assessment. Color coding follows standard risk communication protocols. Level 4 marks
+the critical threshold where technosignature indicators trigger enhanced observational
+campaigns. Objects must meet all criteria for Levels 0-3 sequentially. For Levels 4-10, objects
+may skip levels if higher-level indicators are definitively observed (e.g., electromagnetic signals
+would justify direct Level 6 classification).
+Levels 0-4
+The Loeb Scale's architecture divides into three zones reflecting increasing deviation
+from expected natural phenomena. The Green Zone encompasses Levels 0-1, representing
+
+5
+
+objects consistent with known natural processes, though Level 1 allows for minor unexplained
+variations. The Yellow Zone, covering Levels 2-4, addresses objects with increasingly
+significant anomalies. Level 2 captures single major deviations, such as trajectory anomalies
+exceeding gravitational models. Level 3 indicates multiple persistent anomalies, particularly nongravitational accelerations that significantly exceed cometary outgassing limits.
+The critical threshold occurs at Level 4, where technosignature indicators enter formal
+consideration. This level requires meeting Level 3 criteria plus additional features weakly
+consistent with artificial origin, such as spectral signatures absent from known asteroid
+taxonomies, albedo variations inconsistent with natural materials, unusual shape from lightcurve
+variations, or trajectory alignments with planetary orbital planes having a low probability. Level
+4 represents the critical juncture where scientific curiosity must expand to include strategic
+considerations, the point at which 'What is it?' necessarily becomes 'What does it mean for
+humanity?' Though remaining within the Yellow Zone as these indicators require verification.
+Levels 5-7
+The Orange Zone encompasses Levels 5-7, marking the qualitative shift to suspected
+artificial origin requiring immediate strategic response. Level 5 applies when strong persistent
+indicators suggest artificial but non-operational technology, such as surface compositions
+inconsistent with expected cosmic ray bombardment or absence of cometary activity despite
+substantial non-gravitational acceleration. Level 6 elevates the classification when operational
+signs emerge, including electromagnetic emissions across non-natural frequencies, evidence of
+propulsion, or detection of deployed sub-probes. Level 7 addresses the complex scenario where
+technology is confirmed but intent remains unclear or potentially hostile, where detection itself
+may carry risks.
+
+6
+
+Unlike Near-Earth Objects (NEOs) that offer mostly years of observational opportunity,
+the hyperbolic trajectories of ISOs limit observational windows to months or weeks, requiring
+prepared response protocols. The distinction between natural and technological objects relies on
+convergent evidence across multiple observables. Following Loeb (2025b), key technosignature
+indicators include: propulsion signatures causing deviations from gravitational trajectories that
+exceed cometary outgassing limits; trajectories selectively targeting inner planets or exhibiting
+improbable alignments with the ecliptic plane; spectral signatures distinguishing artificial
+illumination or internal heat sources from reflected sunlight; anomalous shapes inferred from
+lightcurves; surface compositions inconsistent with expected interstellar weathering;
+electromagnetic signals across artificial frequencies; and evidence of deployed sub-probes. These
+criteria inform the progression from Level 4 (initial indicators) through Level 8 (confirmed
+technology).
+Levels 8-10
+The Red Zone, Levels 8-10, manages post-confirmation scenarios differentiated by
+impact potential. Level 8, confirmed technology posing no impact threat, has no Torino analog
+but represents humanity's most profound potential discovery. We advise mandatory immediate
+data release to prevent information hoarding and ensuring discoveries remain the “province of all
+mankind” per the Outer Space Treaty (United Nations, 1967, Article I). Levels 9 and 10 address
+regional and global terrestrial impact scenarios respectively, invoking emergency protocols that
+transcend typical natural disaster response given the added complexity of technological
+causation, whether from malfunction or intent.
+The scale's comprehensive structure serves three essential functions validated by decades

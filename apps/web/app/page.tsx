@@ -91,6 +91,116 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Loeb Scale Showcase */}
+      <section className="py-16 bg-slate-900/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-white mb-4">
+              The Loeb Scale
+            </h2>
+            <p className="text-slate-400 max-w-2xl mx-auto">
+              A scientific 0-10 classification system for evaluating interstellar objects.
+              Based on Avi Loeb&apos;s framework for assessing potential technosignatures.
+            </p>
+          </div>
+
+          {/* Scale Legend */}
+          <div className="flex flex-wrap justify-center gap-4 mb-8">
+            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/30">
+              <span className="text-emerald-500">●</span>
+              <span className="text-sm text-emerald-400 font-medium">0-1: Natural</span>
+            </div>
+            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-amber-500/10 border border-amber-500/30">
+              <span className="text-amber-500">◐</span>
+              <span className="text-sm text-amber-400 font-medium">2-4: Anomalous</span>
+            </div>
+            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-orange-500/10 border border-orange-500/30">
+              <span className="text-orange-500">◉</span>
+              <span className="text-sm text-orange-400 font-medium">5-7: Suspected</span>
+            </div>
+            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/30">
+              <span className="text-red-500">★</span>
+              <span className="text-sm text-red-400 font-medium">8-10: Confirmed</span>
+            </div>
+          </div>
+
+          {/* ISO Cards with Loeb Scores */}
+          <div className="grid md:grid-cols-3 gap-6">
+            {/* 1I/'Oumuamua */}
+            <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-700 hover:border-amber-500/50 transition-colors">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-white">1I/&apos;Oumuamua</h3>
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/20 border border-amber-500/40">
+                  <span className="text-amber-400">◐</span>
+                  <span className="text-amber-400 font-bold">4</span>
+                </div>
+              </div>
+              <p className="text-slate-400 text-sm mb-4">
+                The first confirmed interstellar object. Exhibits non-gravitational acceleration
+                and extreme elongation that challenge natural explanations.
+              </p>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-slate-500">Discovered 2017</span>
+                <Link href="/iso-objects" className="text-blue-400 hover:text-blue-300 font-medium">
+                  View Details →
+                </Link>
+              </div>
+            </div>
+
+            {/* 2I/Borisov */}
+            <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-700 hover:border-emerald-500/50 transition-colors">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-white">2I/Borisov</h3>
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40">
+                  <span className="text-emerald-400">●</span>
+                  <span className="text-emerald-400 font-bold">0</span>
+                </div>
+              </div>
+              <p className="text-slate-400 text-sm mb-4">
+                Classic cometary behavior with clear coma and tail. Composition matches
+                Solar System comets. Definitively natural.
+              </p>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-slate-500">Discovered 2019</span>
+                <Link href="/iso-objects" className="text-blue-400 hover:text-blue-300 font-medium">
+                  View Details →
+                </Link>
+              </div>
+            </div>
+
+            {/* 3I/ATLAS */}
+            <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-700 hover:border-amber-500/50 transition-colors">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-white">3I/ATLAS</h3>
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/20 border border-amber-500/40">
+                  <span className="text-amber-400">◐</span>
+                  <span className="text-amber-400 font-bold">4</span>
+                </div>
+              </div>
+              <p className="text-slate-400 text-sm mb-4">
+                Newly discovered interstellar object. Assessment pending additional
+                data collection. Shows early signs of anomalous characteristics.
+              </p>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-slate-500">Discovered 2025</span>
+                <Link href="/3i-atlas" className="text-blue-400 hover:text-blue-300 font-medium">
+                  View Details →
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center mt-8">
+            <Link
+              href="/iso-objects"
+              className="inline-flex items-center justify-center px-6 py-3 border border-slate-600 text-base font-medium rounded-md text-slate-300 hover:bg-slate-800 transition-colors"
+            >
+              Browse All ISOs
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Pricing Tiers */}
       <section className="bg-slate-800/50 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

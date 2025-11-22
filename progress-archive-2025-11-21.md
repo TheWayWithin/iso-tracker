@@ -3048,3 +3048,82 @@ Running 10 tests using 1 worker
 
 **Sprint 7 Status**: ✅ COMPLETE - All features implemented, tested, and validated
 
+
+---
+
+## 📋 Sprint 8: Observation Planning & Visibility (Nov 19-22, 2025)
+
+**Status**: ✅ SHIPPED TO PRODUCTION
+**Total Time**: ~12 hours
+**Commits**: ca7019c, ea33b81 (integration + bug fix)
+
+### What Was Delivered
+
+**Core Features**:
+- Location-based visibility calculations (GPS + manual city entry)
+- Real-time sky position display (altitude, azimuth, quality rating)
+- Observation window predictions (next 30 days, top 5 windows)
+- Sky Map visualization showing ISO position
+- "Add to Calendar" export for observation windows
+- VisibilityBadge on ISO list page
+- Observation tab in ISO detail pages
+- Educational tooltips (9 astronomy terms)
+- How-to-Use Observation Planning guide
+
+**Technical Implementation**:
+- NASA Horizons API visibility endpoint (`/api/iso/[id]/visibility`)
+- Coordinate transformations (RA/Dec → Alt/Az)
+- Web Worker for background calculations
+- Multi-layer caching (localStorage + sessionStorage)
+- Privacy-first design (location stored client-side only)
+
+### Files Created (Sprint 8)
+- `lib/astronomy/coordinates.ts` (coordinate transformations)
+- `lib/astronomy/visibility.ts` (visibility calculations)
+- `lib/astronomy/visibility.worker.ts` (Web Worker)
+- `lib/client/observation-cache.ts` (cache utilities)
+- `components/observation/HelpTooltip.tsx`
+- `components/observation/ObservationOnboarding.tsx`
+- `components/observation/HowToGuide.tsx`
+- `components/observation/VisibilityBadge.tsx`
+- `hooks/useVisibilityOptimized.ts`
+- `app/api/iso/[id]/visibility/route.ts`
+- `tests/sprint8-priority.spec.ts` (5 tests passing)
+
+### Critical Bugs Fixed
+- Bug #1: fetchHorizonsData import error → Changed to fetchEphemeris
+- Bug #2: Date type mismatch → Pass Date objects not ISO strings
+- Bug #3: Ephemeris data mapping → Map calendar_date to datetime
+- Bug #4: NASA ID lookup → Added database lookup before API call
+
+**Sprint 8 Status**: ✅ COMPLETE - All features shipped to production
+
+---
+
+## 📋 Sprint 9: Landing Page Realignment (Nov 22, 2025)
+
+**Status**: ✅ COMPLETE
+**Total Time**: ~2 hours
+
+### What Was Delivered
+
+**Homepage Updates (isotracker.org)**:
+- Wonder-driven headline: "Are We Alone? Track the Answer."
+- 4-tier pricing: Spectator (Free), Explorer ($4.99), Analyst ($9.99 POPULAR), Professional ($19.99)
+- Responsive grid: sm:grid-cols-2 lg:grid-cols-4
+
+**3i-atlas.live Standalone Page**:
+- Created `/atlas-landing/page.tsx`
+- "Visible Now" badge (updated from "Approaching Now")
+- Email capture form with brand colors
+
+**3I/ATLAS Main Page Updates**:
+- Hero badge: "NOW VISIBLE" (green)
+- Timeline: "Peak Observation Window" as current phase
+
+### Files Modified
+- `apps/web/app/page.tsx` - 4-tier pricing
+- `apps/web/app/3i-atlas/page.tsx` - Visibility updates
+- `apps/web/app/atlas-landing/page.tsx` - Visibility updates
+
+**Sprint 9 Status**: ✅ COMPLETE - Landing pages realigned
