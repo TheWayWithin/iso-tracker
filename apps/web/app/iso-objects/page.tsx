@@ -1,9 +1,44 @@
 import Link from 'next/link'
 import { getISOObjects } from '@/lib/nasa/horizons'
 import VisibilityBadge from '@/components/observation/VisibilityBadge'
+import { LoebScaleBadge } from '@/components/loeb-scale'
+import { createClient } from '@/lib/supabase/server'
+
+type LoebZone = 'green' | 'yellow' | 'orange' | 'red'
+
+interface LoebAssessment {
+  iso_id: string
+  official_level: number | null
+  official_zone: LoebZone | null
+}
+
+async function getLoebAssessments(): Promise<Record<string, LoebAssessment>> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from('loeb_scale_assessments')
+    .select('iso_id, official_level, official_zone')
+    .is('deleted_at', null)
+
+  if (error) {
+    console.error('Failed to fetch Loeb assessments:', error)
+    return {}
+  }
+
+  // Convert to lookup object by ISO ID
+  const lookup: Record<string, LoebAssessment> = {}
+  data?.forEach(assessment => {
+    lookup[assessment.iso_id] = assessment
+  })
+
+  return lookup
+}
 
 export default async function ISOObjectsPage() {
-  const isos = await getISOObjects()
+  const [isos, loebAssessments] = await Promise.all([
+    getISOObjects(),
+    getLoebAssessments()
+  ])
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -29,9 +64,16 @@ export default async function ISOObjectsPage() {
                   <h2 className="text-xl font-bold text-blue-600">{iso.name}</h2>
                   <p className="text-gray-600 text-sm">{iso.designation}</p>
                 </div>
-                <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                  {iso.object_type}
-                </span>
+                <div className="flex items-center gap-2">
+                  <LoebScaleBadge
+                    level={loebAssessments[iso.id]?.official_level ?? null}
+                    zone={loebAssessments[iso.id]?.official_zone ?? null}
+                    size="sm"
+                  />
+                  <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                    {iso.object_type}
+                  </span>
+                </div>
               </div>
 
               <div className="space-y-2 text-sm">
