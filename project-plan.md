@@ -510,11 +510,87 @@ Enable users to follow ISOs and receive notifications for observation windows, n
 
 ---
 
+## 📋 SPRINT 14a: Landing Page Alignment
+
+**PRD References**: `ideation/Landing Page Review_ isotracker.org & 3i-atlas.live.md`
+**Status**: 🔲 PLANNED
+**Dependencies**: Sprint 13 complete ✅
+**Priority**: HIGH - Must fix before Stripe launch (wrong prices displayed)
+**Estimated Time**: 4-6 hours
+
+### Mission Objective
+
+Align landing pages with evolved product strategy. Current pages show incorrect pricing, missing value proposition, and broken 3i-atlas.live strategy.
+
+### Background
+
+Per Landing Page Review document:
+- isotracker.org shows wrong tier names and prices
+- Missing "Evidence Framework" explanation (core differentiator)
+- 3i-atlas.live is a redirect, not standalone email capture
+
+### Phase 14a.1: Pricing Tier Correction (isotracker.org)
+**Goal**: Fix pricing display to match product strategy
+
+- [ ] Remove "Professional" tier ($19.99) - tier doesn't exist
+- [ ] Rename "Explorer" → "Event Pass" ($4.99/mo)
+- [ ] Rename "Analyst" → "Evidence Analyst" and fix price $9.99 → $19/mo
+- [ ] Update pricing card descriptions:
+  - Event Pass: "VIEW-ONLY evidence access, voting, observation alerts, auto-pauses between events"
+  - Evidence Analyst: "Submit & assess evidence, cast verdicts, full year-round access"
+- [ ] Update "POPULAR" badge to Evidence Analyst tier
+
+### Phase 14a.2: Evidence Framework Section (isotracker.org)
+**Goal**: Explain core value proposition clearly
+
+- [ ] Create new section: "Go Beyond Speculation: The Evidence Framework"
+- [ ] Visual explanation of two-step process:
+  - Step 1: Assess Quality (Chain of Custody, Witness Credibility, Technical Analysis)
+  - Step 2: Cast Your Verdict (alien | natural | uncertain + confidence)
+- [ ] Show "Community Sentiment vs Scientific Consensus" concept
+- [ ] Include sample visualization or mockup
+- [ ] Position section above pricing for better conversion flow
+
+### Phase 14a.3: 3i-atlas.live Standalone Page
+**Goal**: Convert redirect to standalone email capture
+
+- [ ] Create dedicated layout for 3i-atlas.live (no shared nav)
+- [ ] Configure Vercel multi-domain routing (3i-atlas.live → /3i-atlas-landing)
+- [ ] Design minimal page:
+  - Headline: "3I/ATLAS is passing through our solar system RIGHT NOW."
+  - Sub-headline: "Get real-time alerts when new evidence drops."
+  - Single email input + "Notify Me" button
+  - Social proof counter
+  - Footer: "Powered by isotracker.org"
+- [ ] Dark theme matching isotracker.org
+- [ ] Mobile-first responsive design
+
+### Phase 14a.4: Email Capture Backend
+**Goal**: Store email signups from 3i-atlas.live
+
+- [ ] Create `email_signups` table:
+  - `id`, `email` (unique), `source` ('3i-atlas-live' | 'isotracker')
+  - `created_at`, `converted_to_user_id` (nullable FK)
+- [ ] Create `/api/email-capture` endpoint:
+  - POST with email validation
+  - Duplicate check (return success if already exists)
+  - Store source for attribution
+- [ ] Success state with confirmation message
+- [ ] Optional: Welcome email via Resend
+
+### Success Criteria
+- [ ] Pricing tiers match product description (2 paid tiers, correct prices)
+- [ ] Evidence Framework section explains core value prop
+- [ ] 3i-atlas.live is standalone page (not redirect)
+- [ ] Email captures stored in database with source tracking
+
+---
+
 ## 📋 SPRINT 14: Payments & Tier Upgrades (Stripe)
 
 **PRD References**: Section 7 "Pricing Tiers"
 **Status**: 🔲 PLANNED
-**Dependencies**: Sprint 13 complete
+**Dependencies**: Sprint 14a complete (landing page must show correct prices first)
 **Priority**: CRITICAL - Monetization
 **Estimated Phases**: 4
 
@@ -524,11 +600,12 @@ Integrate Stripe for subscription payments, enabling users to upgrade to paid ti
 
 ### Background
 
-**Pricing Tiers** (from landing page):
-- Spectator: Free
-- Explorer: $4.99/month (= Event Pass tier in DB)
-- Analyst: $9.99/month (= Evidence Analyst tier in DB)
-- Professional: $19.99/month (= Pro tier, future features)
+**Pricing Tiers** (CORRECTED - see Landing Page Review):
+- Spectator: Free (view-only access)
+- Event Pass: $4.99/month (voting, observation alerts, auto-pauses between events)
+- Evidence Analyst: $19/month (evidence submission, assessment, full access)
+
+**NOTE**: Professional tier REMOVED. Landing page must be updated to match before Stripe launch.
 
 **Existing DB** (needs updates):
 - `subscriptions` table exists with `tier`, `status`, `stripe_customer_id`
@@ -538,9 +615,8 @@ Integrate Stripe for subscription payments, enabling users to upgrade to paid ti
 **Goal**: Set up Stripe products and prices
 
 - [ ] Create Stripe products in dashboard:
-  - Explorer ($4.99/mo)
-  - Analyst ($9.99/mo)
-  - Professional ($19.99/mo)
+  - Event Pass ($4.99/mo)
+  - Evidence Analyst ($19/mo)
 - [ ] Store price IDs in environment variables
 - [ ] Install `stripe` and `@stripe/stripe-js` packages
 - [ ] Configure Stripe webhook endpoint URL
@@ -688,12 +764,16 @@ Create user profile pages, implement 3i-atlas.live email capture backend, and fi
 | 11 | Community Arguments & Voting | ✅ COMPLETE | HIGH |
 | 12 | Evidence Tab & Comments | ✅ COMPLETE | HIGH |
 | 13 | ISO Following & Notifications | ✅ COMPLETE | MEDIUM |
+| **14a** | **Landing Page Alignment** | 🔲 Planned | **HIGH** |
 | 14 | Stripe Payments | 🔲 Planned | CRITICAL |
 | 15 | User Profile & Polish | 🔲 Planned | MEDIUM |
 
-**Next Up**: Sprint 14 (Payments) - Critical for monetization
+**Next Up**: Sprint 14a (Landing Page Alignment) - Must fix pricing before Stripe launch
 
-**Rationale**: With Sprints 11-13 complete, payments integration is the final critical feature before user profile polish.
+**Rationale**: Landing page shows wrong tier names and prices. Must align with product strategy before enabling payments. Sprint 14a includes:
+- Fix pricing tiers (remove Professional, correct names/prices)
+- Add Evidence Framework explainer section
+- 3i-atlas.live standalone email capture page
 
 ---
 
@@ -710,4 +790,4 @@ Create user profile pages, implement 3i-atlas.live email capture backend, and fi
 ---
 
 **Last Updated**: 2025-11-23
-**Next Review**: Sprint 11 kickoff
+**Next Review**: Sprint 14a kickoff
