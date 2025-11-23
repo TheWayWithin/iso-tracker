@@ -65,7 +65,7 @@ export async function POST(request: Request) {
 
       console.error('Email signup error:', error)
       return NextResponse.json(
-        { error: 'Failed to save email' },
+        { error: 'Failed to save email', details: error.message, code: error.code },
         { status: 500 }
       )
     }
