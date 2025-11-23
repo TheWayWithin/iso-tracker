@@ -5,6 +5,7 @@ import { OrbitalPlot2D } from './OrbitalPlot2D';
 import { EphemerisTable } from './EphemerisTable';
 import { CommunitySentiment } from '../evidence/CommunitySentiment';
 import { ArgumentList } from '../arguments';
+import { EvidenceList } from '../evidence';
 import { ErrorBoundary } from '../ErrorBoundary';
 import Link from 'next/link';
 import { Eye, EyeOff, Scale, MessageSquare } from 'lucide-react';
@@ -43,6 +44,8 @@ export function ISODetailTabs({
   const [userLocation, setUserLocation] = useState<LocationResult | undefined>(undefined);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [canVote, setCanVote] = useState(false);
+  const [canSubmitEvidence, setCanSubmitEvidence] = useState(false);
+  const [canAssessEvidence, setCanAssessEvidence] = useState(false);
 
   // Check auth status for community features
   useEffect(() => {
@@ -52,12 +55,18 @@ export function ISODetailTabs({
         if (response.ok) {
           const data = await response.json();
           setIsAuthenticated(!!data.user);
-          // Event Pass or higher can vote
-          setCanVote(data.tier === 'event_pass' || data.tier === 'evidence_analyst');
+          // Event Pass or higher can vote and submit evidence
+          const isEventPassOrHigher = data.tier === 'event_pass' || data.tier === 'evidence_analyst';
+          setCanVote(isEventPassOrHigher);
+          setCanSubmitEvidence(isEventPassOrHigher);
+          // Only Evidence Analyst can assess evidence
+          setCanAssessEvidence(data.tier === 'evidence_analyst');
         }
       } catch {
         setIsAuthenticated(false);
         setCanVote(false);
+        setCanSubmitEvidence(false);
+        setCanAssessEvidence(false);
       }
     };
     checkAuth();
@@ -456,20 +465,15 @@ export function ISODetailTabs({
 
         {/* Evidence Tab */}
         {activeTab === 'evidence' && (
-          <div className="p-6">
-            <div className="bg-gray-50 rounded-lg p-6 border border-gray-200 text-center">
-              <h3 className="text-lg font-bold text-gray-900 mb-3">Evidence Framework</h3>
-              <div className="text-sm text-gray-700 font-medium space-y-2 mb-4">
-                <p>Total evidence pieces: <span className="font-semibold text-gray-900">Coming soon</span></p>
-                <p>Assessment count: <span className="font-semibold text-gray-900">Coming soon</span></p>
-              </div>
-              <Link
-                href={`/iso-objects/${isoId}/evidence`}
-                className="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors font-medium"
-              >
-                View All Evidence →
-              </Link>
-            </div>
+          <div className="p-6 bg-slate-900">
+            <ErrorBoundary>
+              <EvidenceList
+                isoId={isoId}
+                isAuthenticated={isAuthenticated}
+                canSubmit={canSubmitEvidence}
+                canAssess={canAssessEvidence}
+              />
+            </ErrorBoundary>
           </div>
         )}
 

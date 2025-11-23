@@ -342,10 +342,10 @@ Per PRD:
 ## 📋 SPRINT 12: Evidence Tab & Threaded Comments
 
 **PRD References**: Section 4.1 "Evidence-Based Analysis Framework", Section 4.3 "Debate System"
-**Status**: 🔲 PLANNED
-**Dependencies**: Sprint 11 complete
+**Status**: ✅ COMPLETE (Nov 23, 2025)
+**Dependencies**: Sprint 11 complete ✅
 **Priority**: HIGH - Core value proposition for Analyst tier
-**Estimated Phases**: 4
+**Actual Phases**: 4
 
 ### Mission Objective
 
@@ -365,56 +365,58 @@ Integrate existing evidence components into ISO detail pages and add threaded co
 - `EvidenceTimeline.tsx`
 - `CommunitySentiment.tsx`
 
-### Phase 12.1: Evidence Tab Integration
+### Phase 12.1: Evidence Tab Integration ✅
 **Goal**: Add Evidence tab to ISO detail pages
 
-- [ ] Create "Evidence" tab on ISO detail page
-- [ ] Integrate `EvidenceDashboard` showing ISO's evidence
-- [ ] List evidence entries with quality scores
-- [ ] Filter: By type (observation, spectroscopy, etc.)
-- [ ] Sort: By quality score, newest, most assessed
+- [x] Create "Evidence" tab on ISO detail page
+- [x] Integrate `EvidenceList` showing ISO's evidence
+- [x] List evidence entries with quality scores
+- [x] Filter: By type (observation, spectroscopy, etc.)
+- [x] Sort: By quality score, newest, most assessed
 
-### Phase 12.2: Evidence Submission UI
+### Phase 12.2: Evidence Submission UI ✅
 **Goal**: Allow Event Pass+ to submit evidence
 
-- [ ] Integrate `EvidenceSubmissionForm` component
-- [ ] Tier check: Event Pass+ required to submit
-- [ ] Form validation matching DB constraints
-- [ ] Success toast with evidence link
-- [ ] Upgrade CTA for lower tiers
+- [x] Create `EvidenceSubmissionForm` component
+- [x] Tier check: Event Pass+ required to submit
+- [x] Form validation matching DB constraints
+- [x] Success callback for refresh
+- [x] Upgrade CTA for lower tiers
 
-### Phase 12.3: Evidence Assessment UI
+### Phase 12.3: Evidence Assessment UI ✅
 **Goal**: Allow Analysts to score evidence
 
-- [ ] Integrate `EvidenceAssessmentForm` component
-- [ ] Tier check: Evidence Analyst required
-- [ ] Score sliders: Expertise (0-40), Methodology (0-30), Peer Review (0-30)
-- [ ] Show calculated quality score preview
-- [ ] One assessment per user per evidence
+- [x] Create `EvidenceAssessmentForm` component
+- [x] Tier check: Evidence Analyst required
+- [x] Score sliders: Expertise (0-40), Methodology (0-30), Peer Review (0-30)
+- [x] Show calculated quality score preview
+- [x] One assessment per user per evidence (update existing)
 
-### Phase 12.4: Threaded Comments on Evidence
+### Phase 12.4: Threaded Comments on Evidence ✅
 **Goal**: Discussion threads under evidence entries
 
-- [ ] Create `EvidenceCommentThread` component
+- [x] Create `EvidenceComments` component
   - Display comments with nesting (max 3 levels per PRD)
   - Show "[removed]" for soft-deleted comments
   - Collapse/expand nested replies
 
-- [ ] Create `CommentSubmissionForm` component
+- [x] Create inline comment form
   - Textarea with 10-10000 char validation
   - Tier check: Evidence Analyst required to comment
   - Reply-to functionality for nested comments
 
-- [ ] API endpoints:
+- [x] API endpoints:
   - `GET /api/evidence/[id]/comments`
   - `POST /api/evidence/[id]/comments`
+  - `GET /api/evidence/[id]/assess`
+  - `POST /api/evidence/[id]/assess`
 
 ### Success Criteria
-- [ ] Evidence tab visible on ISO detail pages
-- [ ] Event Pass+ can submit evidence
-- [ ] Evidence Analyst can assess evidence quality
-- [ ] Evidence Analyst can add threaded comments
-- [ ] Lower tiers see read-only view with upgrade CTA
+- [x] Evidence tab visible on ISO detail pages
+- [x] Event Pass+ can submit evidence
+- [x] Evidence Analyst can assess evidence quality
+- [x] Evidence Analyst can add threaded comments
+- [x] Lower tiers see read-only view with upgrade CTA
 
 ---
 
@@ -672,7 +674,7 @@ Create user profile pages, implement 3i-atlas.live email capture backend, and fi
 | Sprint | Focus | Status | Priority |
 |--------|-------|--------|----------|
 | 11 | Community Arguments & Voting | ✅ COMPLETE | HIGH |
-| 12 | Evidence Tab & Comments | 🔲 Planned | HIGH |
+| 12 | Evidence Tab & Comments | ✅ COMPLETE | HIGH |
 | 13 | ISO Following & Notifications | 🔲 Planned | MEDIUM |
 | 14 | Stripe Payments | 🔲 Planned | CRITICAL |
 | 15 | User Profile & Polish | 🔲 Planned | MEDIUM |
