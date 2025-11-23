@@ -126,7 +126,9 @@ export function EvidenceAssessmentForm({
             Expertise Factor
           </label>
           <span className="text-xs text-slate-500">({expertiseScore}/40)</span>
-          <Info className="w-4 h-4 text-slate-500 cursor-help" title="Based on the submitter's credentials and expertise level" />
+          <span title="Based on the submitter's credentials and expertise level">
+            <Info className="w-4 h-4 text-slate-500 cursor-help" />
+          </span>
         </div>
         <div className="grid grid-cols-3 gap-2">
           {EXPERTISE_OPTIONS.map((option) => (
@@ -154,7 +156,9 @@ export function EvidenceAssessmentForm({
             <label className="text-sm font-medium text-slate-300">
               Methodology Score
             </label>
-            <Info className="w-4 h-4 text-slate-500 cursor-help" title="How well-documented and rigorous is the methodology?" />
+            <span title="How well-documented and rigorous is the methodology?">
+              <Info className="w-4 h-4 text-slate-500 cursor-help" />
+            </span>
           </div>
           <span className="text-sm text-slate-400">{methodologyScore}/30</span>
         </div>
@@ -180,7 +184,9 @@ export function EvidenceAssessmentForm({
             <label className="text-sm font-medium text-slate-300">
               Peer Review Score
             </label>
-            <Info className="w-4 h-4 text-slate-500 cursor-help" title="Has this been verified or reviewed by other experts?" />
+            <span title="Has this been verified or reviewed by other experts?">
+              <Info className="w-4 h-4 text-slate-500 cursor-help" />
+            </span>
           </div>
           <span className="text-sm text-slate-400">{peerReviewScore}/30</span>
         </div>

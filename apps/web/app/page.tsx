@@ -243,9 +243,9 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* Explorer - $4.99/mo */}
+            {/* Event Pass - $4.99/mo */}
             <div className="bg-slate-900 p-6 rounded-lg border border-slate-700 flex flex-col">
-              <h3 className="text-xl font-semibold text-white mb-2">Explorer</h3>
+              <h3 className="text-xl font-semibold text-white mb-2">Event Pass</h3>
               <p className="text-3xl font-bold text-white mb-4">
                 $4.99<span className="text-sm text-slate-400">/mo</span>
               </p>
@@ -260,111 +260,72 @@ export default function Home() {
                   <svg className="w-5 h-5 text-green-400 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  Ad-free experience
+                  Vote on community debates
                 </li>
                 <li className="flex items-center">
                   <svg className="w-5 h-5 text-green-400 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  Real-time alerts
+                  Observation window alerts
                 </li>
                 <li className="flex items-center">
-                  <svg className="w-5 h-5 text-green-400 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  <svg className="w-5 h-5 text-slate-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  Observation planning
+                  <span className="text-slate-500">Auto-pauses between events</span>
                 </li>
               </ul>
               <Link
-                href="/auth/sign-up?tier=explorer"
+                href="/auth/sign-up?tier=event_pass"
                 className="block text-center w-full py-2 border border-slate-600 rounded text-slate-300 hover:bg-slate-800 transition-colors"
               >
                 Subscribe
               </Link>
             </div>
 
-            {/* Analyst - $9.99/mo - POPULAR */}
+            {/* Evidence Analyst - $19/mo - POPULAR */}
             <div className="bg-slate-900 p-6 rounded-lg border border-blue-600 relative flex flex-col">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
                 POPULAR
               </div>
-              <h3 className="text-xl font-semibold text-white mb-2">Analyst</h3>
+              <h3 className="text-xl font-semibold text-white mb-2">Evidence Analyst</h3>
               <p className="text-3xl font-bold text-white mb-4">
-                $9.99<span className="text-sm text-slate-400">/mo</span>
+                $19<span className="text-sm text-slate-400">/mo</span>
               </p>
               <ul className="space-y-3 text-slate-400 mb-6 flex-grow">
                 <li className="flex items-center">
                   <svg className="w-5 h-5 text-green-400 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  Everything in Explorer
+                  Everything in Event Pass
                 </li>
                 <li className="flex items-center">
                   <svg className="w-5 h-5 text-green-400 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  Debate dashboard
+                  Submit & assess evidence
                 </li>
                 <li className="flex items-center">
                   <svg className="w-5 h-5 text-green-400 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  Submit evidence
+                  Cast verdicts with confidence
                 </li>
                 <li className="flex items-center">
                   <svg className="w-5 h-5 text-green-400 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  Cast verdicts
+                  Full year-round access
                 </li>
               </ul>
               <Link
-                href="/auth/sign-up?tier=analyst"
+                href="/auth/sign-up?tier=evidence_analyst"
                 className="block text-center w-full py-2 bg-blue-600 rounded text-white hover:bg-blue-700 transition-colors"
               >
                 Subscribe
               </Link>
             </div>
 
-            {/* Professional - $19.99/mo */}
-            <div className="bg-slate-900 p-6 rounded-lg border border-slate-700 flex flex-col">
-              <h3 className="text-xl font-semibold text-white mb-2">Professional</h3>
-              <p className="text-3xl font-bold text-white mb-4">
-                $19.99<span className="text-sm text-slate-400">/mo</span>
-              </p>
-              <ul className="space-y-3 text-slate-400 mb-6 flex-grow">
-                <li className="flex items-center">
-                  <svg className="w-5 h-5 text-green-400 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  Everything in Analyst
-                </li>
-                <li className="flex items-center">
-                  <svg className="w-5 h-5 text-green-400 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  Expert analysis content
-                </li>
-                <li className="flex items-center">
-                  <svg className="w-5 h-5 text-green-400 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  Raw data exports
-                </li>
-                <li className="flex items-center">
-                  <svg className="w-5 h-5 text-green-400 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  API access
-                </li>
-              </ul>
-              <Link
-                href="/auth/sign-up?tier=professional"
-                className="block text-center w-full py-2 border border-slate-600 rounded text-slate-300 hover:bg-slate-800 transition-colors"
-              >
-                Subscribe
-              </Link>
-            </div>
           </div>
         </div>
       </section>
