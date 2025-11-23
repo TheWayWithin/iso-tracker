@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { OrbitalPlot2D } from './OrbitalPlot2D';
 import { EphemerisTable } from './EphemerisTable';
 import { CommunitySentiment } from '../evidence/CommunitySentiment';
+import { ArgumentList } from '../arguments';
 import { ErrorBoundary } from '../ErrorBoundary';
 import Link from 'next/link';
-import { Eye, EyeOff, Scale } from 'lucide-react';
+import { Eye, EyeOff, Scale, MessageSquare } from 'lucide-react';
 
 // Observation Planning Components
 import LocationSelector from '../observation/LocationSelector';
@@ -40,6 +41,27 @@ export function ISODetailTabs({
 }: ISODetailTabsProps) {
   const [activeTab, setActiveTab] = useState<'overview' | 'orbital' | 'observation' | 'loeb-scale' | 'evidence' | 'community'>('overview');
   const [userLocation, setUserLocation] = useState<LocationResult | undefined>(undefined);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [canVote, setCanVote] = useState(false);
+
+  // Check auth status for community features
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('/api/auth/status');
+        if (response.ok) {
+          const data = await response.json();
+          setIsAuthenticated(!!data.user);
+          // Event Pass or higher can vote
+          setCanVote(data.tier === 'event_pass' || data.tier === 'evidence_analyst');
+        }
+      } catch {
+        setIsAuthenticated(false);
+        setCanVote(false);
+      }
+    };
+    checkAuth();
+  }, []);
 
   // Fetch Loeb Scale data
   const { data: loebData, loading: loebLoading, error: loebError, refetch: refetchLoeb } = useLoebScale({
@@ -146,14 +168,15 @@ export function ISODetailTabs({
           </button>
           <button
             onClick={() => setActiveTab('community')}
-            className={`px-6 py-3 font-medium rounded-t-lg transition-colors ${
+            className={`px-6 py-3 font-medium rounded-t-lg transition-colors flex items-center gap-2 ${
               activeTab === 'community'
                 ? 'bg-white text-blue-600 border-t-2 border-x border-blue-600'
                 : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
             }`}
             aria-current={activeTab === 'community' ? 'page' : undefined}
           >
-            Community
+            <MessageSquare className="w-4 h-4" />
+            Debate
           </button>
         </div>
       </div>
@@ -450,10 +473,16 @@ export function ISODetailTabs({
           </div>
         )}
 
-        {/* Community Tab */}
+        {/* Community Debate Tab */}
         {activeTab === 'community' && (
-          <div className="p-6">
-            <CommunitySentiment isoId={isoId} />
+          <div className="p-6 bg-slate-900">
+            <ErrorBoundary>
+              <ArgumentList
+                isoId={isoId}
+                isAuthenticated={isAuthenticated}
+                canVote={canVote}
+              />
+            </ErrorBoundary>
           </div>
         )}
       </div>

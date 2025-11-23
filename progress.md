@@ -73,13 +73,26 @@
 
 ## 🎯 Next Steps
 
-### Sprint 11: TBD
-- [ ] Plan next sprint priorities
-- [ ] Consider Loeb Scale badge on ISO list cards
-- [ ] Consider score history tracking
-- [ ] Consider push notifications for score changes
+### Sprint 11-15 PLANNED (Nov 23, 2025)
+Created comprehensive sprint roadmap for all remaining PRD features:
 
-See `project-plan.md` for sprint planning.
+| Sprint | Focus | Priority |
+|--------|-------|----------|
+| 11 | Community Arguments & Voting | HIGH |
+| 12 | Evidence Tab & Comments | HIGH |
+| 13 | ISO Following & Notifications | MEDIUM |
+| 14 | Stripe Payments | CRITICAL |
+| 15 | User Profile & Polish | MEDIUM |
+
+**Key Findings During Planning**:
+- `arguments` and `votes` tables do NOT exist yet (only referenced in migrations)
+- Evidence components exist but aren't integrated into ISO detail pages
+- Notification DB schema exists but no email backend (needs Resend)
+- 3i-atlas.live email capture has no backend endpoint
+
+**Recommended Order**: 11 → 14 → 12 → 13 → 15
+
+See `project-plan.md` for full sprint details.
 
 ---
 
