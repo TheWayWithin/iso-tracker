@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 
@@ -6,6 +6,14 @@ export const dynamic = 'force-dynamic'
 
 // Email validation regex
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+// Create a simple Supabase client for public endpoints (no auth required)
+function getSupabaseClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
+}
 
 export async function POST(request: Request) {
   try {
@@ -33,7 +41,7 @@ export async function POST(request: Request) {
     const headersList = await headers()
     const referrer = headersList.get('referer') || null
 
-    const supabase = await createClient()
+    const supabase = getSupabaseClient()
 
     // Insert email signup
     const { data, error } = await supabase
