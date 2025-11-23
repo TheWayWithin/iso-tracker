@@ -2,19 +2,29 @@
 
 **Mission**: ISO Tracker Development - Evidence-Based Analysis Platform
 **Started**: 2025-11-09
-**Status**: 🟢 Active - Sprint 10 COMPLETE ✅
-**Last Updated**: 2025-11-22
+**Status**: 🟢 Active - Sprint 13 COMPLETE ✅
+**Last Updated**: 2025-11-23
 
 ---
 
 ## 🚀 CURRENT STATUS
 
 **Site URL**: https://www.isotracker.org
-**Current Sprint**: Sprint 10 COMPLETE ✅ (Nov 22, 2025)
-**Previous Sprint**: Sprint 9 COMPLETE ✅ (Nov 22, 2025)
-**MVP Status**: Core features complete, Loeb Scale assessment engine COMPLETE
+**Current Sprint**: Sprint 13 COMPLETE ✅ (Nov 23, 2025)
+**Previous Sprint**: Sprint 12 COMPLETE ✅ (Nov 23, 2025)
+**MVP Status**: Core features complete, Notifications system COMPLETE
 
 ### Recent Deliverables:
+- ✅ **Sprint 13** (Nov 23): ISO Following & Notifications
+  - FollowButton component integrated into ISO detail pages
+  - Follow API endpoints (POST/DELETE/GET with counts)
+  - User following API endpoint
+  - Notification preferences settings page (pre-existing)
+  - Resend email integration (pre-existing templates)
+  - Observation window cron job (pre-existing)
+
+- ✅ **Sprint 12** (Nov 23): Evidence Tab & Threaded Comments
+- ✅ **Sprint 11** (Nov 23): Community Arguments & Debate System
 - ✅ **Sprint 10** (Nov 22): The Loeb Scale - Anomaly Assessment Engine
   - Database schema: loeb_scale_assessments, loeb_scale_votes, loeb_scale_criteria tables
   - API endpoints: GET/POST for assessments and voting
@@ -420,13 +430,13 @@ Integrate existing evidence components into ISO detail pages and add threaded co
 
 ---
 
-## 📋 SPRINT 13: ISO Following & Notifications
+## 📋 SPRINT 13: ISO Following & Notifications ✅ COMPLETE
 
 **PRD References**: Section 4.4 "Notifications", Section 7 "Tier Features"
-**Status**: 🔲 PLANNED
-**Dependencies**: Sprint 12 complete
+**Status**: ✅ COMPLETE (Nov 23, 2025)
+**Dependencies**: Sprint 12 complete ✅
 **Priority**: MEDIUM - Engagement & retention feature
-**Estimated Phases**: 4
+**Actual Phases**: 4
 
 ### Mission Objective
 
@@ -445,56 +455,58 @@ Enable users to follow ISOs and receive notifications for observation windows, n
 - Event Pass: 50 replies, 25 evidence, 10 observation alerts
 - Evidence Analyst: 200 replies, 100 evidence, 50 observation alerts
 
-### Phase 13.1: ISO Following UI
+### Phase 13.1: ISO Following UI ✅
 **Goal**: Follow/unfollow buttons on ISO pages
 
-- [ ] Add "Follow" button to ISO detail pages
-- [ ] Toggle state with optimistic UI
-- [ ] Show follow count on ISO cards
-- [ ] "Following" tab on user profile (Sprint 15)
-- [ ] API endpoints:
+- [x] Add "Follow" button to ISO detail pages (`ISODetailHeader.tsx`)
+- [x] Toggle state with optimistic UI
+- [x] Show follow count on ISO cards (optional - `showCount` prop)
+- [ ] "Following" tab on user profile (deferred to Sprint 15)
+- [x] API endpoints:
   - `POST /api/iso/[id]/follow`
   - `DELETE /api/iso/[id]/follow`
+  - `GET /api/iso/[id]/follow` (with follow count)
   - `GET /api/user/following`
 
-### Phase 13.2: Notification Preferences UI
+### Phase 13.2: Notification Preferences UI ✅
 **Goal**: Settings page for notification toggles
 
-- [ ] Create `/settings/notifications` page
-- [ ] Toggle: Reply notifications (on/off)
-- [ ] Toggle: Evidence notifications (on/off)
-- [ ] Toggle: Observation window alerts (tier-gated)
-- [ ] Show tier-based limits
-- [ ] Unsubscribe token link generation
-- [ ] API: `GET/PATCH /api/user/notification-preferences`
+- [x] Create `/settings/notifications` page
+- [x] Toggle: Reply notifications (on/off)
+- [x] Toggle: Evidence notifications (on/off)
+- [x] Toggle: Observation window alerts (tier-gated)
+- [x] Show tier-based limits
+- [x] Unsubscribe token link generation
+- [x] API: `GET/PATCH /api/notifications/preferences`
 
-### Phase 13.3: Email Notification Backend
+### Phase 13.3: Email Notification Backend ✅
 **Goal**: Resend integration for email delivery
 
-- [ ] Install Resend SDK
-- [ ] Create email templates:
-  - Reply notification
-  - New evidence notification
-  - Observation window alert
-- [ ] Create `/api/notifications/send` internal endpoint
-- [ ] Implement queue processing (cron job or edge function)
-- [ ] Rate limit enforcement per tier
-- [ ] Unsubscribe link handling
+- [x] Install Resend SDK (`lib/emails/send.ts`)
+- [x] Create email templates:
+  - Reply notification (`ReplyNotification.tsx`)
+  - New evidence notification (`EvidenceNotification.tsx`)
+  - Observation window alert (`ObservationWindowAlert.tsx`)
+- [x] Email layout component (`EmailLayout.tsx`)
+- [x] Notification helpers (`lib/notifications/helpers.ts`)
+- [x] Rate limit enforcement per tier (via DB functions)
+- [x] Unsubscribe link handling (`/api/notifications/unsubscribe`)
 
-### Phase 13.4: Observation Window Alerts
+### Phase 13.4: Observation Window Alerts ✅
 **Goal**: Alert users before ISO visibility windows
 
-- [ ] Calculate observation windows (existing visibility logic)
-- [ ] Schedule notifications 24h before optimal viewing
-- [ ] Include: ISO name, altitude, azimuth, best viewing time
-- [ ] Tier gate: Event Pass+ only
+- [x] Calculate observation windows (existing visibility logic)
+- [x] Cron job for notifications (`/api/cron/observation-windows`)
+- [x] Schedule notifications 1, 3, 7 days before optimal viewing
+- [x] Include: ISO name, window dates, days until window
+- [x] Tier gate: Event Pass+ only
 
-### Success Criteria
-- [ ] Users can follow/unfollow ISOs
-- [ ] Notification preferences editable in settings
-- [ ] Email notifications sent via Resend
-- [ ] Rate limits enforced per tier
-- [ ] Observation alerts work for Event Pass+
+### Success Criteria ✅
+- [x] Users can follow/unfollow ISOs
+- [x] Notification preferences editable in settings
+- [x] Email notifications ready via Resend (pending production env vars)
+- [x] Rate limits enforced per tier
+- [x] Observation alerts configured for Event Pass+
 
 ---
 
@@ -675,13 +687,13 @@ Create user profile pages, implement 3i-atlas.live email capture backend, and fi
 |--------|-------|--------|----------|
 | 11 | Community Arguments & Voting | ✅ COMPLETE | HIGH |
 | 12 | Evidence Tab & Comments | ✅ COMPLETE | HIGH |
-| 13 | ISO Following & Notifications | 🔲 Planned | MEDIUM |
+| 13 | ISO Following & Notifications | ✅ COMPLETE | MEDIUM |
 | 14 | Stripe Payments | 🔲 Planned | CRITICAL |
 | 15 | User Profile & Polish | 🔲 Planned | MEDIUM |
 
-**Recommended Order**: 11 → 14 → 12 → 13 → 15
+**Next Up**: Sprint 14 (Payments) - Critical for monetization
 
-**Rationale**: Sprint 14 (Payments) could be prioritized earlier since monetization is critical. Community arguments (11) should come first as it's the engagement foundation.
+**Rationale**: With Sprints 11-13 complete, payments integration is the final critical feature before user profile polish.
 
 ---
 

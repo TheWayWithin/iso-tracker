@@ -2,17 +2,17 @@
 
 **Mission**: MVP-ISO-TRACKER-001 - Evidence-Based Analysis Platform
 **Started**: 2025-11-09
-**Last Updated**: 2025-11-22
+**Last Updated**: 2025-11-23
 **Archive**: See `progress-archive-2025-11-21.md` for detailed Sprint 1-9 history
 
 ---
 
 ## 📊 Current Status
 
-**Active Sprint**: None (Sprint 10 Complete)
-**Last Completed**: Sprint 10 ✅ (Nov 22, 2025)
+**Active Sprint**: None (Sprint 13 Complete)
+**Last Completed**: Sprint 13 ✅ (Nov 23, 2025)
 **Production Site**: https://www.isotracker.org
-**Last Deployment**: 2025-11-22 (Sprint 10 Loeb Scale)
+**Last Deployment**: Pending (Sprint 13 - ISO Following & Notifications)
 
 ---
 
@@ -25,6 +25,9 @@
 | 8 | Observation Planning & Visibility | ✅ Complete | Nov 22 |
 | 9 | Landing Page Realignment | ✅ Complete | Nov 22 |
 | 10 | The Loeb Scale | ✅ Complete | Nov 22 |
+| 11 | Community Arguments & Voting | ✅ Complete | Nov 23 |
+| 12 | Evidence Tab & Comments | ✅ Complete | Nov 23 |
+| 13 | ISO Following & Notifications | ✅ Complete | Nov 23 |
 
 **Full details**: See `progress-archive-2025-11-21.md`
 
@@ -73,26 +76,40 @@
 
 ## 🎯 Next Steps
 
-### Sprint 11-15 PLANNED (Nov 23, 2025)
-Created comprehensive sprint roadmap for all remaining PRD features:
+### Sprint 14 - Stripe Payments (NEXT)
+Critical monetization feature:
+- Stripe checkout integration
+- Webhook handling
+- Subscription management
 
-| Sprint | Focus | Priority |
-|--------|-------|----------|
-| 11 | Community Arguments & Voting | HIGH |
-| 12 | Evidence Tab & Comments | HIGH |
-| 13 | ISO Following & Notifications | MEDIUM |
-| 14 | Stripe Payments | CRITICAL |
-| 15 | User Profile & Polish | MEDIUM |
+### Sprint 15 - User Profile & Polish (PLANNED)
+- User profile pages
+- 3i-atlas.live email capture backend
+- Final polish and QA
 
-**Key Findings During Planning**:
-- `arguments` and `votes` tables do NOT exist yet (only referenced in migrations)
-- Evidence components exist but aren't integrated into ISO detail pages
-- Notification DB schema exists but no email backend (needs Resend)
-- 3i-atlas.live email capture has no backend endpoint
+---
 
-**Recommended Order**: 11 → 14 → 12 → 13 → 15
+## 📋 Sprint 13 Changelog (Nov 23, 2025)
 
-See `project-plan.md` for full sprint details.
+### Deliverables Created
+- `apps/web/components/isos/ISODetailHeader.tsx` - Client component with Follow button
+- `apps/web/app/api/iso/[id]/follow/route.ts` - Follow/unfollow API endpoints
+- `apps/web/app/api/user/following/route.ts` - User following list API
+
+### Files Modified
+- `apps/web/app/iso-objects/[id]/page.tsx` - Integrated ISODetailHeader
+- `apps/web/components/isos/FollowButton.tsx` - Enhanced with API integration, follow count
+
+### Pre-Existing Infrastructure (Discovered During Sprint)
+Much of Sprint 13 infrastructure was already implemented:
+- `apps/web/app/settings/notifications/page.tsx` - Full notification preferences UI
+- `apps/web/app/api/notifications/preferences/route.ts` - GET/PATCH API
+- `apps/web/app/api/notifications/unsubscribe/route.ts` - Unsubscribe flow
+- `apps/web/app/api/cron/observation-windows/route.ts` - Observation window cron
+- `apps/web/lib/notifications/helpers.ts` - Rate limiting, preferences
+- `apps/web/lib/emails/send.ts` - Resend integration
+- `apps/web/lib/emails/templates/*.tsx` - Email templates
+- Database schema: `iso_follows`, `notification_preferences`, `notification_queue`, `notification_rate_limits`
 
 ---
 
@@ -105,5 +122,5 @@ See `project-plan.md` for full sprint details.
 
 ---
 
-**Last Updated**: 2025-11-22
-**Next Review**: When Sprint 10 begins
+**Last Updated**: 2025-11-23
+**Next Review**: Sprint 14 kickoff

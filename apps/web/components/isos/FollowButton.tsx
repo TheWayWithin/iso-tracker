@@ -1,70 +1,61 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { Bell, BellOff, Users } from 'lucide-react';
 
 interface FollowButtonProps {
   isoId: string;
   userId?: string;
+  showCount?: boolean;
+  size?: 'sm' | 'md';
 }
 
-export function FollowButton({ isoId, userId }: FollowButtonProps) {
+export function FollowButton({ isoId, userId, showCount = false, size = 'md' }: FollowButtonProps) {
   const [isFollowing, setIsFollowing] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const supabase = createClient();
+  const [isLoading, setIsLoading] = useState(true);
+  const [followCount, setFollowCount] = useState(0);
 
   useEffect(() => {
-    if (!userId) return;
-
-    // Check if user is following this ISO
+    // Check follow status via API
     const checkFollowStatus = async () => {
-      const { data } = await supabase
-        .from('iso_follows')
-        .select('id')
-        .eq('user_id', userId)
-        .eq('iso_id', isoId)
-        .single();
-
-      setIsFollowing(!!data);
+      try {
+        const response = await fetch(`/api/iso/${isoId}/follow`);
+        if (response.ok) {
+          const data = await response.json();
+          setIsFollowing(data.isFollowing);
+          setFollowCount(data.followCount);
+        }
+      } catch (error) {
+        console.error('Failed to check follow status:', error);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     checkFollowStatus();
-  }, [userId, isoId, supabase]);
+  }, [isoId]);
 
   const handleToggleFollow = async () => {
     if (!userId) {
       // Redirect to sign in
-      window.location.href = '/auth/signin';
+      window.location.href = '/auth/sign-in';
       return;
     }
 
     setIsLoading(true);
 
     try {
-      if (isFollowing) {
-        // Unfollow
-        const { error } = await supabase
-          .from('iso_follows')
-          .delete()
-          .eq('user_id', userId)
-          .eq('iso_id', isoId);
+      const method = isFollowing ? 'DELETE' : 'POST';
+      const response = await fetch(`/api/iso/${isoId}/follow`, { method });
 
-        if (error) throw error;
-
-        setIsFollowing(false);
-      } else {
-        // Follow
-        const { error } = await supabase
-          .from('iso_follows')
-          .insert({
-            user_id: userId,
-            iso_id: isoId,
-          });
-
-        if (error) throw error;
-
-        setIsFollowing(true);
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to update follow status');
       }
+
+      const data = await response.json();
+      setIsFollowing(data.isFollowing);
+      setFollowCount(data.followCount);
     } catch (error) {
       console.error('Failed to toggle follow:', error);
       alert('Failed to update follow status');
@@ -73,21 +64,51 @@ export function FollowButton({ isoId, userId }: FollowButtonProps) {
     }
   };
 
-  if (!userId) {
-    return null; // Don't show button if user not logged in
+  // Don't show button if user not logged in (unless showing count)
+  if (!userId && !showCount) {
+    return null;
+  }
+
+  const sizeClasses = size === 'sm'
+    ? 'px-3 py-1.5 text-sm'
+    : 'px-4 py-2';
+
+  // Show count-only badge if no user
+  if (!userId && showCount) {
+    return (
+      <div className="flex items-center gap-1 text-gray-500 text-sm">
+        <Users className="w-4 h-4" />
+        <span>{followCount}</span>
+      </div>
+    );
   }
 
   return (
-    <button
-      onClick={handleToggleFollow}
-      disabled={isLoading}
-      className={`px-4 py-2 rounded-md font-medium transition-colors ${
-        isFollowing
-          ? 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-          : 'bg-blue-600 text-white hover:bg-blue-700'
-      } disabled:opacity-50 disabled:cursor-not-allowed`}
-    >
-      {isLoading ? 'Loading...' : isFollowing ? 'Unfollow' : 'Follow for Alerts'}
-    </button>
+    <div className="flex items-center gap-2">
+      <button
+        onClick={handleToggleFollow}
+        disabled={isLoading}
+        className={`${sizeClasses} rounded-md font-medium transition-colors flex items-center gap-2 ${
+          isFollowing
+            ? 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            : 'bg-blue-600 text-white hover:bg-blue-700'
+        } disabled:opacity-50 disabled:cursor-not-allowed`}
+      >
+        {isLoading ? (
+          <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+        ) : isFollowing ? (
+          <BellOff className="w-4 h-4" />
+        ) : (
+          <Bell className="w-4 h-4" />
+        )}
+        <span>{isLoading ? 'Loading...' : isFollowing ? 'Following' : 'Follow'}</span>
+      </button>
+      {showCount && followCount > 0 && (
+        <span className="text-gray-500 text-sm flex items-center gap-1">
+          <Users className="w-4 h-4" />
+          {followCount}
+        </span>
+      )}
+    </div>
   );
 }
