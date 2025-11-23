@@ -22,7 +22,7 @@ export default function AtlasLanding() {
         {/* Subheadline */}
         <p className="text-lg md:text-xl text-[#CBD5E1] mb-10 max-w-md mx-auto leading-relaxed">
           The third interstellar visitor is passing through our solar system right now.
-          <span className="text-[#F5F7FA] font-medium"> Track it live.</span>
+          <span className="text-[#F5F7FA] font-medium"> Get real-time alerts when new evidence drops.</span>
         </p>
 
         {/* Email Form */}
@@ -39,7 +39,7 @@ export default function AtlasLanding() {
               type="submit"
               className="bg-[#FFB84D] hover:bg-[#FFC978] text-[#0A1628] font-semibold px-8 py-4 rounded-lg min-h-[48px] transition-all duration-200 shadow-[0_4px_16px_rgba(255,184,77,0.3)] hover:shadow-[0_6px_20px_rgba(255,184,77,0.4)] whitespace-nowrap"
             >
-              Get Updates
+              Notify Me
             </button>
           </div>
         </form>
