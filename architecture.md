@@ -12,7 +12,7 @@ ISO Tracker is a Progressive Web Application (PWA) for evidence-based analysis o
 - **Error Monitoring**: Sentry (client, server, edge)
 - **Hosting**: Vercel with automatic SSL and global CDN
 
-**Current Status**: Production Ready - Sprint 5 Complete (2025-11-15)
+**Current Status**: Production Ready - Sprint 13 Complete (2025-11-23)
 
 ---
 
@@ -74,11 +74,16 @@ iso_horizons_cache (id, iso_object_id, coordinate_type, raw_data, cached_at, exp
 evidence (id, iso_object_id, submitter_id, evidence_type, title, description, methodology, source_url, quality_score)
 evidence_assessments (id, evidence_id, assessor_id, chain_of_custody_score, witness_credibility_score, technical_analysis_score, verdict, confidence, overall_score)
 
--- Collaboration
+-- Collaboration & Debate
 debate_threads (id, iso_object_id, author_id, title, content, created_at)
 thread_replies (id, thread_id, author_id, content, parent_reply_id, created_at)
 votes (id, votable_type, votable_id, user_id, vote_type)
-arguments (id, iso_object_id, user_id, title, content, position)
+arguments (id, iso_object_id, user_id, title, content, stance, upvotes, downvotes, created_at)
+argument_votes (id, argument_id, user_id, vote_type, created_at)
+
+-- The Loeb Scale (Anomaly Assessment Engine)
+loeb_scale_assessments (id, iso_object_id, assessor_id, total_score, assessment_data, created_at)
+loeb_scale_criteria (id, category, criterion_name, max_points, description)
 
 -- Notifications
 notification_preferences (id, user_id, email, unsubscribe_token, reply_notifications, evidence_notifications, observation_window_alerts)
@@ -213,8 +218,14 @@ apps/web/
 
 | Endpoint | Method | Purpose | Auth Required | Tier Restriction |
 |----------|--------|---------|---------------|------------------|
-| `/api/evidence` | POST | Submit new evidence | Yes | Event Pass+ |
-| `/api/comments` | POST | Add comment + notify | Yes | Any |
+| `/api/iso/[id]/evidence` | GET/POST | Evidence CRUD | POST: Yes | Event Pass+ |
+| `/api/evidence/[id]/assess` | GET/POST | Evidence assessments | POST: Yes | Evidence Analyst |
+| `/api/evidence/[id]/comments` | GET/POST | Threaded comments | POST: Yes | Any |
+| `/api/iso/[id]/arguments` | GET/POST | Debate arguments | POST: Yes | Event Pass+ |
+| `/api/arguments/[id]/vote` | POST | Vote on arguments | Yes | Any |
+| `/api/iso/[id]/follow` | GET/POST/DELETE | Follow/unfollow ISO | POST/DELETE: Yes | Any |
+| `/api/user/following` | GET | User's followed ISOs | Yes | Any |
+| `/api/iso/[id]/loeb-scale` | GET/POST | Loeb Scale assessments | POST: Yes | Evidence Analyst |
 | `/api/notifications/preferences` | GET/PATCH | Manage email preferences | Yes | Any |
 | `/api/notifications/unsubscribe` | GET/POST | Token-based unsubscribe | No | Any |
 | `/api/admin/moderation` | GET/POST | Content moderation | Yes | Admin |
@@ -516,20 +527,64 @@ NEXT_PUBLIC_APP_URL=https://iso-tracker.app
 
 ---
 
+## What's Built (Sprints 7-13)
+
+The following major features were implemented since Sprint 5:
+
+### Sprint 7: Orbital Visualization & NASA API
+- NASA Horizons API integration with ephemeris data
+- Orbital trajectory visualization
+- Position/velocity data caching
+
+### Sprint 8: Observation Planning & Visibility
+- Observation window calculations
+- Visibility forecasting for ISOs
+- Location-based observation recommendations
+
+### Sprint 9: Landing Page Realignment
+- Hero section redesign
+- 3I/ATLAS launch landing page (3i-Atlas.live)
+- Marketing-focused homepage
+
+### Sprint 10: The Loeb Scale (Anomaly Assessment Engine)
+- 9-category assessment framework (100 total points)
+- Categories: Trajectory, Acceleration, Structure, Albedo, Spectroscopy, Outgassing, Mass, Tumbling, Interstellar
+- Aggregate Loeb Scale scores per ISO
+- Loeb Scale badges on ISO list page
+
+### Sprint 11: Community Arguments & Debate System
+- Arguments API (GET/POST /api/iso/[id]/arguments)
+- Stance-based arguments (Artificial, Natural, Uncertain)
+- Upvote/Downvote voting system
+- Debate tab on ISO detail pages
+- ArgumentCard and ArgumentSubmissionForm components
+
+### Sprint 12: Evidence Tab & Threaded Comments
+- Evidence submission by evidence type
+- Evidence assessment with quality rubric
+- Threaded comments on evidence
+- Evidence filtering and sorting
+- EvidenceCard component
+
+### Sprint 13: ISO Following & Notifications
+- Follow/Unfollow ISOs with FollowButton component
+- Notification preferences page (/settings/notifications)
+- Email notifications for followed ISOs
+- Unsubscribe flow with JWT tokens
+
+---
+
 ## What's NOT Built Yet
 
-The following were in the original architecture but are NOT implemented:
+The following are planned but NOT implemented:
 
-1. **Stripe Integration** - Products not created, no checkout flow
+1. **Stripe Integration** - Products not created, no checkout flow (Sprint 14 priority)
 2. **Discord Integration** - Bot not built, no role sync
-3. **Sky Map Visualization** - No 2D/3D trajectory rendering
+3. **Sky Map Visualization** - No 2D/3D interactive trajectory rendering
 4. **News Feed CMS** - No article management
-5. **Zustand State Management** - Using React Server Components instead
-6. **Educational Content Library** - Phase 2 feature
-7. **API Access for Researchers** - Phase 4 feature
-8. **Rate Limiting** - Implemented for emails only, not API routes
-9. **Community Sentiment Visualization** - Schema supports verdicts, but UI aggregation/display not built (P0 for Sprint 6)
-10. **Evidence Assessment UI Update** - Schema corrected (migration 014), but EvidenceAssessmentForm.tsx still uses old fields
+5. **Educational Content Library** - Phase 2 feature
+6. **API Access for Researchers** - Phase 4 feature
+7. **Rate Limiting on APIs** - Implemented for emails only, not API routes
 
 ---
 
@@ -555,12 +610,10 @@ The following were in the original architecture but are NOT implemented:
 
 ## Technical Debt
 
-1. **No Test Coverage** - 0% unit tests, 0% E2E tests (need Jest + Playwright)
-2. **Manual QA Only** - No automated testing in CI/CD
-3. **Missing Stripe Integration** - Revenue blocked until implemented
-4. **Placeholder Icons** - Need actual PNG icons for PWA
-5. **No Rate Limiting on APIs** - Only email notifications rate limited
-6. **Hardcoded Strings** - Some tier names hardcoded, not centralized
+1. **Partial Test Coverage** - Playwright E2E tests added for Sprints 11-13, but no unit tests (need Vitest)
+2. **Missing Stripe Integration** - Revenue blocked until Sprint 14 implementation
+3. **No Rate Limiting on APIs** - Only email notifications rate limited
+4. **Hardcoded Strings** - Some tier names hardcoded, not centralized
 
 ---
 
@@ -594,16 +647,21 @@ The following were in the original architecture but are NOT implemented:
 
 ## Future Roadmap
 
-### Sprint 6 (Next)
-- Production deployment
-- Domain configuration
-- Environment setup
-- Analytics/monitoring activation
+### Sprint 14 (Next): Stripe Payments
+- Stripe checkout integration
+- Webhook handling for subscription events
+- Subscription management UI
+- Tier upgrade/downgrade flows
+
+### Sprint 15 (Planned): User Profile & Polish
+- User profile pages
+- 3i-atlas.live email capture backend
+- Final polish and QA
 
 ### Phase 2 (Future)
-- Stripe payment integration
 - Educational content library
 - 3D trajectory visualization
+- Sky Map interactive visualization
 
 ### Phase 3 (Future)
 - In-app community (replace Discord)
@@ -626,7 +684,7 @@ The following were in the original architecture but are NOT implemented:
 
 ---
 
-**Architecture Version**: 2.0
-**Last Updated**: 2025-11-15
-**Status**: Sprint 5 Complete - Production Ready
-**Author**: coordinator (comprehensive rewrite from v1.0)
+**Architecture Version**: 3.0
+**Last Updated**: 2025-11-23
+**Status**: Sprint 13 Complete - Production Ready
+**Author**: coordinator (comprehensive rewrite from v1.0, v2.0 update to v3.0 for Sprints 7-13)

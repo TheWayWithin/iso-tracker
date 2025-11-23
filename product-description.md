@@ -1,8 +1,8 @@
 # ISO Tracker Product Description
 
-**Version:** 3.0 (PRD Aligned)
-**Date:** November 15, 2025
-**Status:** Production Ready - Sprint 5 Complete
+**Version:** 4.0 (PRD Aligned)
+**Date:** November 23, 2025
+**Status:** Production Ready - Sprint 13 Complete
 **Purpose:** Strategic product overview for stakeholders, investors, and team alignment
 
 ---
@@ -635,30 +635,74 @@ Day 90: Auto-pause Event Pass, final upgrade opportunity
 - [x] PostHog analytics + Sentry monitoring
 - [x] SEO optimization (sitemap, robots.txt, OG tags)
 
-### Phase 1.5: PRD Alignment Fixes 🟡 IN PROGRESS
+### Phase 1.5: Extended Features ✅ COMPLETE (Sprints 7-13)
 
-**Timeline:** Sprint 6.5
-**Status:** 🟡 MIGRATIONS CREATED, UI PENDING
+**Timeline:** November 19-23, 2025
+**Status:** ✅ DONE
 
-**Critical P0 Tasks:**
-- [x] Migration 013: Event Pass VIEW-ONLY (no evidence submission)
-- [x] Migration 014: Evidence assessment schema (rubric + verdict)
-- [ ] Update EvidenceAssessmentForm.tsx for new schema
-- [ ] Build Community Sentiment visualization (% alien/natural/uncertain)
-- [ ] Deploy migrations to production
+**Sprint 7: Orbital Visualization & NASA API ✅**
+- [x] NASA Horizons API integration with ephemeris data
+- [x] Orbital trajectory visualization
+- [x] Position/velocity data caching
+
+**Sprint 8: Observation Planning & Visibility ✅**
+- [x] Observation window calculations
+- [x] Visibility forecasting for ISOs
+- [x] Location-based observation recommendations
+
+**Sprint 9: Landing Page Realignment ✅**
+- [x] Hero section redesign for 3I/ATLAS launch
+- [x] Marketing-focused homepage
+- [x] 3i-Atlas.live landing page
+
+**Sprint 10: The Loeb Scale (Anomaly Assessment Engine) ✅**
+- [x] 9-category assessment framework (100 total points)
+- [x] Categories: Trajectory, Acceleration, Structure, Albedo, Spectroscopy, Outgassing, Mass, Tumbling, Interstellar
+- [x] Aggregate Loeb Scale scores per ISO
+- [x] Loeb Scale badges on ISO list page
+
+**Sprint 11: Community Arguments & Debate System ✅**
+- [x] Arguments API (GET/POST /api/iso/[id]/arguments)
+- [x] Stance-based arguments (Artificial, Natural, Uncertain)
+- [x] Upvote/Downvote voting system
+- [x] Debate tab on ISO detail pages
+- [x] ArgumentCard and ArgumentSubmissionForm components
+
+**Sprint 12: Evidence Tab & Threaded Comments ✅**
+- [x] Evidence submission by evidence type
+- [x] Evidence assessment with quality rubric
+- [x] Threaded comments on evidence
+- [x] Evidence filtering and sorting
+- [x] EvidenceCard component
+
+**Sprint 13: ISO Following & Notifications ✅**
+- [x] Follow/Unfollow ISOs with FollowButton component
+- [x] Notification preferences page (/settings/notifications)
+- [x] Email notifications for followed ISOs
+- [x] Unsubscribe flow with JWT tokens
+- [x] Playwright E2E tests for Sprints 11-13
+
+### Phase 1.6: Monetization 🟡 NEXT
+
+**Timeline:** Sprint 14
+**Status:** 🟡 PLANNED
+
+**Sprint 14: Stripe Payments**
+- [ ] Stripe checkout integration
+- [ ] Webhook handling for subscription events
+- [ ] Subscription management UI
+- [ ] Tier upgrade/downgrade flows
+
+**Sprint 15: User Profile & Polish**
+- [ ] User profile pages
+- [ ] 3i-atlas.live email capture backend
+- [ ] Final polish and QA
 
 **NOT YET BUILT (Deferred to Phase 2+):**
-- Stripe payment integration
-- 2D Sky Map visualization
+- 2D/3D Sky Map interactive visualization
 - News feed CMS
 - Discord integration
 - Educational content library
-
-**Success Criteria:**
-- [ ] PRD alignment complete (tier permissions, assessment schema)
-- [x] <3 second page load time (PWA optimizations)
-- [x] Zero critical security vulnerabilities
-- [ ] Community Sentiment visualization live
 
 ### Phase 2: Education & Content (Months 4-6)
 
@@ -910,6 +954,6 @@ Day 90: Auto-pause Event Pass, final upgrade opportunity
 
 ---
 
-**Document Status:** ✅ Version 3.0 - PRD Aligned (Sprint 5 Complete)
-**Last Updated:** November 15, 2025
+**Document Status:** ✅ Version 4.0 - PRD Aligned (Sprint 13 Complete)
+**Last Updated:** November 23, 2025
 **Next Review:** December 15, 2025 (post-launch review)
