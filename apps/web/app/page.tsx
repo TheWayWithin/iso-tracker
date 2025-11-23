@@ -64,8 +64,122 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured ISO */}
+      {/* Evidence Framework Section */}
       <section className="py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-white mb-4">
+              Go Beyond Speculation: The Evidence Framework
+            </h2>
+            <p className="text-slate-400 max-w-2xl mx-auto">
+              Not just opinions - a structured approach to evaluate evidence scientifically.
+              Every assessment follows the same rigorous methodology.
+            </p>
+          </div>
+
+          {/* Two-Step Process */}
+          <div className="grid md:grid-cols-2 gap-8 mb-12">
+            {/* Step 1: Assess Quality */}
+            <div className="bg-slate-800/50 rounded-xl p-8 border border-slate-700">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold">
+                  1
+                </div>
+                <h3 className="text-xl font-semibold text-white">Assess Quality</h3>
+              </div>
+              <p className="text-slate-400 mb-6">
+                Every piece of evidence is scored against three objective criteria:
+              </p>
+              <div className="space-y-4">
+                <div className="flex items-start gap-3 p-3 bg-slate-900/50 rounded-lg">
+                  <div className="text-2xl">🔗</div>
+                  <div>
+                    <div className="text-white font-medium">Chain of Custody</div>
+                    <div className="text-sm text-slate-500">Where did this evidence come from? Is the source verifiable?</div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 p-3 bg-slate-900/50 rounded-lg">
+                  <div className="text-2xl">👤</div>
+                  <div>
+                    <div className="text-white font-medium">Witness Credibility</div>
+                    <div className="text-sm text-slate-500">What&apos;s the expertise level of the observer or analyst?</div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 p-3 bg-slate-900/50 rounded-lg">
+                  <div className="text-2xl">🔬</div>
+                  <div>
+                    <div className="text-white font-medium">Technical Analysis</div>
+                    <div className="text-sm text-slate-500">Has it been independently reviewed using scientific methods?</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Step 2: Cast Your Verdict */}
+            <div className="bg-slate-800/50 rounded-xl p-8 border border-slate-700">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center text-white font-bold">
+                  2
+                </div>
+                <h3 className="text-xl font-semibold text-white">Cast Your Verdict</h3>
+              </div>
+              <p className="text-slate-400 mb-6">
+                After assessing evidence quality, make your determination:
+              </p>
+              <div className="space-y-4">
+                <button className="w-full flex items-center gap-3 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-lg hover:bg-emerald-500/20 transition-colors">
+                  <span className="text-2xl">🌍</span>
+                  <div className="text-left">
+                    <div className="text-emerald-400 font-medium">Natural Origin</div>
+                    <div className="text-sm text-slate-500">Evidence points to known natural phenomena</div>
+                  </div>
+                </button>
+                <button className="w-full flex items-center gap-3 p-4 bg-amber-500/10 border border-amber-500/30 rounded-lg hover:bg-amber-500/20 transition-colors">
+                  <span className="text-2xl">❓</span>
+                  <div className="text-left">
+                    <div className="text-amber-400 font-medium">Uncertain</div>
+                    <div className="text-sm text-slate-500">More data needed before making a determination</div>
+                  </div>
+                </button>
+                <button className="w-full flex items-center gap-3 p-4 bg-purple-500/10 border border-purple-500/30 rounded-lg hover:bg-purple-500/20 transition-colors">
+                  <span className="text-2xl">🛸</span>
+                  <div className="text-left">
+                    <div className="text-purple-400 font-medium">Anomalous / Artificial</div>
+                    <div className="text-sm text-slate-500">Evidence suggests non-natural characteristics</div>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Community vs Scientific Consensus */}
+          <div className="bg-gradient-to-r from-slate-800/50 to-slate-700/30 rounded-xl p-8 border border-slate-600">
+            <div className="text-center mb-6">
+              <h3 className="text-xl font-semibold text-white mb-2">
+                Track the Evolving Consensus
+              </h3>
+              <p className="text-slate-400">
+                See how community assessments compare to scientific consensus over time
+              </p>
+            </div>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="text-center p-4 bg-slate-900/50 rounded-lg">
+                <div className="text-3xl mb-2">👥</div>
+                <div className="text-white font-medium mb-1">Community Sentiment</div>
+                <div className="text-sm text-slate-500">Real-time aggregate of all user verdicts</div>
+              </div>
+              <div className="text-center p-4 bg-slate-900/50 rounded-lg">
+                <div className="text-3xl mb-2">🎓</div>
+                <div className="text-white font-medium mb-1">Scientific Consensus</div>
+                <div className="text-sm text-slate-500">Peer-reviewed assessments from experts</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured ISO */}
+      <section className="py-16 bg-slate-800/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-xl p-8 border border-blue-700/50">
             <div className="flex items-center gap-4 mb-4">
