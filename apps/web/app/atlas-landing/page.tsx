@@ -1,4 +1,42 @@
+'use client'
+
+import { useState } from 'react'
+
 export default function AtlasLanding() {
+  const [email, setEmail] = useState('')
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [message, setMessage] = useState('')
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+
+    if (!email.trim()) return
+
+    setStatus('loading')
+
+    try {
+      const response = await fetch('/api/email-signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, source: '3i-atlas.live' })
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setStatus('success')
+        setMessage(data.message || 'You\'re on the list!')
+        setEmail('')
+      } else {
+        setStatus('error')
+        setMessage(data.error || 'Something went wrong. Please try again.')
+      }
+    } catch {
+      setStatus('error')
+      setMessage('Network error. Please try again.')
+    }
+  }
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-[#0A1628] via-[#0D1B2A] to-[#0A1628] relative overflow-hidden">
       {/* Star field overlay */}
@@ -26,23 +64,37 @@ export default function AtlasLanding() {
         </p>
 
         {/* Email Form */}
-        <form className="w-full max-w-md mx-auto mb-8">
-          <div className="flex flex-col sm:flex-row gap-3">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="flex-1 bg-[#0A1628]/80 border border-[#2E5BFF]/30 rounded-lg px-4 py-4 text-[#F5F7FA] placeholder-[#64748B] focus:border-[#2E5BFF] focus:outline-none focus:ring-2 focus:ring-[#2E5BFF]/20 text-base min-h-[48px]"
-              required
-              aria-label="Email address"
-            />
-            <button
-              type="submit"
-              className="bg-[#FFB84D] hover:bg-[#FFC978] text-[#0A1628] font-semibold px-8 py-4 rounded-lg min-h-[48px] transition-all duration-200 shadow-[0_4px_16px_rgba(255,184,77,0.3)] hover:shadow-[0_6px_20px_rgba(255,184,77,0.4)] whitespace-nowrap"
-            >
-              Notify Me
-            </button>
+        {status === 'success' ? (
+          <div className="w-full max-w-md mx-auto mb-8 p-6 bg-[#10B981]/20 border border-[#10B981]/50 rounded-lg">
+            <div className="text-[#10B981] text-lg font-medium mb-2">You&apos;re on the list!</div>
+            <p className="text-[#94A3B8] text-sm">{message}</p>
           </div>
-        </form>
+        ) : (
+          <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto mb-8">
+            <div className="flex flex-col sm:flex-row gap-3">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                className="flex-1 bg-[#0A1628]/80 border border-[#2E5BFF]/30 rounded-lg px-4 py-4 text-[#F5F7FA] placeholder-[#64748B] focus:border-[#2E5BFF] focus:outline-none focus:ring-2 focus:ring-[#2E5BFF]/20 text-base min-h-[48px]"
+                required
+                disabled={status === 'loading'}
+                aria-label="Email address"
+              />
+              <button
+                type="submit"
+                disabled={status === 'loading'}
+                className="bg-[#FFB84D] hover:bg-[#FFC978] text-[#0A1628] font-semibold px-8 py-4 rounded-lg min-h-[48px] transition-all duration-200 shadow-[0_4px_16px_rgba(255,184,77,0.3)] hover:shadow-[0_6px_20px_rgba(255,184,77,0.4)] whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {status === 'loading' ? 'Joining...' : 'Notify Me'}
+              </button>
+            </div>
+            {status === 'error' && (
+              <p className="mt-3 text-red-400 text-sm">{message}</p>
+            )}
+          </form>
+        )}
 
         {/* Social Proof */}
         <p className="text-sm text-[#64748B] mb-12">
