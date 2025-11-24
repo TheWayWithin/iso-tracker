@@ -7,11 +7,11 @@ export const dynamic = 'force-dynamic'
 // Email validation regex
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-// Create a simple Supabase client for public endpoints (no auth required)
+// Use service role for server-side operations (bypasses RLS)
 function getSupabaseClient() {
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
   )
 }
 
