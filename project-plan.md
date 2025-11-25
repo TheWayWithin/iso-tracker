@@ -624,22 +624,22 @@ Integrate Stripe for subscription payments, enabling users to upgrade to paid ti
 - `subscriptions` table exists with `tier`, `status`, `stripe_customer_id`
 - May need: `stripe_subscription_id`, `current_period_end`, `billing_interval`
 
-### Phase 14.0: Update Landing Page Pricing ⚡ CURRENT
+### Phase 14.0: Update Landing Page Pricing ✅ COMPLETE
 **Goal**: Update isotracker.org with new pricing before Stripe setup
 
-- [ ] Update Event Pass pricing card:
+- [x] Update Event Pass pricing card:
   - Monthly: $4.99/mo
   - Annual: $49.95/year with "2 MONTHS FREE" badge
   - Toggle or tabs to switch between monthly/annual view
 
-- [ ] Update Evidence Analyst pricing card:
+- [x] Update Evidence Analyst pricing card:
   - Monthly: $9.95/mo (was $19/mo)
   - Annual: $79.95/year with "4 MONTHS FREE" badge
   - Keep "POPULAR" badge
 
-- [ ] Update feature descriptions if needed
-- [ ] Test responsive layout with annual pricing toggle
-- [ ] Commit changes before moving to Stripe
+- [x] Update feature descriptions if needed
+- [x] Test responsive layout with annual pricing toggle
+- [x] Commit changes before moving to Stripe
 
 ### Phase 14.1: Stripe Configuration
 **Goal**: Set up Stripe products and prices
