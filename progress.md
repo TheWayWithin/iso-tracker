@@ -113,6 +113,35 @@ Much of Sprint 13 infrastructure was already implemented:
 
 ---
 
+## 📋 Sprint 14a Extended - Email Signup Issue (Nov 24, 2025)
+
+### Issue: Email Signup RLS Policy Violation
+
+**What Happened**:
+- 3i-atlas.live email signup form returned 500 error
+- Error: `new row violates row-level security policy for table "email_signups"`
+- Database table existed, RLS policies looked correct, grants were in place
+- Direct SQL inserts worked, even with `SET ROLE anon`
+
+**Root Cause**:
+- API route used `NEXT_PUBLIC_SUPABASE_ANON_KEY` for server-side operation
+- Server-side API routes should use `SUPABASE_SERVICE_ROLE_KEY` instead
+- Anon key is for client-side operations, service role is for trusted server operations
+
+**Fix**:
+- Changed `apps/web/app/api/email-signup/route.ts` to use service role key
+- Service role bypasses RLS (correct for trusted server-side operations)
+- Committed: `4087b94 - fix: Use service role key for email signup API to bypass RLS`
+
+**Prevention**:
+- Server-side API routes (`/app/api/*`) should use service role key
+- Client-side components should use anon key
+- Document this pattern in architecture.md
+
+**Time Impact**: ~2 hours debugging (Nov 24)
+
+---
+
 ## 📚 References
 
 - **Detailed History**: `progress-archive-2025-11-21.md`
