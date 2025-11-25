@@ -1,6 +1,11 @@
+'use client'
+
 import Link from 'next/link'
+import { useState } from 'react'
 
 export default function Home() {
+  const [billingInterval, setBillingInterval] = useState<'monthly' | 'annual'>('monthly')
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800">
       {/* Hero Section */}
@@ -321,9 +326,29 @@ export default function Home() {
           <h2 className="text-3xl font-bold text-white text-center mb-4">
             Choose Your Role
           </h2>
-          <p className="text-slate-400 text-center mb-12 max-w-2xl mx-auto">
+          <p className="text-slate-400 text-center mb-8 max-w-2xl mx-auto">
             Start free as a Spectator, or upgrade to contribute evidence and verdicts.
           </p>
+
+          {/* Billing Toggle */}
+          <div className="flex justify-center items-center gap-4 mb-12">
+            <span className={`text-sm font-medium ${billingInterval === 'monthly' ? 'text-white' : 'text-slate-400'}`}>
+              Monthly
+            </span>
+            <button
+              onClick={() => setBillingInterval(billingInterval === 'monthly' ? 'annual' : 'monthly')}
+              className="relative inline-flex h-6 w-11 items-center rounded-full bg-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900"
+            >
+              <span
+                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                  billingInterval === 'annual' ? 'translate-x-6' : 'translate-x-1'
+                }`}
+              />
+            </button>
+            <span className={`text-sm font-medium ${billingInterval === 'annual' ? 'text-white' : 'text-slate-400'}`}>
+              Annual <span className="text-green-400 ml-1">Save up to 33%</span>
+            </span>
+          </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             {/* Spectator - Free */}
             <div className="bg-slate-900 p-6 rounded-lg border border-slate-700 flex flex-col">
@@ -357,12 +382,26 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* Event Pass - $4.99/mo */}
-            <div className="bg-slate-900 p-6 rounded-lg border border-slate-700 flex flex-col">
+            {/* Event Pass - $4.99/mo or $49.95/year */}
+            <div className="bg-slate-900 p-6 rounded-lg border border-slate-700 flex flex-col relative">
+              {billingInterval === 'annual' && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                  2 MONTHS FREE
+                </div>
+              )}
               <h3 className="text-xl font-semibold text-white mb-2">Event Pass</h3>
-              <p className="text-3xl font-bold text-white mb-4">
-                $4.99<span className="text-sm text-slate-400">/mo</span>
-              </p>
+              {billingInterval === 'monthly' ? (
+                <p className="text-3xl font-bold text-white mb-4">
+                  $4.99<span className="text-sm text-slate-400">/mo</span>
+                </p>
+              ) : (
+                <div className="mb-4">
+                  <p className="text-3xl font-bold text-white">
+                    $49.95<span className="text-sm text-slate-400">/year</span>
+                  </p>
+                  <p className="text-sm text-slate-400">$4.16/mo billed annually</p>
+                </div>
+              )}
               <ul className="space-y-3 text-slate-400 mb-6 flex-grow">
                 <li className="flex items-center">
                   <svg className="w-5 h-5 text-green-400 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -397,15 +436,29 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* Evidence Analyst - $19/mo - POPULAR */}
+            {/* Evidence Analyst - $9.95/mo or $79.95/year - POPULAR */}
             <div className="bg-slate-900 p-6 rounded-lg border border-blue-600 relative flex flex-col">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
                 POPULAR
               </div>
+              {billingInterval === 'annual' && (
+                <div className="absolute -top-3 right-4 bg-green-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                  4 MONTHS FREE
+                </div>
+              )}
               <h3 className="text-xl font-semibold text-white mb-2">Evidence Analyst</h3>
-              <p className="text-3xl font-bold text-white mb-4">
-                $19<span className="text-sm text-slate-400">/mo</span>
-              </p>
+              {billingInterval === 'monthly' ? (
+                <p className="text-3xl font-bold text-white mb-4">
+                  $9.95<span className="text-sm text-slate-400">/mo</span>
+                </p>
+              ) : (
+                <div className="mb-4">
+                  <p className="text-3xl font-bold text-white">
+                    $79.95<span className="text-sm text-slate-400">/year</span>
+                  </p>
+                  <p className="text-sm text-slate-400">$6.66/mo billed annually</p>
+                </div>
+              )}
               <ul className="space-y-3 text-slate-400 mb-6 flex-grow">
                 <li className="flex items-center">
                   <svg className="w-5 h-5 text-green-400 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">

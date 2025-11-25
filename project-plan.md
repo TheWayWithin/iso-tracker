@@ -599,10 +599,10 @@ Per Landing Page Review document:
 ## 📋 SPRINT 14: Payments & Tier Upgrades (Stripe)
 
 **PRD References**: Section 7 "Pricing Tiers"
-**Status**: 🔲 PLANNED
-**Dependencies**: Sprint 14a complete (landing page must show correct prices first)
+**Status**: 🟡 IN PROGRESS
+**Dependencies**: Sprint 14a complete ✅
 **Priority**: CRITICAL - Monetization
-**Estimated Phases**: 4
+**Estimated Phases**: 5
 
 ### Mission Objective
 
@@ -610,24 +610,46 @@ Integrate Stripe for subscription payments, enabling users to upgrade to paid ti
 
 ### Background
 
-**Pricing Tiers** (CORRECTED - see Landing Page Review):
-- Spectator: Free (view-only access)
-- Event Pass: $4.99/month (voting, observation alerts, auto-pauses between events)
-- Evidence Analyst: $19/month (evidence submission, assessment, full access)
+**Final Pricing Structure** (Nov 24, 2025):
+- **Spectator**: Free (view-only access)
+- **Event Pass**: $4.99/mo or $49.95/year ("2 months free" - 17% off)
+- **Evidence Analyst**: $9.95/mo or $79.95/year ("4 months free" - 33% off)
 
-**NOTE**: Professional tier REMOVED. Landing page must be updated to match before Stripe launch.
+**Pricing Strategy**:
+- Event Pass annual: Modest savings (8% off) to keep users considering upgrade
+- Evidence Analyst annual: Strong value (33% off) to drive annual conversions
+- Gap between annual tiers: Only $30/year ($2.50/mo) makes upselling easy
 
-**Existing DB** (needs updates):
+**Existing DB**:
 - `subscriptions` table exists with `tier`, `status`, `stripe_customer_id`
-- May need: `stripe_subscription_id`, `current_period_end`
+- May need: `stripe_subscription_id`, `current_period_end`, `billing_interval`
+
+### Phase 14.0: Update Landing Page Pricing ⚡ CURRENT
+**Goal**: Update isotracker.org with new pricing before Stripe setup
+
+- [ ] Update Event Pass pricing card:
+  - Monthly: $4.99/mo
+  - Annual: $49.95/year with "2 MONTHS FREE" badge
+  - Toggle or tabs to switch between monthly/annual view
+
+- [ ] Update Evidence Analyst pricing card:
+  - Monthly: $9.95/mo (was $19/mo)
+  - Annual: $79.95/year with "4 MONTHS FREE" badge
+  - Keep "POPULAR" badge
+
+- [ ] Update feature descriptions if needed
+- [ ] Test responsive layout with annual pricing toggle
+- [ ] Commit changes before moving to Stripe
 
 ### Phase 14.1: Stripe Configuration
 **Goal**: Set up Stripe products and prices
 
 - [ ] Create Stripe products in dashboard:
-  - Event Pass ($4.99/mo)
-  - Evidence Analyst ($19/mo)
-- [ ] Store price IDs in environment variables
+  - Event Pass Monthly ($4.99/mo recurring)
+  - Event Pass Annual ($49.95/year recurring)
+  - Evidence Analyst Monthly ($9.95/mo recurring)
+  - Evidence Analyst Annual ($79.95/year recurring)
+- [ ] Store price IDs in environment variables (4 price IDs)
 - [ ] Install `stripe` and `@stripe/stripe-js` packages
 - [ ] Configure Stripe webhook endpoint URL
 
