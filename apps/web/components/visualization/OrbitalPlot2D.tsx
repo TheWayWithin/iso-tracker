@@ -21,9 +21,13 @@ interface OrbitalPlot2DProps {
 
 export function OrbitalPlot2D({ isoId, isoName }: OrbitalPlot2DProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [data, setData] = useState<EphemerisPoint[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Canvas dimensions
+  const [canvasDimensions, setCanvasDimensions] = useState({ width: 800, height: 600 });
 
   // Visualization state
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -31,6 +35,52 @@ export function OrbitalPlot2D({ isoId, isoName }: OrbitalPlot2DProps) {
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+
+  // Responsive canvas sizing
+  useEffect(() => {
+    const updateCanvasSize = () => {
+      const container = containerRef.current;
+      if (!container) return;
+
+      const rect = container.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+
+      // Use container width, maintain aspect ratio
+      const width = Math.floor(rect.width);
+      const height = Math.floor(width * 0.75); // 4:3 aspect ratio
+
+      setCanvasDimensions({ width, height });
+    };
+
+    // Initial size
+    updateCanvasSize();
+
+    // Update on resize
+    const resizeObserver = new ResizeObserver(updateCanvasSize);
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    // Also listen to window resize for orientation changes
+    window.addEventListener('resize', updateCanvasSize);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', updateCanvasSize);
+    };
+  }, []);
+
+  // Calculate scale when data or canvas dimensions change
+  useEffect(() => {
+    if (data.length === 0 || !canvasDimensions.width) return;
+
+    const trajectory = data.map((p: EphemerisPoint) =>
+      raDecToCartesian(p.ra, p.dec, p.delta)
+    );
+    const autoScale = calculateAutoScale(trajectory, canvasDimensions.width, canvasDimensions.height, 50);
+    setScale(autoScale);
+    setPan({ x: 0, y: 0 }); // Reset pan when scale changes
+  }, [data, canvasDimensions]);
 
   // Fetch ephemeris data
   useEffect(() => {
@@ -61,17 +111,7 @@ export function OrbitalPlot2D({ isoId, isoName }: OrbitalPlot2DProps) {
         const ephemerisData = result.ephemeris || [];
         setData(ephemerisData);
 
-        // Calculate appropriate scale
-        if (ephemerisData.length > 0) {
-          const trajectory = ephemerisData.map((p: EphemerisPoint) =>
-            raDecToCartesian(p.ra, p.dec, p.delta)
-          );
-          const canvas = canvasRef.current;
-          if (canvas) {
-            const autoScale = calculateAutoScale(trajectory, canvas.width, canvas.height, 50);
-            setScale(autoScale);
-          }
-        }
+        // Scale will be recalculated in a separate effect when canvas dimensions are ready
 
         // Set current index to middle of dataset (today)
         setCurrentIndex(Math.floor(ephemerisData.length / 2));
@@ -140,8 +180,9 @@ export function OrbitalPlot2D({ isoId, isoName }: OrbitalPlot2DProps) {
       const planetX = centerX + pan.x + (radius * Math.cos(angle));
       const planetY = centerY + pan.y + (radius * Math.sin(angle));
 
-      // Draw planet dot
-      const planetRadius = planet.name === 'Jupiter' ? 5 : planet.name === 'Earth' ? 3.5 : 3;
+      // Draw planet dot (responsive sizing)
+      const baseScale = Math.max(0.6, Math.min(1.2, canvas.width / 800));
+      const planetRadius = (planet.name === 'Jupiter' ? 5 : planet.name === 'Earth' ? 3.5 : 3) * baseScale;
       ctx.fillStyle = planet.color;
       ctx.beginPath();
       ctx.arc(planetX, planetY, planetRadius, 0, Math.PI * 2);
@@ -156,14 +197,16 @@ export function OrbitalPlot2D({ isoId, isoName }: OrbitalPlot2DProps) {
       ctx.stroke();
       ctx.globalAlpha = 1.0;
 
-      // Draw planet name near the planet
+      // Draw planet name near the planet (responsive font size)
+      const fontSize = Math.max(10, Math.min(14, canvas.width / 60));
       ctx.fillStyle = '#D1D5DB'; // Light grey for readability on dark background
-      ctx.font = '500 11px sans-serif';
+      ctx.font = `500 ${fontSize}px sans-serif`;
       ctx.fillText(planet.name, planetX + 8, planetY - 8);
     });
 
-    // Draw Sun
-    const sunRadius = 8;
+    // Draw Sun (responsive sizing)
+    const baseScale = Math.max(0.6, Math.min(1.2, canvas.width / 800));
+    const sunRadius = 8 * baseScale;
     const sunGradient = ctx.createRadialGradient(
       centerX + pan.x, centerY + pan.y, 0,
       centerX + pan.x, centerY + pan.y, sunRadius * 2
@@ -215,8 +258,9 @@ export function OrbitalPlot2D({ isoId, isoName }: OrbitalPlot2DProps) {
         pan.y
       );
 
-      // Pulsing effect (time-based)
-      const pulseSize = 8 + Math.sin(Date.now() / 200) * 2;
+      // Pulsing effect (time-based, responsive sizing)
+      const baseScale = Math.max(0.6, Math.min(1.2, canvas.width / 800));
+      const pulseSize = (8 + Math.sin(Date.now() / 200) * 2) * baseScale;
 
       // Outer glow
       const glowGradient = ctx.createRadialGradient(
@@ -243,9 +287,10 @@ export function OrbitalPlot2D({ isoId, isoName }: OrbitalPlot2DProps) {
       ctx.fill();
     }
 
-    // Draw scale indicator
+    // Draw scale indicator (responsive font size)
+    const scaleFontSize = Math.max(10, Math.min(14, canvas.width / 60));
     ctx.fillStyle = '#FFFFFF';
-    ctx.font = '12px sans-serif';
+    ctx.font = `${scaleFontSize}px sans-serif`;
     ctx.fillText(`Scale: ${(1 / scale).toFixed(1)} AU`, 10, canvas.height - 10);
 
   }, [data, currentIndex, scale, pan]);
@@ -267,17 +312,31 @@ export function OrbitalPlot2D({ isoId, isoName }: OrbitalPlot2DProps) {
     return () => cancelAnimationFrame(animationId);
   }, [data]);
 
+  // Get canvas coordinates from mouse/touch event
+  const getCanvasCoordinates = (clientX: number, clientY: number) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return { x: 0, y: 0 };
+
+    const rect = canvas.getBoundingClientRect();
+    return {
+      x: clientX - rect.left,
+      y: clientY - rect.top,
+    };
+  };
+
   // Mouse handlers for pan
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const coords = getCanvasCoordinates(e.clientX, e.clientY);
     setIsDragging(true);
-    setDragStart({ x: e.clientX - pan.x, y: e.clientY - pan.y });
+    setDragStart({ x: coords.x - pan.x, y: coords.y - pan.y });
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (!isDragging) return;
+    const coords = getCanvasCoordinates(e.clientX, e.clientY);
     setPan({
-      x: e.clientX - dragStart.x,
-      y: e.clientY - dragStart.y,
+      x: coords.x - dragStart.x,
+      y: coords.y - dragStart.y,
     });
   };
 
@@ -286,6 +345,32 @@ export function OrbitalPlot2D({ isoId, isoName }: OrbitalPlot2DProps) {
   };
 
   const handleMouseLeave = () => {
+    setIsDragging(false);
+  };
+
+  // Touch handlers for mobile
+  const handleTouchStart = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (e.touches.length === 1) {
+      const touch = e.touches[0];
+      const coords = getCanvasCoordinates(touch.clientX, touch.clientY);
+      setIsDragging(true);
+      setDragStart({ x: coords.x - pan.x, y: coords.y - pan.y });
+      e.preventDefault(); // Prevent scrolling
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (!isDragging || e.touches.length !== 1) return;
+    const touch = e.touches[0];
+    const coords = getCanvasCoordinates(touch.clientX, touch.clientY);
+    setPan({
+      x: coords.x - dragStart.x,
+      y: coords.y - dragStart.y,
+    });
+    e.preventDefault();
+  };
+
+  const handleTouchEnd = () => {
     setIsDragging(false);
   };
 
@@ -299,15 +384,12 @@ export function OrbitalPlot2D({ isoId, isoName }: OrbitalPlot2DProps) {
   };
 
   const handleResetView = () => {
-    if (data.length > 0) {
+    if (data.length > 0 && canvasDimensions.width) {
       const trajectory = data.map((p: EphemerisPoint) =>
         raDecToCartesian(p.ra, p.dec, p.delta)
       );
-      const canvas = canvasRef.current;
-      if (canvas) {
-        const autoScale = calculateAutoScale(trajectory, canvas.width, canvas.height, 50);
-        setScale(autoScale);
-      }
+      const autoScale = calculateAutoScale(trajectory, canvasDimensions.width, canvasDimensions.height, 50);
+      setScale(autoScale);
     }
     setPan({ x: 0, y: 0 });
     setCurrentIndex(Math.floor(data.length / 2));
@@ -347,17 +429,24 @@ export function OrbitalPlot2D({ isoId, isoName }: OrbitalPlot2DProps) {
       <h3 className="text-lg font-bold text-gray-900 mb-4">2D Orbital Trajectory</h3>
 
       {/* Canvas */}
-      <div className="mb-4 border border-gray-300 rounded overflow-hidden">
+      <div ref={containerRef} className="mb-4 border border-gray-300 rounded overflow-hidden">
         <canvas
           ref={canvasRef}
-          width={800}
-          height={600}
-          className="cursor-move w-full h-auto"
-          style={{ maxWidth: '100%', height: 'auto' }}
+          width={canvasDimensions.width}
+          height={canvasDimensions.height}
+          className="cursor-move w-full h-auto touch-none"
+          style={{
+            maxWidth: '100%',
+            height: 'auto',
+            display: 'block' // Prevent whitespace below canvas
+          }}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseLeave}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
           role="img"
           aria-label={`2D orbital plot showing ${isoName}'s trajectory through the solar system. Use zoom controls and time slider below to explore the orbital path.`}
           tabIndex={0}
