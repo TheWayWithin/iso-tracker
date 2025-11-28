@@ -1,8 +1,8 @@
 # ISO Tracker Product Description
 
-**Version:** 4.0 (PRD Aligned)
-**Date:** November 23, 2025
-**Status:** Production Ready - Sprint 13 Complete
+**Version:** 5.0 (Sprint 14 Update)
+**Date:** November 28, 2025
+**Status:** Sprint 14 In Progress - Stripe Payments Integration (70% complete)
 **Purpose:** Strategic product overview for stakeholders, investors, and team alignment
 
 ---
@@ -177,7 +177,7 @@ This creates a unique "Debate Dashboard" showing how public perception compares 
 
 ## Pricing Strategy
 
-### Event Pass - $4.99/month
+### Event Pass - $4.99/month or $49.95/year
 
 **Target:** Spectators during ISO detection events (3-6 month observation windows)
 
@@ -195,7 +195,9 @@ This creates a unique "Debate Dashboard" showing how public perception compares 
 
 **Upgrade Trigger:** When users see evidence framework value but cannot contribute, they upgrade
 
-### Evidence Analyst - $19/month or $199/year
+**Annual Discount:** 17% ($49.95/year vs $59.88 monthly = $9.93 savings)
+
+### Evidence Analyst - $9.95/month or $79.95/year
 
 **Target:** Debaters committed to ongoing analysis between ISO events
 
@@ -211,9 +213,9 @@ This creates a unique "Debate Dashboard" showing how public perception compares 
 
 **Role:** Debater retention engine - core value proposition
 
-**LTV:** $228/year per converted Debater
+**LTV:** $119.40/year per converted Debater (monthly) or $79.95/year (annual)
 
-**Annual Discount:** 12.5% ($199 vs. $228 monthly = $29 savings)
+**Annual Discount:** 33% ($79.95/year vs $119.40 monthly = $39.45 savings)
 
 ### Unit Economics
 
@@ -297,7 +299,7 @@ Debater Conversion (10% target):
 ### Infrastructure
 - **Hosting:** Vercel (Edge deployment, preview environments)
 - **CDN:** Vercel Edge Network (global low-latency)
-- **Payments:** Stripe (Checkout + Billing + Webhooks) - NOT YET INTEGRATED
+- **Payments:** Stripe (Checkout + Billing + Webhooks) - TEST MODE INTEGRATED ✅
 - **Email:** Resend with React Email templates (transactional notifications)
 - **Analytics:** PostHog (privacy-first, no PII, custom events)
 - **Error Monitoring:** Sentry (client, server, edge configurations)
@@ -682,20 +684,51 @@ Day 90: Auto-pause Event Pass, final upgrade opportunity
 - [x] Unsubscribe flow with JWT tokens
 - [x] Playwright E2E tests for Sprints 11-13
 
-### Phase 1.6: Monetization 🟡 NEXT
+### Phase 1.6: Monetization 🟡 IN PROGRESS
 
 **Timeline:** Sprint 14
-**Status:** 🟡 PLANNED
+**Status:** 🟡 70% COMPLETE
 
-**Sprint 14: Stripe Payments**
-- [ ] Stripe checkout integration
+**Sprint 14: Stripe Payments (Current)**
+
+**Phase 14.0: Landing Page Pricing** ✅
+- [x] Annual pricing toggle on landing page
+- [x] Updated pricing display ($4.99/$49.95 and $9.95/$79.95)
+- [x] Responsive pricing cards
+
+**Phase 14.1: Stripe Configuration** ✅
+- [x] Created 4 Stripe subscription products (TEST mode)
+- [x] Event Pass: $4.99/mo or $49.95/year (17% savings)
+- [x] Evidence Analyst: $9.95/mo or $79.95/year (33% savings)
+- [x] Price IDs stored in environment variables
+
+**Phase 14.2: Checkout Flow** (Partially Complete)
+- [x] Stripe checkout session creation API
+- [x] Success page with benefits display
+- [x] Cancel page handling
+- [x] Email collection for unauthenticated users
+- [ ] OAuth authentication (Google, Apple) - NEXT
+- [ ] Magic link authentication
+- [ ] Auth-before-checkout flow
+
+**Phase 14.3: Webhook Handler** (Planned)
 - [ ] Webhook handling for subscription events
-- [ ] Subscription management UI
+- [ ] Subscription lifecycle management
 - [ ] Tier upgrade/downgrade flows
+
+**Sprint 14a: Email Signup Backend** ✅
+- [x] Email capture API for 3i-atlas.live
+- [x] Service role key fix for RLS bypass
+
+**Mobile Improvements (Nov 28)** ✅
+- [x] Horizontal scrolling navigation tabs
+- [x] Responsive Ephemeris date picker
+- [x] City search input contrast fix
+- [x] NASA date format conversion (orbital visualization fix)
 
 **Sprint 15: User Profile & Polish**
 - [ ] User profile pages
-- [ ] 3i-atlas.live email capture backend
+- [x] 3i-atlas.live email capture backend (done in 14a)
 - [ ] Final polish and QA
 
 **NOT YET BUILT (Deferred to Phase 2+):**
@@ -954,6 +987,6 @@ Day 90: Auto-pause Event Pass, final upgrade opportunity
 
 ---
 
-**Document Status:** ✅ Version 4.0 - PRD Aligned (Sprint 13 Complete)
-**Last Updated:** November 23, 2025
-**Next Review:** December 15, 2025 (post-launch review)
+**Document Status:** ✅ Version 5.0 - Sprint 14 Update (Stripe Integration 70% Complete)
+**Last Updated:** November 28, 2025
+**Next Review:** December 1, 2025 (Sprint 14 completion review)

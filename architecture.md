@@ -12,7 +12,7 @@ ISO Tracker is a Progressive Web Application (PWA) for evidence-based analysis o
 - **Error Monitoring**: Sentry (client, server, edge)
 - **Hosting**: Vercel with automatic SSL and global CDN
 
-**Current Status**: Production Ready - Sprint 13 Complete (2025-11-23)
+**Current Status**: Sprint 14 In Progress - Stripe Payments Integration (2025-11-28)
 
 ---
 
@@ -48,11 +48,11 @@ ISO Tracker is a Progressive Web Application (PWA) for evidence-based analysis o
 └─────────────────────────────────────────────────────────────────────┘
 
 External Services:
-┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-│ NASA Horizons│  │   Resend     │  │   PostHog    │  │   Sentry     │
-│ - Ephemeris  │  │ - Email API  │  │ - Analytics  │  │ - Errors     │
-│ - Trajectory │  │ - Templates  │  │ - Events     │  │ - Performance│
-└──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘
+┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+│ NASA Horizons│  │   Resend     │  │   PostHog    │  │   Sentry     │  │   Stripe     │
+│ - Ephemeris  │  │ - Email API  │  │ - Analytics  │  │ - Errors     │  │ - Checkout   │
+│ - Trajectory │  │ - Templates  │  │ - Events     │  │ - Performance│  │ - Webhooks   │
+└──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘
 ```
 
 ---
@@ -138,9 +138,15 @@ This two-step process separates objective evidence quality assessment from subje
 | Tier | Cost | Evidence Submission | Evidence Assessment | Observation Alerts | Admin Access |
 |------|------|--------------------|--------------------|-------------------|--------------|
 | Guest (Free) | $0 | View only | No | No | No |
-| Event Pass | $4.99/mo | View only | No | Yes | No |
-| Evidence Analyst | $19/mo | Unlimited | Yes | Yes | No |
+| Event Pass | $4.99/mo or $49.95/yr | View only | No | Yes | No |
+| Evidence Analyst | $9.95/mo or $79.95/yr | Unlimited | Yes | Yes | No |
 | Admin | Internal | Unlimited | Yes | Yes | Yes |
+
+**Stripe Configuration** (TEST Mode):
+- Event Pass Monthly: `price_1SXqsOIiC84gpR8HysaVrxgV`
+- Event Pass Annual: `price_1SXqsOIiC84gpR8HovvfZEQ5`
+- Evidence Analyst Monthly: `price_1SXqxFIiC84gpR8H7Woz8a48`
+- Evidence Analyst Annual: `price_1SXqxFIiC84gpR8HRZivV2bA`
 
 ### Row-Level Security (RLS)
 
@@ -232,6 +238,11 @@ apps/web/
 | `/api/admin/users` | GET/PATCH | User management | Yes | Admin |
 | `/api/admin/health` | GET | System health metrics | Yes | Admin |
 | `/api/cron/observation-windows` | GET | Daily alert cron | CRON_SECRET | System |
+| `/api/stripe/checkout` | POST | Create Stripe checkout session | No* | Any |
+| `/api/stripe/webhook` | POST | Handle Stripe webhook events | Stripe Signature | System |
+| `/api/email-signup` | POST | Email capture for 3i-atlas.live | No | Any |
+
+*Note: Checkout currently allows unauthenticated users with email. Auth-first flow planned for Phase 14.2b.
 
 ### Authentication Flow
 
@@ -572,19 +583,56 @@ The following major features were implemented since Sprint 5:
 - Email notifications for followed ISOs
 - Unsubscribe flow with JWT tokens
 
+### Sprint 14: Stripe Payments Integration (In Progress)
+
+**Phase 14.0: Landing Page Pricing** ✅
+- Annual pricing toggle on landing page
+- Updated pricing display ($4.99/$49.95 and $9.95/$79.95)
+- Responsive pricing cards
+
+**Phase 14.1: Stripe Configuration** ✅
+- Created 4 Stripe subscription products (TEST mode)
+- Event Pass: $4.99/mo or $49.95/year (17% savings)
+- Evidence Analyst: $9.95/mo or $79.95/year (33% savings)
+- Price IDs stored in environment variables
+
+**Phase 14.2: Checkout Flow** (Partially Complete)
+- Stripe checkout session creation API
+- Success page with benefits display
+- Cancel page handling
+- Email collection for unauthenticated users
+
+**Phase 14.2b: Authentication Integration** (Planned)
+- OAuth providers (Google, Apple)
+- Magic link email authentication
+- Auth-before-checkout flow
+
+### Sprint 14a: Email Signup Backend ✅
+- Email capture API for 3i-atlas.live
+- Service role key fix for RLS bypass
+- Proper server-side authentication pattern
+
+### Mobile Improvements (Nov 28, 2025)
+- Horizontal scrolling navigation tabs (all tabs accessible)
+- Responsive Ephemeris date picker (stacks on mobile)
+- City search input contrast fix
+- NASA date format conversion (fixes "Invalid Date" error)
+- Planet names and positions now render in orbital visualization
+
 ---
 
 ## What's NOT Built Yet
 
 The following are planned but NOT implemented:
 
-1. **Stripe Integration** - Products not created, no checkout flow (Sprint 14 priority)
-2. **Discord Integration** - Bot not built, no role sync
-3. **Sky Map Visualization** - No 2D/3D interactive trajectory rendering
-4. **News Feed CMS** - No article management
-5. **Educational Content Library** - Phase 2 feature
-6. **API Access for Researchers** - Phase 4 feature
-7. **Rate Limiting on APIs** - Implemented for emails only, not API routes
+1. **Stripe Webhooks** - Checkout works, but webhook handler needs completion for subscription lifecycle
+2. **OAuth Authentication** - Google/Apple OAuth needed before checkout flow finalized
+3. **Discord Integration** - Bot not built, no role sync
+4. **Sky Map Visualization** - No 2D/3D interactive trajectory rendering
+5. **News Feed CMS** - No article management
+6. **Educational Content Library** - Phase 2 feature
+7. **API Access for Researchers** - Phase 4 feature
+8. **Rate Limiting on APIs** - Implemented for emails only, not API routes
 
 ---
 
@@ -647,15 +695,19 @@ The following are planned but NOT implemented:
 
 ## Future Roadmap
 
-### Sprint 14 (Next): Stripe Payments
-- Stripe checkout integration
-- Webhook handling for subscription events
-- Subscription management UI
-- Tier upgrade/downgrade flows
+### Sprint 14 (Current): Stripe Payments - 70% Complete
+- ✅ Stripe products created (TEST mode)
+- ✅ Checkout session creation
+- ✅ Success/Cancel pages
+- 🔄 OAuth authentication (Google, Apple) - Next
+- 🔄 Magic link authentication - Next
+- ⏳ Webhook handling for subscription lifecycle
+- ⏳ Subscription management UI
+- ⏳ Tier upgrade/downgrade flows
 
 ### Sprint 15 (Planned): User Profile & Polish
 - User profile pages
-- 3i-atlas.live email capture backend
+- ✅ 3i-atlas.live email capture backend (completed Sprint 14a)
 - Final polish and QA
 
 ### Phase 2 (Future)
@@ -684,7 +736,7 @@ The following are planned but NOT implemented:
 
 ---
 
-**Architecture Version**: 3.0
-**Last Updated**: 2025-11-23
-**Status**: Sprint 13 Complete - Production Ready
-**Author**: coordinator (comprehensive rewrite from v1.0, v2.0 update to v3.0 for Sprints 7-13)
+**Architecture Version**: 4.0
+**Last Updated**: 2025-11-28
+**Status**: Sprint 14 In Progress - Stripe Payments Integration (70% complete)
+**Author**: coordinator (v4.0 update for Sprint 14 progress, mobile fixes, Stripe integration)
