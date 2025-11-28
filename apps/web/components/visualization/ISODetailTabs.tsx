@@ -97,10 +97,10 @@ export function ISODetailTabs({
     <div>
       {/* Tab Navigation */}
       <div className="bg-white border-b border-gray-200 rounded-t-lg">
-        <div className="flex gap-1 px-2 pt-2">
+        <div className="flex gap-1 px-2 pt-2 overflow-x-auto scrollbar-hide" style={{ WebkitOverflowScrolling: 'touch' }}>
           <button
             onClick={() => setActiveTab('overview')}
-            className={`px-6 py-3 font-medium rounded-t-lg transition-colors ${
+            className={`flex-shrink-0 px-4 py-3 font-medium rounded-t-lg transition-colors whitespace-nowrap ${
               activeTab === 'overview'
                 ? 'bg-white text-blue-600 border-t-2 border-x border-blue-600'
                 : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
@@ -111,7 +111,7 @@ export function ISODetailTabs({
           </button>
           <button
             onClick={() => setActiveTab('orbital')}
-            className={`px-6 py-3 font-medium rounded-t-lg transition-colors ${
+            className={`flex-shrink-0 px-4 py-3 font-medium rounded-t-lg transition-colors whitespace-nowrap ${
               activeTab === 'orbital'
                 ? 'bg-white text-blue-600 border-t-2 border-x border-blue-600'
                 : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
@@ -122,7 +122,7 @@ export function ISODetailTabs({
           </button>
           <button
             onClick={() => setActiveTab('observation')}
-            className={`px-6 py-3 font-medium rounded-t-lg transition-colors flex items-center gap-2 ${
+            className={`flex-shrink-0 px-4 py-3 font-medium rounded-t-lg transition-colors flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'observation'
                 ? 'bg-white text-blue-600 border-t-2 border-x border-blue-600'
                 : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
@@ -141,7 +141,7 @@ export function ISODetailTabs({
           </button>
           <button
             onClick={() => setActiveTab('loeb-scale')}
-            className={`px-6 py-3 font-medium rounded-t-lg transition-colors flex items-center gap-2 ${
+            className={`flex-shrink-0 px-4 py-3 font-medium rounded-t-lg transition-colors flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'loeb-scale'
                 ? 'bg-white text-blue-600 border-t-2 border-x border-blue-600'
                 : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
@@ -166,7 +166,7 @@ export function ISODetailTabs({
           </button>
           <button
             onClick={() => setActiveTab('evidence')}
-            className={`px-6 py-3 font-medium rounded-t-lg transition-colors ${
+            className={`flex-shrink-0 px-4 py-3 font-medium rounded-t-lg transition-colors whitespace-nowrap ${
               activeTab === 'evidence'
                 ? 'bg-white text-blue-600 border-t-2 border-x border-blue-600'
                 : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
@@ -177,7 +177,7 @@ export function ISODetailTabs({
           </button>
           <button
             onClick={() => setActiveTab('community')}
-            className={`px-6 py-3 font-medium rounded-t-lg transition-colors flex items-center gap-2 ${
+            className={`flex-shrink-0 px-4 py-3 font-medium rounded-t-lg transition-colors flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'community'
                 ? 'bg-white text-blue-600 border-t-2 border-x border-blue-600'
                 : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'

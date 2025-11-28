@@ -169,13 +169,14 @@ function parseEphemerisData(resultText: string): EphemerisPoint[] {
     if (parts.length < 7) continue;
 
     try {
-      // Convert calendar date to approximate Julian Date for display
-      // Format: "2025-Oct-20 00:00" -> ISO date -> JD calculation
-      const calDate = parts[0];
-      const jd = calendarToJulianDate(calDate);
+      // Convert calendar date to ISO format and Julian Date
+      // NASA format: "2025-Oct-20 00:00" -> ISO: "2025-10-20T00:00:00.000Z"
+      const nasaDate = parts[0];
+      const isoDate = nasaDateToIso(nasaDate);
+      const jd = calendarToJulianDate(nasaDate);
 
       ephemeris.push({
-        calendar_date: calDate,
+        calendar_date: isoDate,  // Store as ISO format for JavaScript Date parsing
         datetime_jd: jd.toString(),
         ra: parseFloat(parts[3]),
         dec: parseFloat(parts[4]),
@@ -195,6 +196,44 @@ function parseEphemerisData(resultText: string): EphemerisPoint[] {
 }
 
 /**
+ * Parse NASA date format to components
+ *
+ * @param dateStr - Date string in format "YYYY-MMM-DD HH:MM" (e.g., "2025-Oct-20 00:00")
+ * @returns Object with year, month (1-12), day, hour, minute
+ */
+function parseNasaDate(dateStr: string): { year: number; month: number; day: number; hour: number; minute: number } {
+  const monthMap: Record<string, number> = {
+    Jan: 1, Feb: 2, Mar: 3, Apr: 4, May: 5, Jun: 6,
+    Jul: 7, Aug: 8, Sep: 9, Oct: 10, Nov: 11, Dec: 12
+  };
+
+  const parts = dateStr.split(/[\s-:]+/);
+  return {
+    year: parseInt(parts[0]),
+    month: monthMap[parts[1]] || 1,
+    day: parseInt(parts[2]),
+    hour: parseInt(parts[3] || '0'),
+    minute: parseInt(parts[4] || '0'),
+  };
+}
+
+/**
+ * Convert NASA date format to ISO 8601 string
+ *
+ * @param dateStr - Date string in format "YYYY-MMM-DD HH:MM" (e.g., "2025-Oct-20 00:00")
+ * @returns ISO 8601 date string (e.g., "2025-10-20T00:00:00.000Z")
+ */
+function nasaDateToIso(dateStr: string): string {
+  const { year, month, day, hour, minute } = parseNasaDate(dateStr);
+  // Create ISO string with zero-padded values
+  const monthStr = month.toString().padStart(2, '0');
+  const dayStr = day.toString().padStart(2, '0');
+  const hourStr = hour.toString().padStart(2, '0');
+  const minuteStr = minute.toString().padStart(2, '0');
+  return `${year}-${monthStr}-${dayStr}T${hourStr}:${minuteStr}:00.000Z`;
+}
+
+/**
  * Convert calendar date to Julian Date
  * Simplified calculation for dates after 1582 (Gregorian calendar)
  *
@@ -202,18 +241,7 @@ function parseEphemerisData(resultText: string): EphemerisPoint[] {
  * @returns Julian Date as number
  */
 function calendarToJulianDate(dateStr: string): number {
-  // Parse NASA date format: "2025-Oct-20 00:00"
-  const monthMap: Record<string, number> = {
-    Jan: 1, Feb: 2, Mar: 3, Apr: 4, May: 5, Jun: 6,
-    Jul: 7, Aug: 8, Sep: 9, Oct: 10, Nov: 11, Dec: 12
-  };
-
-  const parts = dateStr.split(/[\s-:]+/);
-  const year = parseInt(parts[0]);
-  const month = monthMap[parts[1]];
-  const day = parseInt(parts[2]);
-  const hour = parseInt(parts[3] || '0');
-  const minute = parseInt(parts[4] || '0');
+  const { year, month, day, hour, minute } = parseNasaDate(dateStr);
 
   // Convert to fractional day
   const dayFraction = day + (hour / 24.0) + (minute / 1440.0);

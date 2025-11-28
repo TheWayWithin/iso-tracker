@@ -134,26 +134,26 @@ export function EphemerisTable({ isoId }: EphemerisTableProps) {
   }
 
   return (
-    <div className="bg-white rounded-lg p-6 border border-gray-200">
-      <div className="flex justify-between items-center mb-4">
+    <div className="bg-white rounded-lg p-4 sm:p-6 border border-gray-200">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
         <h3 className="text-lg font-bold text-gray-900">Ephemeris Data</h3>
-        <div className="flex gap-2 text-sm">
-          <div>
-            <label className="text-gray-900 font-medium mr-2">From:</label>
+        <div className="flex flex-wrap gap-2 text-sm">
+          <div className="flex items-center gap-2">
+            <label className="text-gray-900 font-medium">From:</label>
             <input
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="border border-gray-300 rounded px-2 py-1"
+              className="border border-gray-300 rounded px-2 py-1 text-gray-900"
             />
           </div>
-          <div>
-            <label className="text-gray-900 font-medium mr-2">To:</label>
+          <div className="flex items-center gap-2">
+            <label className="text-gray-900 font-medium">To:</label>
             <input
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="border border-gray-300 rounded px-2 py-1"
+              className="border border-gray-300 rounded px-2 py-1 text-gray-900"
             />
           </div>
         </div>
