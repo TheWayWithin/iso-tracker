@@ -2,9 +2,99 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { AuthModal } from '@/components/auth/AuthModal'
+
+// TEMPORARY WORKAROUND: Hardcoded TEST mode price IDs since env vars not loading correctly
+// TODO: Fix environment variable loading before production deployment
+const PRICE_IDS = {
+  eventPass: {
+    monthly: 'price_1SXqsOIiC84gpR8HysaVrxgV', // Event Pass Monthly (TEST)
+    annual: 'price_1SXqsOIiC84gpR8HovvfZEQ5',  // Event Pass Annual (TEST)
+  },
+  evidenceAnalyst: {
+    monthly: 'price_1SXqxFIiC84gpR8H7Woz8a48', // Evidence Analyst Monthly (TEST)
+    annual: 'price_1SXqxFIiC84gpR8HRZivV2bA',  // Evidence Analyst Annual (TEST)
+  },
+}
 
 export default function Home() {
   const [billingInterval, setBillingInterval] = useState<'monthly' | 'annual'>('monthly')
+  const [showAuthModal, setShowAuthModal] = useState(false)
+  const [selectedTier, setSelectedTier] = useState<'event-pass' | 'evidence-analyst' | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
+
+  // Handle subscribe button click
+  const handleSubscribe = async (tier: 'event-pass' | 'evidence-analyst') => {
+    setSelectedTier(tier)
+    setIsLoading(true)
+
+    // Get the correct price ID
+    const priceId = tier === 'event-pass'
+      ? (billingInterval === 'annual' ? PRICE_IDS.eventPass.annual : PRICE_IDS.eventPass.monthly)
+      : (billingInterval === 'annual' ? PRICE_IDS.evidenceAnalyst.annual : PRICE_IDS.evidenceAnalyst.monthly)
+
+    try {
+      // Try checkout - if user is authenticated, it will work
+      const response = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ priceId }),
+      })
+
+      const data = await response.json()
+
+      // If auth required, show modal
+      if (!response.ok && (data.error === 'Email is required' || response.status === 401)) {
+        setIsLoading(false)
+        setShowAuthModal(true)
+        return
+      }
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Something went wrong')
+      }
+
+      if (data.url) {
+        window.location.href = data.url
+      }
+    } catch (error) {
+      console.error('Checkout error:', error)
+      alert('Something went wrong. Please try again.')
+      setIsLoading(false)
+    }
+  }
+
+  // After auth success, proceed to checkout
+  const handleAuthSuccess = async () => {
+    setShowAuthModal(false)
+    if (!selectedTier) return
+
+    setIsLoading(true)
+    const priceId = selectedTier === 'event-pass'
+      ? (billingInterval === 'annual' ? PRICE_IDS.eventPass.annual : PRICE_IDS.eventPass.monthly)
+      : (billingInterval === 'annual' ? PRICE_IDS.evidenceAnalyst.annual : PRICE_IDS.evidenceAnalyst.monthly)
+
+    try {
+      const response = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ priceId }),
+      })
+
+      const data = await response.json()
+
+      if (data.url) {
+        window.location.href = data.url
+      }
+    } catch (error) {
+      console.error('Checkout error:', error)
+      alert('Something went wrong. Please try again.')
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800">
@@ -428,12 +518,13 @@ export default function Home() {
                   <span className="text-slate-500">Auto-pauses between events</span>
                 </li>
               </ul>
-              <Link
-                href="/auth/sign-up?tier=event_pass"
-                className="block text-center w-full py-2 border border-slate-600 rounded text-slate-300 hover:bg-slate-800 transition-colors"
+              <button
+                onClick={() => handleSubscribe('event-pass')}
+                disabled={isLoading}
+                className="block text-center w-full py-2 border border-slate-600 rounded text-slate-300 hover:bg-slate-800 transition-colors disabled:opacity-50"
               >
-                Subscribe
-              </Link>
+                {isLoading && selectedTier === 'event-pass' ? 'Loading...' : 'Subscribe'}
+              </button>
             </div>
 
             {/* Evidence Analyst - $9.95/mo or $79.95/year - POPULAR */}
@@ -485,12 +576,13 @@ export default function Home() {
                   Full year-round access
                 </li>
               </ul>
-              <Link
-                href="/auth/sign-up?tier=evidence_analyst"
-                className="block text-center w-full py-2 bg-blue-600 rounded text-white hover:bg-blue-700 transition-colors"
+              <button
+                onClick={() => handleSubscribe('evidence-analyst')}
+                disabled={isLoading}
+                className="block text-center w-full py-2 bg-blue-600 rounded text-white hover:bg-blue-700 transition-colors disabled:opacity-50"
               >
-                Subscribe
-              </Link>
+                {isLoading && selectedTier === 'evidence-analyst' ? 'Loading...' : 'Subscribe'}
+              </button>
             </div>
 
           </div>
@@ -515,24 +607,118 @@ export default function Home() {
         </div>
       </section>
 
+      {/* About & Contact Section */}
+      <section className="py-16 bg-slate-800/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 gap-12">
+            {/* About */}
+            <div>
+              <h2 className="text-2xl font-bold text-white mb-4">About ISO Tracker</h2>
+              <p className="text-slate-400 mb-4">
+                ISO Tracker is built by Jamie Watters, a solo founder using AI to build products that matter.
+                As a former enterprise architect turned indie hacker, I created ISO Tracker to bring
+                evidence-based analysis to the study of interstellar objects.
+              </p>
+              <p className="text-slate-400 mb-6">
+                This is one of 10+ products in my portfolio, all built with the mission of demonstrating
+                what one person with the right AI tools can accomplish.
+              </p>
+              <a
+                href="https://jamiewatters.work"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center text-blue-400 hover:text-blue-300 font-medium"
+              >
+                Learn more about my journey
+                <svg className="ml-2 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+            </div>
+
+            {/* Contact */}
+            <div>
+              <h2 className="text-2xl font-bold text-white mb-4">Get in Touch</h2>
+              <p className="text-slate-400 mb-6">
+                Have questions, feedback, or want to collaborate? I&apos;d love to hear from you.
+              </p>
+              <div className="space-y-4">
+                <a
+                  href="mailto:support@isotracker.org"
+                  className="flex items-center gap-3 text-slate-300 hover:text-white transition-colors"
+                >
+                  <svg className="w-5 h-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  support@isotracker.org
+                </a>
+                <a
+                  href="https://jamiewatters.work"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 text-slate-300 hover:text-white transition-colors"
+                >
+                  <svg className="w-5 h-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                  </svg>
+                  jamiewatters.work
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/jamie-watters-solo"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 text-slate-300 hover:text-white transition-colors"
+                >
+                  <svg className="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                  </svg>
+                  LinkedIn
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="border-t border-slate-700 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="text-slate-400 mb-4 md:mb-0">
-              &copy; 2025 ISO Tracker. Evidence-based analysis for interstellar objects.
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="text-slate-400 text-center md:text-left">
+              &copy; 2025 ISO Tracker. Built by{' '}
+              <a href="https://jamiewatters.work" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">
+                Jamie Watters
+              </a>
             </div>
-            <div className="flex gap-6">
+            <div className="flex flex-wrap justify-center gap-6">
               <Link href="/guidelines" className="text-slate-400 hover:text-white">
                 Guidelines
               </Link>
               <Link href="/iso-objects" className="text-slate-400 hover:text-white">
                 Browse ISOs
               </Link>
+              <a href="mailto:support@isotracker.org" className="text-slate-400 hover:text-white">
+                Contact
+              </a>
+              <a href="https://www.linkedin.com/in/jamie-watters-solo" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white">
+                LinkedIn
+              </a>
             </div>
           </div>
         </div>
       </footer>
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => {
+          setShowAuthModal(false)
+          setIsLoading(false)
+        }}
+        onSuccess={handleAuthSuccess}
+        title="Create your account"
+        subtitle={`Sign up to get ${selectedTier === 'event-pass' ? 'Event Pass' : 'Evidence Analyst'}`}
+      />
     </div>
   )
 }
