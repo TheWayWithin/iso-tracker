@@ -2,597 +2,57 @@
 
 **Mission**: ISO Tracker Development - Evidence-Based Analysis Platform
 **Started**: 2025-11-09
-**Status**: 🟢 Active - Sprint 14a COMPLETE ✅
-**Last Updated**: 2025-11-23
+**Status**: 🟢 Active - Sprint 14 COMPLETE, Sprint 15 NEXT
+**Last Updated**: 2025-12-19
 
 ---
 
 ## 🚀 CURRENT STATUS
 
 **Site URL**: https://www.isotracker.org
-**Current Sprint**: Sprint 14a COMPLETE ✅ (Nov 23, 2025)
-**Previous Sprint**: Sprint 13 COMPLETE ✅ (Nov 23, 2025)
-**MVP Status**: Core features complete, Landing pages aligned with product strategy
+**Current Sprint**: Sprint 14 COMPLETE - Sprint 15 NEXT
+**MVP Status**: Stripe integration complete in TEST mode, ready for production setup
 
-### Recent Deliverables:
-- ✅ **Sprint 14a** (Nov 23): Landing Page Alignment
-  - Fixed pricing tiers: Removed Professional, renamed to Event Pass & Evidence Analyst
-  - Updated prices to match product strategy ($4.99 and $19/mo)
-  - Added "Evidence Framework" section explaining core value proposition
-  - Multi-domain routing middleware for 3i-atlas.live
-  - Email capture backend with database table and API endpoint
-  - Interactive email signup form on atlas-landing page
+### What's Done (Sprint 14):
+- ✅ Stripe TEST products created (4 price IDs)
+- ✅ Checkout session API working
+- ✅ Success/cancel pages functional
+- ✅ Landing page pricing with annual toggle
+- ✅ Mobile fixes (Nov 28): tabs, dates, input contrast, orbital visualization
+- ✅ AuthModal component with email/password + Google OAuth button
+- ✅ Pricing buttons wired to show auth modal before checkout
+- ✅ Post-auth redirect to Stripe checkout
+- ✅ Webhook handler for subscription events
+- ✅ Subscription management page with Stripe Portal
 
-- ✅ **Sprint 13** (Nov 23): ISO Following & Notifications
-  - FollowButton component integrated into ISO detail pages
-  - Follow API endpoints (POST/DELETE/GET with counts)
-  - User following API endpoint
-  - Notification preferences settings page (pre-existing)
-  - Resend email integration (pre-existing templates)
-  - Observation window cron job (pre-existing)
+### Before Production Launch:
+- ⚠️ **Enable Google OAuth** in Supabase dashboard (user action)
+- ⚠️ **Fix env vars** - Remove hardcoded Stripe keys, fix Next.js env loading
+- ⚠️ **Create LIVE Stripe products** - Switch from TEST to LIVE mode
+- ⚠️ **Configure webhook URL** in Stripe dashboard
 
-- ✅ **Sprint 12** (Nov 23): Evidence Tab & Threaded Comments
-- ✅ **Sprint 11** (Nov 23): Community Arguments & Debate System
-- ✅ **Sprint 10** (Nov 22): The Loeb Scale - Anomaly Assessment Engine
-  - Database schema: loeb_scale_assessments, loeb_scale_votes, loeb_scale_criteria tables
-  - API endpoints: GET/POST for assessments and voting
-  - LoebScaleDashboard: Circular gauge with zone colors
-  - LoebCriteriaChecklist: Expandable accordion with 11 levels
-  - LoebScaleVoting: Community voting for Analyst tier
-  - LoebScaleBadge: Compact badge component
-  - Homepage showcase: "The Loeb Scale" section with 3 ISOs
-  - ISO detail page: New "Loeb Scale" tab integrated
-  - Seed data: 1I/'Oumuamua (4), 2I/Borisov (0), 3I/ATLAS (4)
+### What's Next:
+- ⏳ **Sprint 15**: User Profile & Polish
+- ⏳ **Sprint 16**: Loeb Scale Content & Evidence Population
 
-- ✅ **Sprint 9** (Nov 22): Landing Page Realignment
-  - Wonder-driven headline: "Are We Alone? Track the Answer."
-  - 4-tier pricing: Spectator (Free), Explorer ($4.99), Analyst ($9.99), Professional ($19.99)
-  - Analyst tier marked as POPULAR
-  - 3i-atlas.live standalone email capture page
-  - Star field background effect
-  - Updated value proposition copy
-  - **Visibility update**: Both 3i-atlas pages updated to "NOW VISIBLE" status
-  - Timeline updated: "Peak Observation Window" now current phase
-
-- ✅ **Sprint 8** (Nov 22): Observation Planning & Visibility Features
-  - Location-based visibility calculations (GPS + manual city entry)
-  - Real-time sky position (altitude/azimuth) display
-  - Observation window predictions (next 30 days)
-  - Sky Map visualization component
-  - Educational tooltips and how-to guides
-  - VisibilityBadge on ISO list page
-  - Observation tab integrated into ISO detail pages
-  - NASA Horizons API visibility endpoint
-
-- ✅ **Sprint 7** (Nov 19): Orbital Visualization & NASA Horizons API Integration
-  - 2D orbital trajectory visualization with time scrubber
-  - NASA JPL Horizons API integration
-  - Ephemeris data table with sorting and pagination
-  - Performance optimizations and error boundaries
-
-### Active Work:
-- ✅ **Sprint 9** COMPLETE (Nov 22): Landing Page Realignment
-  - Wonder-driven homepage messaging implemented
-  - 4-tier pricing structure complete
-  - 3i-atlas.live standalone page created
-  - Brand color migration deferred to Phase 10
-
-### Archive:
-- See `completed-project-plan.md` for Sprints 1-6 (MVP foundation complete)
+### Completed Sprints (Archived):
+- ✅ Sprint 7-13: See `completed-project-plan.md`
+- ✅ Sprint 14a: Landing page alignment, email capture backend
 
 ---
 
-## 📋 SPRINT 9: Landing Page Realignment ✅ COMPLETE
-
-**Status**: ✅ COMPLETE (Nov 22, 2025)
-**Time**: ~2 hours
-**Full Details**: See `progress-archive-2025-11-21.md`
-
-### Summary
-- Wonder-driven headline: "Are We Alone? Track the Answer."
-- 4-tier pricing: Spectator (Free), Explorer ($4.99), Analyst ($9.99 POPULAR), Professional ($19.99)
-- 3i-atlas.live standalone email capture page created
-- Both 3I/ATLAS pages updated to "NOW VISIBLE" status
-- QA: 38/41 checks passed
-
-### Deferred to Future
-- Full brand color migration (slate-* → brand colors)
-- Space Grotesk typography
-
----
-
-## 🎯 SPRINT 10: The Loeb Scale - Anomaly Assessment Engine ✅ COMPLETE
-
-**PRD References**: Avi Loeb Research (`ideation/ISO Tracker Avi Loeb/`)
-**Status**: ✅ COMPLETE (Nov 22, 2025)
-**Dependencies**: Sprint 9 complete ✅
-**Actual Time**: ~4 hours
-**Priority**: HIGH - Core differentiation feature, monetization driver
-
-### Mission Objective
-
-Implement the Loeb Scale (Interstellar Object Significance Scale - IOSS), a 0-10 classification system based on Avi Loeb's framework for evaluating ISOs. This transforms ISO Tracker from a tracking utility into an engaging, habit-forming assessment platform.
-
-### Background
-
-The Loeb Scale is a scientific framework from arXiv:2508.09167 (Eldadi, Tenenbaum, Loeb 2025) that classifies ISOs based on anomaly indicators:
-
-| Zone | Levels | Classification | Color |
-|------|--------|----------------|-------|
-| Green | 0-1 | Natural Objects | 🟢 |
-| Yellow | 2-4 | Anomalous Objects | 🟡 |
-| Orange | 5-7 | Suspected Technology | 🟠 |
-| Red | 8-10 | Confirmed Technology | 🔴 |
-
-**Current ISO Classifications:**
-- 1I/'Oumuamua: Level 4 (Anomalous)
-- 2I/Borisov: Level 0 (Natural)
-- 3I/ATLAS: Level 4 (Anomalous)
-
-### Phase 10.1: Database & API ✅
-**Goal**: Store and serve Loeb Scale data
-
-- [x] Create `loeb_scale_assessments` table
-  - `iso_id`, `level` (0-10), `zone` (green/yellow/orange/red)
-  - `criteria_met` (JSONB array of met criteria)
-  - `evidence_links` (JSONB array of supporting evidence)
-  - `official_score` (Galileo Project/scientific consensus)
-  - `community_score` (user voting average)
-  - `last_updated`, `updated_by`
-
-- [x] Create `loeb_scale_votes` table (for Analyst tier)
-  - `user_id`, `iso_id`, `voted_level`, `reasoning` (optional)
-  - `created_at`, `updated_at`
-
-- [x] Create `loeb_scale_criteria` reference table
-  - Level definitions, criteria text, observable categories
-  - Pre-populate with all 11 levels (0-10)
-
-- [x] API endpoints:
-  - `GET /api/iso/[id]/loeb-scale` - Get current assessment
-  - `POST /api/iso/[id]/loeb-scale/vote` - Cast vote (Analyst+)
-  - `GET /api/loeb-scale/criteria` - Get criteria definitions
-
-### Phase 10.2: Loeb Scale Dashboard Component ✅
-**Goal**: Prominent UI displaying current score
-
-- [x] Create `LoebScaleDashboard` component
-  - Large circular gauge showing 0-10 score
-  - Color-coded background matching zone (green/yellow/orange/red)
-  - Label showing classification (e.g., "Level 4 - Anomalous")
-  - Pulsing animation for scores ≥4 (potential technosignature)
-
-- [x] Add to ISO detail page (prominent position, above fold)
-- [x] Add mini-badge version for ISO list cards (`LoebScaleBadge`)
-- [x] Mobile-responsive design (375px primary)
-
-### Phase 10.3: Criteria Checklist UI ✅
-**Goal**: Interactive display of assessment criteria
-
-- [x] Create `LoebCriteriaChecklist` component
-  - Expandable accordion for each level (0-10)
-  - Checkmarks for criteria met by current ISO
-  - Evidence links for each criterion (NASA data, papers, etc.)
-  - Tooltips explaining each criterion in plain language
-
-- [x] Observable Categories sections:
-  - Trajectory Anomalies
-  - Spectroscopic Signatures
-  - Geometric Properties
-  - Surface Composition
-  - Electromagnetic Signals
-  - Operational Indicators
-
-- [x] "Why this score?" explainer section
-
-### Phase 10.4: Community Voting (Analyst Tier) ✅
-**Goal**: Let paid users participate in assessment
-
-- [x] Create `LoebScaleVoting` component
-  - Button group for selecting level (0-10)
-  - Optional reasoning text field (2000 char max)
-  - Show "Your Vote" vs "Community Consensus" vs "Official Score"
-  - Require Analyst tier ($9.99+) to vote
-
-- [x] Community consensus calculation
-  - Average of all user votes (via database trigger)
-  - Display vote distribution histogram
-  - Show total vote count
-
-- [x] Voting restrictions:
-  - One vote per user per ISO (can change)
-  - Must be Analyst or Professional tier
-  - Spectator/Explorer see results but can't vote (upgrade CTA shown)
-
-### Phase 10.5: Integration & Polish ✅
-**Goal**: Connect everything and add finishing touches
-
-- [x] Add Loeb Scale tab to ISO detail pages
-- [x] Homepage showcase: "The Loeb Scale" section with 3 ISOs
-- [x] Zone legend with icons (●, ◐, ◉, ★)
-- [ ] Push notification hooks (future): "Score changed!"
-
-- [x] Seed initial data:
-  - 1I/'Oumuamua: Level 4, criteria from research
-  - 2I/Borisov: Level 0, natural comet indicators
-  - 3I/ATLAS: Level 4, criteria from research
-
-### Phase 10.6: Testing & QA ✅
-**Goal**: Validate implementation
-
-- [x] Dev server starts without errors
-- [x] Homepage renders Loeb Scale showcase section
-- [x] API routes configured correctly (dynamic export added)
-- [x] Components compile without TypeScript errors
-- [ ] E2E tests for voting flow (Analyst tier) - deferred to future sprint
-- [ ] Accessibility audit - deferred to future sprint
-
-### Success Criteria ✅
-
-**Functionality**:
-- [x] Loeb Scale score displayed for all ISOs
-- [x] Criteria checklist shows evidence for each level
-- [x] Community voting ready for Analyst+ tiers
-- [ ] Score history/changes tracked (future)
-
-**Monetization**:
-- [x] Free users can VIEW scores
-- [x] Analyst users can VOTE on scores
-- [ ] Professional users get expert commentary (future)
-
-**Engagement**:
-- [x] Score visible on ISO detail pages and homepage
-- [x] Color-coded zones create visual interest
-- [x] "Why this score?" explainer section
-
-### Technical Notes
-
-**Color Palette for Zones:**
-- Green (0-1): `#10B981` (existing Signal Green)
-- Yellow (2-4): `#FFB84D` (existing Trajectory Gold)
-- Orange (5-7): `#F97316` (Tailwind orange-500)
-- Red (8-10): `#EF4444` (Tailwind red-500)
-
-**Reference Material:**
-- `ideation/ISO Tracker Avi Loeb/Analysis: Avi Loeb's Assessment Criteria (The Loeb Scale).md`
-- `ideation/ISO Tracker Avi Loeb/Avi Loeb's Assessment Criteria Research.md`
-- arXiv:2508.09167
-
----
-
-## 📋 SPRINT 11: Community Arguments & Debate Foundation
-
-**PRD References**: `ideation/Analysis and Recommendation_ Defining the _Debater_ User Journey.md`
-**Status**: ✅ COMPLETE (Nov 23, 2025)
-**Dependencies**: Sprint 10 complete ✅
-**Priority**: HIGH - Core engagement & monetization feature
-**Estimated Phases**: 4
-
-### Mission Objective
-
-Implement the community arguments system that enables the "Spectator → Debater" conversion journey. Free users can submit arguments, Event Pass users can vote (influencing Community Sentiment score).
-
-### Background
-
-Per PRD:
-- **Free users**: Can submit basic arguments/opinions
-- **Event Pass ($4.99)**: Can vote on arguments (influences Community Sentiment)
-- **Evidence Analyst ($9.99)**: Can also use evidence assessment framework
-- **Note**: `arguments` and `votes` tables referenced in migrations but NOT created yet
-
-### Phase 11.1: Database Schema
-**Goal**: Create arguments and votes tables
-
-- [x] Create `arguments` table
-  - `id`, `iso_object_id`, `user_id`
-  - `stance` ('artificial' | 'natural' | 'uncertain')
-  - `title` (varchar 200)
-  - `content` (text, max 2000 chars)
-  - `upvotes_count`, `downvotes_count` (denormalized)
-  - RLS: All authenticated can SELECT, authenticated can INSERT
-  - Indexes on iso_object_id, user_id, created_at
-
-- [x] Create `argument_votes` table
-  - `id`, `argument_id`, `user_id`
-  - `vote_type` ('upvote' | 'downvote')
-  - RLS: Event Pass+ can INSERT, one vote per user per argument
-  - Trigger: Update argument vote counts
-
-- [x] Update `consensus_snapshot` materialized view
-  - Fix reference to `arguments` table (now exists)
-  - Add community sentiment calculation
-
-### Phase 11.2: Arguments API Endpoints
-**Goal**: Backend support for argument CRUD
-
-- [x] `GET /api/iso/[id]/arguments` - List arguments for ISO
-  - Query params: sort (newest, top), stance filter
-  - Returns: Arguments with vote counts, user's vote status
-
-- [x] `POST /api/iso/[id]/arguments` - Create argument
-  - Auth: Any authenticated user
-  - Validation: Title 3-200 chars, content 10-2000 chars
-
-- [x] `POST /api/arguments/[id]/vote` - Vote on argument
-  - Auth: Event Pass+ tier required
-  - Body: { vote_type: 'upvote' | 'downvote' | null }
-  - Returns: Updated vote counts
-
-### Phase 11.3: Arguments UI Components
-**Goal**: Frontend for viewing and submitting arguments
-
-- [x] Create `ArgumentCard` component
-  - Display stance badge (color-coded)
-  - Title, excerpt, author, timestamp
-  - Vote buttons with counts (disabled for non-Event Pass)
-  - Expand/collapse for full content
-
-- [x] Create `ArgumentSubmissionForm` component
-  - Stance selector (Artificial / Natural / Uncertain)
-  - Title input with character count
-  - Content textarea with character count
-  - Submit button (auth required message for guests)
-
-- [x] Create `ArgumentList` component
-  - Filter by stance (all, artificial, natural, uncertain)
-  - Sort by (newest, most upvoted, most discussed)
-  - Pagination or infinite scroll
-  - Empty state with CTA to submit first argument
-
-### Phase 11.4: Integration & Testing
-**Goal**: Wire into ISO detail pages
-
-- [x] Add "Community Debate" tab to ISO detail pages
-- [x] Show Community Sentiment chart (existing component)
-- [x] Connect to argument list and submission form
-- [x] Tier upgrade CTA for voting (Event Pass)
-- [ ] Test RLS policies with different tiers (pending DB migration)
-- [x] Mobile responsive (375px primary)
-
-### Success Criteria
-- [x] Free users can submit arguments
-- [x] Event Pass users can vote on arguments
-- [x] Community Sentiment shows live percentage
-- [x] Vote counts update in real-time (optimistic UI)
-
----
-
-## 📋 SPRINT 12: Evidence Tab & Threaded Comments
-
-**PRD References**: Section 4.1 "Evidence-Based Analysis Framework", Section 4.3 "Debate System"
-**Status**: ✅ COMPLETE (Nov 23, 2025)
-**Dependencies**: Sprint 11 complete ✅
-**Priority**: HIGH - Core value proposition for Analyst tier
-**Actual Phases**: 4
-
-### Mission Objective
-
-Integrate existing evidence components into ISO detail pages and add threaded comment functionality on evidence entries. DB schema already exists (`evidence`, `evidence_assessments`, `evidence_comments`).
-
-### Background
-
-**Existing Database Tables** (already deployed):
-- `evidence` - Scientific evidence submissions
-- `evidence_assessments` - Quality scoring by Analysts
-- `evidence_comments` - Threaded discussions (max 3 levels)
-
-**Existing Components** (need integration):
-- `EvidenceSubmissionForm.tsx`
-- `EvidenceAssessmentForm.tsx`
-- `EvidenceDashboard.tsx`
-- `EvidenceTimeline.tsx`
-- `CommunitySentiment.tsx`
-
-### Phase 12.1: Evidence Tab Integration ✅
-**Goal**: Add Evidence tab to ISO detail pages
-
-- [x] Create "Evidence" tab on ISO detail page
-- [x] Integrate `EvidenceList` showing ISO's evidence
-- [x] List evidence entries with quality scores
-- [x] Filter: By type (observation, spectroscopy, etc.)
-- [x] Sort: By quality score, newest, most assessed
-
-### Phase 12.2: Evidence Submission UI ✅
-**Goal**: Allow Event Pass+ to submit evidence
-
-- [x] Create `EvidenceSubmissionForm` component
-- [x] Tier check: Event Pass+ required to submit
-- [x] Form validation matching DB constraints
-- [x] Success callback for refresh
-- [x] Upgrade CTA for lower tiers
-
-### Phase 12.3: Evidence Assessment UI ✅
-**Goal**: Allow Analysts to score evidence
-
-- [x] Create `EvidenceAssessmentForm` component
-- [x] Tier check: Evidence Analyst required
-- [x] Score sliders: Expertise (0-40), Methodology (0-30), Peer Review (0-30)
-- [x] Show calculated quality score preview
-- [x] One assessment per user per evidence (update existing)
-
-### Phase 12.4: Threaded Comments on Evidence ✅
-**Goal**: Discussion threads under evidence entries
-
-- [x] Create `EvidenceComments` component
-  - Display comments with nesting (max 3 levels per PRD)
-  - Show "[removed]" for soft-deleted comments
-  - Collapse/expand nested replies
-
-- [x] Create inline comment form
-  - Textarea with 10-10000 char validation
-  - Tier check: Evidence Analyst required to comment
-  - Reply-to functionality for nested comments
-
-- [x] API endpoints:
-  - `GET /api/evidence/[id]/comments`
-  - `POST /api/evidence/[id]/comments`
-  - `GET /api/evidence/[id]/assess`
-  - `POST /api/evidence/[id]/assess`
-
-### Success Criteria
-- [x] Evidence tab visible on ISO detail pages
-- [x] Event Pass+ can submit evidence
-- [x] Evidence Analyst can assess evidence quality
-- [x] Evidence Analyst can add threaded comments
-- [x] Lower tiers see read-only view with upgrade CTA
-
----
-
-## 📋 SPRINT 13: ISO Following & Notifications ✅ COMPLETE
-
-**PRD References**: Section 4.4 "Notifications", Section 7 "Tier Features"
-**Status**: ✅ COMPLETE (Nov 23, 2025)
-**Dependencies**: Sprint 12 complete ✅
-**Priority**: MEDIUM - Engagement & retention feature
-**Actual Phases**: 4
-
-### Mission Objective
-
-Enable users to follow ISOs and receive notifications for observation windows, new evidence, and comment replies. DB schema exists (`iso_follows`, `notification_preferences`, `notification_queue`).
-
-### Background
-
-**Existing Database Tables** (already deployed):
-- `iso_follows` - Track which users follow which ISOs
-- `notification_preferences` - Per-user email toggles
-- `notification_queue` - Batched notification processing
-- `notification_rate_limits` - Tier-based rate limiting
-
-**Tier Notification Limits** (per 24h):
-- Free: 10 replies, 5 evidence, 0 observation alerts
-- Event Pass: 50 replies, 25 evidence, 10 observation alerts
-- Evidence Analyst: 200 replies, 100 evidence, 50 observation alerts
-
-### Phase 13.1: ISO Following UI ✅
-**Goal**: Follow/unfollow buttons on ISO pages
-
-- [x] Add "Follow" button to ISO detail pages (`ISODetailHeader.tsx`)
-- [x] Toggle state with optimistic UI
-- [x] Show follow count on ISO cards (optional - `showCount` prop)
-- [ ] "Following" tab on user profile (deferred to Sprint 15)
-- [x] API endpoints:
-  - `POST /api/iso/[id]/follow`
-  - `DELETE /api/iso/[id]/follow`
-  - `GET /api/iso/[id]/follow` (with follow count)
-  - `GET /api/user/following`
-
-### Phase 13.2: Notification Preferences UI ✅
-**Goal**: Settings page for notification toggles
-
-- [x] Create `/settings/notifications` page
-- [x] Toggle: Reply notifications (on/off)
-- [x] Toggle: Evidence notifications (on/off)
-- [x] Toggle: Observation window alerts (tier-gated)
-- [x] Show tier-based limits
-- [x] Unsubscribe token link generation
-- [x] API: `GET/PATCH /api/notifications/preferences`
-
-### Phase 13.3: Email Notification Backend ✅
-**Goal**: Resend integration for email delivery
-
-- [x] Install Resend SDK (`lib/emails/send.ts`)
-- [x] Create email templates:
-  - Reply notification (`ReplyNotification.tsx`)
-  - New evidence notification (`EvidenceNotification.tsx`)
-  - Observation window alert (`ObservationWindowAlert.tsx`)
-- [x] Email layout component (`EmailLayout.tsx`)
-- [x] Notification helpers (`lib/notifications/helpers.ts`)
-- [x] Rate limit enforcement per tier (via DB functions)
-- [x] Unsubscribe link handling (`/api/notifications/unsubscribe`)
-
-### Phase 13.4: Observation Window Alerts ✅
-**Goal**: Alert users before ISO visibility windows
-
-- [x] Calculate observation windows (existing visibility logic)
-- [x] Cron job for notifications (`/api/cron/observation-windows`)
-- [x] Schedule notifications 1, 3, 7 days before optimal viewing
-- [x] Include: ISO name, window dates, days until window
-- [x] Tier gate: Event Pass+ only
-
-### Success Criteria ✅
-- [x] Users can follow/unfollow ISOs
-- [x] Notification preferences editable in settings
-- [x] Email notifications ready via Resend (pending production env vars)
-- [x] Rate limits enforced per tier
-- [x] Observation alerts configured for Event Pass+
-
----
-
-## 📋 SPRINT 14a: Landing Page Alignment ✅ COMPLETE
-
-**PRD References**: `ideation/Landing Page Review_ isotracker.org & 3i-atlas.live.md`
-**Status**: ✅ COMPLETE (Nov 23, 2025)
-**Dependencies**: Sprint 13 complete ✅
-**Priority**: HIGH - Must fix before Stripe launch (wrong prices displayed)
-**Actual Time**: ~2 hours
-
-### Mission Objective
-
-Align landing pages with evolved product strategy. Current pages show incorrect pricing, missing value proposition, and broken 3i-atlas.live strategy.
-
-### Background
-
-Per Landing Page Review document:
-- isotracker.org shows wrong tier names and prices
-- Missing "Evidence Framework" explanation (core differentiator)
-- 3i-atlas.live is a redirect, not standalone email capture
-
-### Phase 14a.1: Pricing Tier Correction (isotracker.org) ✅
-**Goal**: Fix pricing display to match product strategy
-
-- [x] Remove "Professional" tier ($19.99) - tier doesn't exist
-- [x] Rename "Explorer" → "Event Pass" ($4.99/mo)
-- [x] Rename "Analyst" → "Evidence Analyst" and fix price $9.99 → $19/mo
-- [x] Update pricing card descriptions:
-  - Event Pass: "VIEW-ONLY evidence access, voting, observation alerts, auto-pauses between events"
-  - Evidence Analyst: "Submit & assess evidence, cast verdicts, full year-round access"
-- [x] Update "POPULAR" badge to Evidence Analyst tier
-
-### Phase 14a.2: Evidence Framework Section (isotracker.org) ✅
-**Goal**: Explain core value proposition clearly
-
-- [x] Create new section: "Go Beyond Speculation: The Evidence Framework"
-- [x] Visual explanation of two-step process:
-  - Step 1: Assess Quality (Chain of Custody, Witness Credibility, Technical Analysis)
-  - Step 2: Cast Your Verdict (alien | natural | uncertain + confidence)
-- [x] Show "Community Sentiment vs Scientific Consensus" concept
-- [x] Include sample visualization or mockup
-- [x] Position section above pricing for better conversion flow
-
-### Phase 14a.3: 3i-atlas.live Standalone Page ✅
-**Goal**: Convert redirect to standalone email capture
-
-- [x] Create dedicated layout for 3i-atlas.live (no shared nav)
-- [x] Configure Vercel multi-domain routing (middleware.ts created)
-- [x] Design minimal page:
-  - Headline: "3I/ATLAS is passing through our solar system RIGHT NOW."
-  - Sub-headline: "Get real-time alerts when new evidence drops."
-  - Single email input + "Notify Me" button
-  - Social proof counter
-  - Footer: "Powered by isotracker.org"
-- [x] Dark theme matching isotracker.org
-- [x] Mobile-first responsive design
-
-### Phase 14a.4: Email Capture Backend ✅
-**Goal**: Store email signups from 3i-atlas.live
-
-- [x] Create `email_signups` table (migration 018):
-  - `id`, `email` (unique), `source`, `referrer`
-  - `created_at`, `converted_at`, `user_id` (nullable FK)
-- [x] Create `/api/email-signup` endpoint:
-  - POST with email validation
-  - Duplicate check (return success if already exists)
-  - Store source for attribution
-- [x] Success state with confirmation message
-- [ ] Optional: Welcome email via Resend (deferred)
-
-### Success Criteria
-- [x] Pricing tiers match product description (2 paid tiers, correct prices)
-- [x] Evidence Framework section explains core value prop
-- [x] 3i-atlas.live is standalone page (not redirect)
-- [x] Email captures stored in database with source tracking
-
-**Note**: Run migration 018_email_signups.sql in Supabase to enable email capture. Add 3i-atlas.live domain in Vercel dashboard to complete multi-domain routing.
+## 📋 COMPLETED SPRINTS (Summary)
+
+| Sprint | Focus | Completed |
+|--------|-------|-----------|
+| 9 | Landing Page Realignment | Nov 22 |
+| 10 | Loeb Scale Assessment Engine | Nov 22 |
+| 11 | Community Arguments & Voting | Nov 23 |
+| 12 | Evidence Tab & Threaded Comments | Nov 23 |
+| 13 | ISO Following & Notifications | Nov 23 |
+| 14a | Landing Page Alignment & Email Capture | Nov 23 |
+
+**Full details**: See `completed-project-plan.md`
 
 ---
 
@@ -641,60 +101,96 @@ Integrate Stripe for subscription payments, enabling users to upgrade to paid ti
 - [x] Test responsive layout with annual pricing toggle
 - [x] Commit changes before moving to Stripe
 
-### Phase 14.1: Stripe Configuration
+### Phase 14.1: Stripe Configuration ✅
 **Goal**: Set up Stripe products and prices
 
-- [ ] Create Stripe products in dashboard:
-  - Event Pass Monthly ($4.99/mo recurring)
-  - Event Pass Annual ($49.95/year recurring)
-  - Evidence Analyst Monthly ($9.95/mo recurring)
-  - Evidence Analyst Annual ($79.95/year recurring)
-- [ ] Store price IDs in environment variables (4 price IDs)
+- [x] Create Stripe products in dashboard:
+  - Event Pass Monthly ($4.99/mo recurring) - price_1SXKwiIiC84gpR8HwTjbwBct
+  - Event Pass Annual ($49.95/year recurring) - price_1SXKwiIiC84gpR8HOdkFFchm
+  - Evidence Analyst Monthly ($9.95/mo recurring) - price_1SXKzxIiC84gpR8HYQXRjUZp
+  - Evidence Analyst Annual ($79.95/year recurring) - price_1SXKzxIiC84gpR8H5dJFNv7p
+- [x] Store price IDs in environment variables (4 price IDs)
 - [ ] Install `stripe` and `@stripe/stripe-js` packages
 - [ ] Configure Stripe webhook endpoint URL
 
-### Phase 14.2: Checkout Flow
-**Goal**: Stripe Checkout for tier upgrades
+### Phase 14.2: Authentication Before Checkout ✅ COMPLETE
+**Goal**: Require authentication before Stripe checkout
+**Status**: Auth modal and pricing flow implemented
 
-- [ ] Create `/api/stripe/checkout` endpoint
-  - Creates Stripe Checkout session
-  - Includes user email, success/cancel URLs
-  - Sets metadata: user_id, tier
+#### Completed:
+- [x] Create `/api/stripe/checkout` endpoint
+- [x] TEST Stripe price IDs configured
+- [x] Checkout redirects to Stripe successfully
+- [x] Success/cancel pages working
 
-- [ ] Create `PricingCard` component with "Upgrade" buttons
-- [ ] Redirect to Stripe Checkout on click
-- [ ] Success page: `/upgrade/success`
-- [ ] Cancel page: `/pricing`
+**Task 1: Auth Modal Component** ✅
+- [x] Create `AuthModal` component in `components/auth/`
+- [x] Reuse existing sign-in/sign-up form logic
+- [x] Modal overlay (not full page redirect)
+- [x] Close button and click-outside-to-close (Escape key too)
+- [x] Loading states during auth
 
-### Phase 14.3: Webhook Handler
+**Task 2: Wire Pricing Buttons** ✅
+- [x] Update "Join Now" buttons on landing page
+- [x] On click: Check if authenticated (via checkout API response)
+- [x] If NOT authenticated → Open AuthModal
+- [x] If authenticated → Redirect to Stripe checkout
+- [x] Pass selected tier/price to checkout after auth
+
+**Task 3: Google OAuth** ✅
+- [ ] Enable Google provider in Supabase dashboard (USER ACTION NEEDED)
+- [x] Add "Continue with Google" button to AuthModal
+- [x] Handle OAuth callback → redirect to Stripe
+- [ ] Test full flow: Google → Stripe → Success (NEEDS TESTING)
+
+**Task 4: Post-Auth Checkout Redirect** ✅
+- [x] Store selected tier in component state before auth
+- [x] After successful auth, retrieve plan and redirect to Stripe via `handleAuthSuccess()`
+- [x] Implemented in both `page.tsx` and `PricingCard.tsx`
+
+#### Known Issues (to fix before production):
+- ⚠️ Hardcoded Stripe TEST keys in checkout route (env vars not loading)
+- ⚠️ Google OAuth needs enabling in Supabase dashboard
+
+#### Existing Auth Components (reuse these):
+- `/app/auth/sign-up/page.tsx` - Sign-up form logic
+- `/app/auth/sign-in/page.tsx` - Sign-in form logic
+- `/app/auth/actions.ts` - `signUp()`, `signIn()` server actions
+- `/app/auth/callback/route.ts` - OAuth callback (ready for Google)
+
+#### Design Decision:
+Auth BEFORE payment is the standard SaaS pattern:
+- User has account immediately
+- Stripe subscription links to existing user
+- No webhook complexity for account creation
+
+### Phase 14.3: Webhook Handler ✅ COMPLETE
 **Goal**: Process Stripe events
 
-- [ ] Create `/api/stripe/webhook` endpoint
-- [ ] Verify webhook signature
-- [ ] Handle events:
+- [x] Create `/api/stripe/webhook` endpoint
+- [x] Verify webhook signature (with fallback for dev)
+- [x] Handle events:
   - `checkout.session.completed` → Create/update subscription
   - `customer.subscription.updated` → Update tier
   - `customer.subscription.deleted` → Downgrade to free
   - `invoice.payment_failed` → Flag for follow-up
 
-- [ ] Update `subscriptions` table:
-  - Add `stripe_subscription_id` column if missing
-  - Add `current_period_end` column if missing
+- [x] Database already has required columns (stripe_subscription_id, current_period_end)
 
-### Phase 14.4: Subscription Management
+### Phase 14.4: Subscription Management ✅ COMPLETE
 **Goal**: Users can manage subscriptions
 
-- [ ] Create `/settings/subscription` page
-- [ ] Show current tier and billing date
-- [ ] "Manage Subscription" → Stripe Customer Portal
-- [ ] Create `/api/stripe/portal` endpoint
-- [ ] Handle tier changes and cancellations
+- [x] Create `/settings/subscription` page
+- [x] Show current tier and billing date
+- [x] "Manage Subscription" → Stripe Customer Portal
+- [x] Create `/api/stripe/portal` endpoint
+- [x] Handle tier changes and cancellations (via portal)
 
 ### Success Criteria
-- [ ] Users can upgrade to Explorer/Analyst/Professional
-- [ ] Stripe webhooks update subscriptions in DB
-- [ ] Tier-gated features activate immediately
-- [ ] Users can manage/cancel via Stripe Portal
+- [x] Users can upgrade to Event Pass/Evidence Analyst
+- [x] Stripe webhooks update subscriptions in DB
+- [x] Tier-gated features activate immediately (via webhook)
+- [x] Users can manage/cancel via Stripe Portal
 
 ---
 
@@ -783,6 +279,9 @@ Create user profile pages, implement 3i-atlas.live email capture backend, and fi
 ### Pre-Launch Checklist
 - [ ] All tier gates tested with real Stripe subscriptions
 - [ ] Production environment variables verified
+  - [ ] Create LIVE Stripe price IDs (switch Stripe to Live mode, recreate 4 products)
+  - [ ] Set LIVE Stripe keys in Vercel/Railway environment variables
+  - [ ] Update production env vars with LIVE price IDs
 - [ ] Error monitoring configured (Sentry or similar)
 - [ ] Backup strategy confirmed
 - [ ] Domain/DNS final configuration
@@ -793,30 +292,419 @@ Create user profile pages, implement 3i-atlas.live email capture backend, and fi
 
 | Sprint | Focus | Status | Priority |
 |--------|-------|--------|----------|
-| 11 | Community Arguments & Voting | ✅ COMPLETE | HIGH |
-| 12 | Evidence Tab & Comments | ✅ COMPLETE | HIGH |
-| 13 | ISO Following & Notifications | ✅ COMPLETE | MEDIUM |
-| **14a** | **Landing Page Alignment** | ✅ COMPLETE | **HIGH** |
-| 14 | Stripe Payments | 🔲 Planned | CRITICAL |
+| **14** | **Stripe Payments + Auth Modal** | ⏳ IN PROGRESS | **CRITICAL** |
 | 15 | User Profile & Polish | 🔲 Planned | MEDIUM |
+| **16** | **Loeb Scale Content & Evidence** | 🔲 Planned | **P1 - CRITICAL** |
 
-**Next Up**: Sprint 14 (Stripe Payments) - Landing pages now aligned, ready for monetization
+**Current Focus**: Sprint 14 Phase 14.2 - Auth Modal before Stripe checkout
 
-**Rationale**: Sprint 14a completed - pricing tiers corrected, Evidence Framework section added, 3i-atlas.live standalone page with email capture. Ready for Stripe integration.
+**Next Tasks**:
+1. Create AuthModal component
+2. Wire "Join Now" buttons to show modal
+3. Add Google OAuth (optional)
+4. Complete checkout flow
 
----
-
-## 📋 COMPLETED SPRINTS (Archive)
-
-### SPRINT 7: Orbital Visualization & NASA API Integration
-**Status**: ✅ COMPLETE (Nov 19, 2025)
-[Details preserved in completed-project-plan.md]
-
-### SPRINT 8: Observation Planning & Visibility Features
-**Status**: ✅ COMPLETE (Nov 22, 2025)
-[Full details in previous project-plan.md version]
+**After Sprint 14**: Sprint 16 (Content) recommended before Sprint 15 (Polish) - content is the core differentiator
 
 ---
 
-**Last Updated**: 2025-11-23
-**Next Review**: Sprint 14a kickoff
+## 📋 SPRINT 16: Loeb Scale Content & Evidence Population
+
+**PRD References**: Section 4.3.1 (Loeb Scale Assessment Dashboard), 4.3.2 (Evidence Tracking), 4.7 (Data Visualization)
+**Status**: 🔲 PLANNED
+**Dependencies**: Sprint 14 complete (Loeb Scale components exist)
+**Priority**: P1 - CRITICAL - Core scientific content that differentiates platform
+**Estimated Phases**: 5
+
+### Mission Objective
+
+Populate the ISO Tracker platform with comprehensive, scientifically-sourced evidence content for all three known interstellar objects. Transform the existing Loeb Scale framework from empty scaffolding into a rich, interactive evidence repository that enables meaningful community assessment and debate.
+
+### Background
+
+The Loeb Scale components and Evidence framework exist but contain minimal seed data. This sprint focuses entirely on content population and UI refinement to display that content effectively. Research has been completed on:
+
+- **1I/'Oumuamua**: 6 major evidence categories, Level 4 assessment
+- **2I/Borisov**: Control case with standard comet behavior, Level 0 assessment
+- **3I/ATLAS (C/2025 N1)**: 8 anomalies identified, Level 4 assessment
+
+**Evidence Card Structure** (per research):
+- **Claim**: Clear statement of the finding
+- **Source**: Primary scientific paper or data source (clickable link)
+- **The Data**: Summary of quantitative data
+- **Natural Interpretation**: How this can be explained naturally
+- **Anomalous Interpretation**: Why this is unusual or suggestive of technology
+- **Community Vote**: Natural / Anomalous / Uncertain (Analyst tier)
+
+**Loeb Scale Reference**:
+| Zone | Levels | Classification |
+|------|--------|----------------|
+| Green | 0-1 | Natural Objects |
+| Yellow | 2-4 | Anomalous Objects |
+| Orange | 5-7 | Suspected Technology |
+| Red | 8-10 | Confirmed Technology |
+
+---
+
+### Phase 16.0: Database Schema Extension & Seed Infrastructure
+**Goal**: Extend evidence schema for dual-interpretation content, then seed comprehensive data
+
+**Architecture Alignment Note**:
+- Existing `evidence` table has: evidence_type, title, description, methodology, source_url, quality_score
+- Need to add new columns for Natural/Anomalous interpretation format from research
+- Existing `loeb_scale_assessments` already has: official_level, official_zone, criteria_met, evidence_links
+- The 0-10 Loeb Scale levels complement the existing 9-category rubric (100pt system)
+
+**Schema Migration** (create `supabase/migrations/019_evidence_interpretations.sql`):
+- [ ] Add `natural_interpretation` TEXT column to `evidence` table
+- [ ] Add `anomalous_interpretation` TEXT column to `evidence` table
+- [ ] Add `anomaly_rating` ENUM ('none', 'low', 'medium', 'high') to `evidence` table
+- [ ] Add `evidence_category` TEXT column for grouping (Orbital, Composition, Morphology, etc.)
+- [ ] Add `is_seed_content` BOOLEAN DEFAULT false to distinguish admin-seeded vs user-submitted
+- [ ] Create index on `evidence_category` for filtering
+- [ ] Update RLS policies to allow public read of seed content
+
+**Seed Data** (create `supabase/migrations/020_loeb_evidence_seed.sql`):
+- [ ] Seed official `loeb_scale_assessments` for all 3 ISOs with:
+  - official_level, official_zone, official_reasoning, official_source
+  - criteria_met JSONB arrays
+  - evidence_links JSONB arrays with source citations
+- [ ] Seed evidence records for all three ISOs (35+ total items)
+- [ ] Ensure idempotent with ON CONFLICT DO UPDATE
+- [ ] Test migration against local Supabase
+- [ ] Document seeding process in `/docs/SEED-DATA.md`
+
+---
+
+### Phase 16.1: 1I/'Oumuamua Evidence Population
+**Goal**: Seed comprehensive evidence cards for 'Oumuamua (~15 individual evidence items across 6 categories)
+
+**Official Assessment**: Level 4 (Highly Anomalous - Yellow Zone)
+
+**Category 1: Non-Gravitational Acceleration**
+- [ ] Evidence: 30σ acceleration deviation from gravitational trajectory
+  - Source: [Micheli et al. 2018, Nature](https://www.nature.com/articles/s41586-018-0254-4)
+  - Natural: Comet-like outgassing of invisible material
+  - Anomalous: Propulsion or solar sail effect
+  - Anomaly Rating: HIGH (most significant finding)
+
+- [ ] Evidence: No visible outgassing despite acceleration magnitude
+  - Source: Spitzer Space Telescope observations
+  - Natural: Dark carbonaceous crust trapping volatiles
+  - Anomalous: Non-volatile propulsion mechanism
+
+- [ ] Evidence: Acceleration scales exactly as r⁻² from Sun
+  - Source: Micheli et al. 2018
+  - Natural: Consistent with radiation pressure physics
+  - Anomalous: Matches light sail design predictions
+
+**Category 2: Physical Morphology**
+- [ ] Evidence: Extreme aspect ratio (6:1 to 10:1 elongation)
+  - Source: Light curve analysis, Meech et al. 2017 (Nature)
+  - Natural: Rare but possible natural fracture/formation
+  - Anomalous: Optimized geometry for solar sailing
+
+- [ ] Evidence: Tumbling rotation (8.1-hour period)
+  - Source: Photometric observations from multiple observatories
+  - Natural: Impact-induced non-principal axis rotation
+  - Anomalous: Damaged or derelict craft
+
+- [ ] Evidence: Unusually high reflectivity for asteroid
+  - Source: Albedo measurements
+  - Natural: Metallic surface composition
+  - Anomalous: Artificial metallic construction
+
+**Category 3: Spectroscopic Anomalies**
+- [ ] Evidence: No emission lines detected (unlike any known comet)
+  - Source: Multiple observatory spectroscopy
+  - Natural: Extinct comet or metallic asteroid
+  - Anomalous: Non-volatile artificial material
+
+- [ ] Evidence: Reddish color from cosmic ray exposure
+  - Source: Color photometry
+  - Natural: Long interstellar journey (>100 Myr exposure)
+  - Anomalous: Aged material (neutral - both possibilities)
+
+**Category 4: Orbital Characteristics**
+- [ ] Evidence: Hyperbolic orbit (e=1.2) confirming interstellar origin
+  - Source: JPL orbit determination
+  - Natural: Ejected from another star system
+  - Anomalous: Deliberate interstellar trajectory
+
+- [ ] Evidence: Approached from solar apex direction
+  - Source: Orbital analysis
+  - Natural: Statistical coincidence (~1-2%)
+  - Anomalous: Potential reconnaissance trajectory
+
+- [ ] Evidence: V∞ (26.3 km/s) matches Local Standard of Rest
+  - Source: Orbital mechanics analysis
+  - Natural: Coincidence within velocity distribution
+  - Anomalous: "Parked" probe or buoy at LSR
+
+**Category 5: Size & Thermal Constraints**
+- [ ] Evidence: No thermal emission detected by Spitzer
+  - Source: Spitzer Space Telescope infrared observations
+  - Natural: Very small or very highly reflective
+  - Anomalous: Thin, low-mass structure (sail-like)
+
+- [ ] Evidence: Size estimates range 100m to 1km (10x uncertainty)
+  - Source: Brightness-albedo degeneracy calculations
+  - Natural: Uncertainty in surface reflectivity
+  - Anomalous: Shape/structure affects standard calculations
+
+**Category 6: Hydrogen Outgassing Hypothesis**
+- [ ] Evidence: H₂ ice sublimation proposed as explanation
+  - Source: Seligman & Laughlin 2020
+  - Natural: Would explain acceleration without visible coma
+  - Status: Debated - requires unusual formation conditions
+
+- [ ] Create 'Oumuamua assessment record: Level 4 (Yellow Zone)
+- [ ] Assessment justification: "Multiple significant anomalies (acceleration, shape, no outgassing) challenge conventional comet/asteroid models. Natural explanations require multiple unlikely coincidences."
+
+---
+
+### Phase 16.2: 2I/Borisov Evidence Population (Control Case)
+**Goal**: Seed evidence demonstrating normal cometary behavior for baseline comparison
+
+**Official Assessment**: Level 0 (Confirmed Natural - Green Zone)
+
+**Category 1: Cometary Activity (Normal)**
+- [ ] Evidence: Visible coma detected at 3 AU from Sun
+  - Source: Multiple ground-based observations
+  - Interpretation: Standard cometary outgassing confirms natural origin
+  - Anomaly Rating: NONE
+
+- [ ] Evidence: Dust tail matching typical comet morphology
+  - Source: Imaging observations worldwide
+  - Interpretation: Normal sublimation-driven activity
+  - Anomaly Rating: NONE
+
+**Category 2: Composition (Familiar)**
+- [ ] Evidence: Water, CO, CO₂ detected in spectrum
+  - Source: Spectroscopic analysis from multiple observatories
+  - Interpretation: Composition matches Solar System comets
+  - Anomaly Rating: NONE
+
+- [ ] Evidence: High CO/H₂O ratio (>173%, 3x Solar System average)
+  - Source: ALMA observations
+  - Interpretation: Formed in colder region of parent system
+  - Anomaly Rating: LOW (within natural variation)
+
+- [ ] Evidence: C₂-depleted compared to most Solar System comets
+  - Source: Optical spectroscopy
+  - Interpretation: Different formation environment (red dwarf?)
+  - Anomaly Rating: LOW
+
+**Category 3: Physical Properties**
+- [ ] Evidence: Nucleus size ~1 km (975 meters)
+  - Source: Size estimates from brightness
+  - Interpretation: Typical comet dimensions
+  - Anomaly Rating: NONE
+
+- [ ] Evidence: Fragment broke off in March 2020
+  - Source: Hubble Space Telescope observations
+  - Interpretation: Normal cometary fragmentation behavior
+  - Anomaly Rating: NONE
+
+**Category 4: Orbital (Interstellar Confirmed)**
+- [ ] Evidence: Hyperbolic orbit (e=3.36) confirming interstellar origin
+  - Source: JPL orbit determination
+  - Interpretation: Ejected from another planetary system
+  - Anomaly Rating: NONE (expected for interstellar object)
+
+- [ ] Create Borisov assessment record: Level 0 (Green Zone)
+- [ ] Assessment justification: "Classic cometary behavior with visible coma, standard spectroscopy, and predictable trajectory. Represents baseline for 'normal' interstellar comet."
+
+---
+
+### Phase 16.3: 3I/ATLAS Evidence Population
+**Goal**: Seed comprehensive evidence for ATLAS with 8 identified anomalies
+
+**Official Assessment**: Level 4 (Highly Anomalous - Yellow Zone)
+
+**Anomaly 1: Ecliptic Alignment (0.2% probability)**
+- [ ] Evidence: Trajectory aligned within 5° of ecliptic plane
+  - Source: ATLAS survey trajectory determination
+  - Natural: Statistical outlier (1 in 500)
+  - Anomalous: Deliberate Solar System approach angle
+  - Anomaly Rating: HIGH
+
+**Anomaly 2: Sunward Jet/Anti-tail**
+- [ ] Evidence: Unusual sunward jet observed July-August 2025
+  - Source: Ground-based imaging
+  - Natural: Complex outgassing geometry (possible)
+  - Anomalous: Not typical optical illusion anti-tail
+  - Anomaly Rating: MEDIUM
+
+**Anomaly 3: Extreme Size/Speed (<0.1% probability)**
+- [ ] Evidence: ~1 million times more massive than 'Oumuamua
+  - Source: Size estimates from photometry
+  - Natural: Large objects can be ejected (rare)
+  - Anomalous: Unusual among detected ISOs
+  - Anomaly Rating: MEDIUM
+
+- [ ] Evidence: Moving faster than both previous ISOs
+  - Source: Velocity measurements
+  - Natural: Wide velocity distribution possible
+  - Anomalous: Combined with size is statistically unusual
+  - Anomaly Rating: MEDIUM
+
+**Anomaly 4: Fine-tuned Arrival Timing (0.005% probability)**
+- [ ] Evidence: Close approaches to Mars, Venus, and Jupiter
+  - Source: Trajectory analysis
+  - Natural: Coincidental geometry
+  - Anomalous: Planetary reconnaissance trajectory
+  - Anomaly Rating: MEDIUM
+
+- [ ] Evidence: Unobservable from Earth at perihelion (behind Sun)
+  - Source: Visibility calculations
+  - Natural: ~30% of objects pass during solar conjunction
+  - Anomalous: Evasion of observation (speculative)
+  - Anomaly Rating: LOW
+
+**Anomaly 5: Industrial-like Composition (<1% probability)**
+- [ ] Evidence: Nickel-to-Iron ratio orders of magnitude higher than comets
+  - Source: Hibberd et al., arXiv:2510.11779
+  - Natural: Unknown natural formation process
+  - Anomalous: Resembles industrial nickel alloys
+  - Anomaly Rating: HIGH (unprecedented)
+
+- [ ] Evidence: Ni/CN ratio unlike all known comets including Borisov
+  - Source: Spectroscopic comparison studies
+  - Natural: Novel cometary type from metal-rich region
+  - Anomalous: Processed metallic material
+  - Anomaly Rating: HIGH
+
+**Anomaly 6: Low Water Content**
+- [ ] Evidence: Only 4% water by mass
+  - Source: Spectroscopic analysis
+  - Natural: Formed in water-poor region
+  - Anomalous: Not typical icy body composition
+  - Anomaly Rating: MEDIUM
+
+**Anomaly 7: Extreme Negative Polarization (<1% probability)**
+- [ ] Evidence: Unprecedented polarization signature
+  - Source: Polarimetric observations
+  - Natural: Unknown dust properties
+  - Anomalous: Artificial surface structure
+  - Anomaly Rating: HIGH
+
+- [ ] Evidence: Outside range of all known asteroids and comets
+  - Source: Comparative polarimetry database
+  - Natural: New class of surface material
+  - Anomalous: Non-natural material properties
+  - Anomaly Rating: HIGH
+
+**Anomaly 8: Wow! Signal Alignment (0.6% probability)**
+- [ ] Evidence: Arrived from direction of 1977 Wow! Signal within 9°
+  - Source: Trajectory vs historical signal comparison
+  - Natural: Coincidence given search area
+  - Anomalous: Possible connection to Wow! source
+  - Anomaly Rating: LOW (speculative but notable)
+
+**Cumulative Probability Calculation**:
+- [ ] Evidence: Combined probability less than 1 in 10^16
+  - Source: Avi Loeb analysis (Medium, October 2025)
+  - Natural: Extremely rare natural object
+  - Anomalous: Statistical anomalies suggest non-random origin
+  - Anomaly Rating: SYNTHESIS
+
+- [ ] Create ATLAS assessment record: Level 4 (Yellow Zone)
+- [ ] Assessment justification: "Eight statistical anomalies with cumulative probability <10^-16. Individual anomalies each unusual; combination highly improbable for random natural object. Ongoing monitoring may revise assessment."
+
+---
+
+### Phase 16.4: UI Enhancements for Evidence Display
+**Goal**: Extend existing components to display new dual-interpretation content
+
+**Architecture Alignment Note**:
+- Extend existing `EvidenceCard` component (`apps/web/components/evidence/EvidenceCard.tsx`)
+- Extend existing `LoebScaleDashboard` component (`apps/web/components/loeb-scale/LoebScaleDashboard.tsx`)
+- Extend existing `EvidenceList` component (`apps/web/components/evidence/EvidenceList.tsx`)
+- Use existing API routes: `/api/evidence`, `/api/iso/[id]/loeb-scale`
+
+**EvidenceCard Component Extensions** (`components/evidence/EvidenceCard.tsx`):
+- [ ] Add "Source Citation" display with formatted DOI/arXiv links (use existing `source_url`)
+- [ ] Add "Dual Interpretation" panel showing `natural_interpretation` vs `anomalous_interpretation`
+- [ ] Add anomaly severity badge using new `anomaly_rating` field (none/low/medium/high)
+- [ ] Style anomaly badges: none=gray, low=blue, medium=yellow, high=orange
+- [ ] Add copy citation button for researchers
+
+**LoebScaleDashboard Extensions** (`components/loeb-scale/LoebScaleDashboard.tsx`):
+- [ ] Add "Key Anomalies" section pulling top 3 HIGH-rated evidence items per ISO
+- [ ] Add evidence category breakdown using new `evidence_category` field
+- [ ] Ensure official (0-10 level) vs community score comparison displays correctly
+- [ ] Add "Based on X evidence items" count
+
+**EvidenceList Extensions** (`components/evidence/EvidenceList.tsx`):
+- [ ] Add category filter dropdown using `evidence_category` (Orbital, Composition, Morphology, etc.)
+- [ ] Add anomaly rating filter using `anomaly_rating` (None/Low/Medium/High)
+- [ ] Add source type filter using `evidence_type` (existing field)
+- [ ] Add sort options: Date added, Anomaly rating, Vote count
+
+**ISODetailTabs Integration** (`components/visualization/ISODetailTabs.tsx`):
+- [ ] Ensure Loeb Scale tab shows official level badge prominently
+- [ ] Add "Quick Stats" summary: Total evidence count, Anomaly breakdown by rating
+- [ ] Update empty states to reference seed content availability
+
+---
+
+### Phase 16.5: Community Engagement Features
+**Goal**: Enable tier-gated community participation per architecture tier system
+
+**Architecture Alignment Note**:
+- Tier hierarchy: Guest (free) → Event Pass ($4.99/mo) → Evidence Analyst ($9.95/mo)
+- Use existing tier check functions in `lib/supabase/`
+- Leverage existing APIs: `/api/arguments/[id]/vote`, `/api/iso/[id]/loeb-scale`
+- Evidence votes table already exists from Sprint 12
+
+**Evidence Voting System (Event Pass+ tier)**:
+- [ ] Verify `evidence_votes` table accepts votes (may need schema check)
+- [ ] Add vote count display to EvidenceCard (visible to all tiers)
+- [ ] Add vote buttons with tier-gate check (use `check_tier()` function)
+- [ ] Show "Upgrade to Event Pass to vote" CTA for Guest/Spectator tier
+- [ ] Calculate and display community consensus percentage per evidence item
+- [ ] Add "What the community thinks" summary (% Natural / Anomalous / Uncertain)
+
+**Evidence Submission (Evidence Analyst tier only)**:
+- [ ] Extend `EvidenceSubmissionForm` to include new fields:
+  - natural_interpretation, anomalous_interpretation, anomaly_rating, evidence_category
+- [ ] Implement source URL/DOI validation (regex for arxiv, doi, nature, etc.)
+- [ ] Use existing moderation queue from Sprint 8 admin moderation
+- [ ] Trigger notification on approval (existing notification system)
+- [ ] Show "Upgrade to Evidence Analyst to submit" CTA for lower tiers
+
+**Loeb Scale Voting (Evidence Analyst tier only)**:
+- [ ] Use existing `/api/iso/[id]/loeb-scale` POST for user assessments
+- [ ] Leverage existing `loeb_scale_votes` table (from migration 016)
+- [ ] Display user rating distribution histogram on LoebScaleDashboard
+- [ ] Auto-calculate community_level from votes (existing trigger handles this)
+- [ ] Show Official vs Community comparison prominently
+
+---
+
+### Success Criteria
+
+**Content Population**:
+- [ ] 1I/'Oumuamua has 15+ evidence cards across 6 categories
+- [ ] 2I/Borisov has 8+ evidence cards as natural control case
+- [ ] 3I/ATLAS has 12+ evidence cards covering 8 anomalies
+- [ ] Each evidence card has: Source URL, Natural interpretation, Anomalous interpretation, Anomaly rating
+- [ ] Official Loeb Scale assessments exist for all three objects with justifications
+
+**User Experience**:
+- [ ] Evidence cards render correctly on desktop and mobile
+- [ ] Loeb Scale dashboard shows meaningful data (not empty states)
+- [ ] Filtering and sorting work correctly
+- [ ] Source links open in new tab and are valid
+
+**Community Features**:
+- [ ] Voting works for Event Pass+ holders
+- [ ] Vote counts display for all users
+- [ ] Tier-gating shows appropriate upgrade prompts
+- [ ] Community vs Official comparison visible on dashboard
+
+---
+
+**Last Updated**: 2025-12-01
+**Next Review**: After Sprint 14 Auth Modal complete, then begin Sprint 16
