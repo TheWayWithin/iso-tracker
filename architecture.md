@@ -710,6 +710,14 @@ The following are planned but NOT implemented:
 - ✅ 3i-atlas.live email capture backend (completed Sprint 14a)
 - Final polish and QA
 
+### Sprint 16 (Planned): Loeb Scale Content & Evidence Population
+- **Priority**: P1 - Core differentiating content
+- Schema extension: Add `natural_interpretation`, `anomalous_interpretation`, `anomaly_rating`, `evidence_category` to evidence table
+- Seed 35+ evidence cards across 3 ISOs with dual-interpretation format
+- Official Loeb Scale assessments for 'Oumuamua (Level 4), Borisov (Level 0), ATLAS (Level 4)
+- UI enhancements to EvidenceCard, LoebScaleDashboard, EvidenceList
+- Community voting integration with tier-gating
+
 ### Phase 2 (Future)
 - Educational content library
 - 3D trajectory visualization
@@ -736,7 +744,7 @@ The following are planned but NOT implemented:
 
 ---
 
-**Architecture Version**: 4.0
-**Last Updated**: 2025-11-28
-**Status**: Sprint 14 In Progress - Stripe Payments Integration (70% complete)
-**Author**: coordinator (v4.0 update for Sprint 14 progress, mobile fixes, Stripe integration)
+**Architecture Version**: 4.1
+**Last Updated**: 2025-12-01
+**Status**: Sprint 14 In Progress - Stripe Payments Integration (70% complete) | Sprint 16 Planned
+**Author**: coordinator (v4.1 update for Sprint 16 content roadmap alignment)

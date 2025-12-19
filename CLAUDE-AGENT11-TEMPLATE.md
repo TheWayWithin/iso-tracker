@@ -415,16 +415,20 @@ When manual file creation is required after delegation:
 - Use verification checklist after every file operation delegation
 ```
 
-### ⚠️ CRITICAL: FILE PERSISTENCE ARCHITECTURE (SPRINT 2 - PRODUCTION READY)
+### ⚠️ CRITICAL: FILE PERSISTENCE ARCHITECTURE (SPRINT 2 + SPRINT 6 ENFORCEMENT)
 
 **ARCHITECTURAL LIMITATION IDENTIFIED 2025-01-12**: Task tool delegation + Write tool operations have an architectural limitation where files created in delegated agent contexts don't persist to the host filesystem after agent completion. This is not a patchable bug but a fundamental limitation of the Task tool architecture.
 
 **SPRINT 2 SOLUTION (PRODUCTION READY - 2025-01-19)**: Coordinator-as-executor pattern implemented and deployed. Specialists return structured JSON with file operation specifications, coordinator automatically parses and executes all operations with verification. Reliability improved from ~80% (Sprint 1 manual) to ~99.9% (Sprint 2 automatic).
 
+**SPRINT 6 ENFORCEMENT (2025-11-29)**: Protocol enforcement added to make bypass impossible. Pre-flight checklists, response validation, and mandatory verification steps now integrated into coord.md and coordinator.md.
+
 **DOCUMENTATION**: Complete migration guide and examples available:
 - **Migration Guide**: `/project/field-manual/migration-guides/file-persistence-v2.md`
+- **Quick Reference**: `/project/field-manual/file-operation-quickref.md` (Sprint 6)
+- **Delegation Templates**: `/templates/file-operation-delegation.md` (Sprint 6)
 - **Examples**: `/project/examples/file-operations/` (4 comprehensive examples)
-- **Architecture**: Sprint 1 → Sprint 2 transition fully documented
+- **Architecture**: Sprint 1 → Sprint 2 → Sprint 6 transition fully documented
 
 **LEGACY SPRINT 1 PROTOCOL**: Manual verification protocol below is retained for backward compatibility and emergency fallback only. All new development should use Sprint 2 structured output pattern.
 
@@ -654,6 +658,111 @@ All agent profiles should explicitly list their available tools:
 
 *See `/templates/agent-creation-mastery.md` for complete tool specification format and agent-specific tool sets.*
 
+## Model Selection Guidelines
+
+### Overview - Tiered Model Deployment
+
+AGENT-11 uses a tiered model deployment strategy to optimize cost and performance. The Task tool's `model` parameter enables dynamic model selection based on task complexity.
+
+**Available Models**:
+- `opus` - Frontier intelligence for complex orchestration and strategic reasoning
+- `sonnet` - Standard intelligence for well-defined tasks (default)
+- `haiku` - Fast execution for simple, routine operations
+
+### Tiered Model Strategy
+
+| Tier | Model | Agents/Tasks | Use Cases |
+|------|-------|--------------|-----------|
+| **1** | **Opus** | Coordinator, Strategist (complex) | Orchestration, strategic planning, long-horizon missions |
+| **2** | **Sonnet** | Developer, Tester, Architect, Analyst | Implementation, testing, analysis, review |
+| **3** | **Haiku** | Documenter (simple), routine ops | Documentation updates, quick lookups |
+
+### When to Use Each Model
+
+**Use Opus (`model="opus"`) for**:
+- Multi-phase missions (>2 phases)
+- Strategic planning with >5 agents
+- Architectural decisions and system design
+- Ambiguous requirements needing interpretation
+- Long-horizon tasks (>30 minutes)
+- Code migration or major refactoring
+- Complex coordination and orchestration
+
+**Use Sonnet (default, omit `model` parameter) for**:
+- Well-defined implementation tasks
+- Single-phase operations
+- Clear, unambiguous requirements
+- Testing with defined test plans
+- Routine code changes
+
+**Use Haiku (`model="haiku"`) for**:
+- Simple documentation updates
+- Quick file searches and lookups
+- Routine operations needing speed
+- Low-complexity tasks
+
+### Task Tool Model Parameter Usage
+
+**Syntax**:
+```
+Task(
+  subagent_type="strategist",
+  model="opus",  # Optional: opus, sonnet, or haiku
+  prompt="..."
+)
+```
+
+**Examples**:
+
+```python
+# Complex strategic analysis - use Opus
+Task(
+  subagent_type="strategist",
+  model="opus",
+  prompt="Analyze multi-phase MVP requirements and create strategic roadmap..."
+)
+
+# Standard implementation - use default (Sonnet)
+Task(
+  subagent_type="developer",
+  # model omitted = Sonnet (default)
+  prompt="Implement user authentication following architecture.md spec..."
+)
+
+# Quick documentation - use Haiku
+Task(
+  subagent_type="documenter",
+  model="haiku",
+  prompt="Update README.md with new API endpoint documentation..."
+)
+```
+
+### Cost-Benefit Analysis
+
+| Scenario | Per-Token Cost | Efficiency | Net Impact |
+|----------|----------------|------------|------------|
+| Opus for Coordinator | +67% | -35% tokens, -28% iterations | **-24% total cost** |
+| Opus for Strategist | +67% | Better requirements, -20% rework | **Net positive** |
+| Haiku for simple tasks | -80% | Faster execution | **Significant savings** |
+
+**Key Insight**: Opus's 35% token efficiency and fewer iterations often result in lower total cost despite higher per-token pricing.
+
+### Expected Performance Improvements
+
+With Opus 4.5 for Coordinator:
+- **+15% mission success rate** (from 70% to 85%)
+- **-28% iterations to completion** (from 3.5 to 2.5)
+- **-50% context clearing events** per mission
+- **-47% user clarification requests**
+- **-24% total cost** due to efficiency gains
+
+### Reference Documentation
+
+- **Complete Guide**: `/project/field-manual/model-selection-guide.md` - Comprehensive model selection documentation
+- **Analysis**: `/Ideation/Agent-11 opus4.5/` - Opus 4.5 integration research
+- **Coordinator Protocol**: See coordinator.md MODEL SELECTION PROTOCOL section
+- **Strategist Guidance**: See strategist.md MODEL SELECTION NOTE section
+
 ## MCP (Model Context Protocol) Setup
 
 ### Quick Start
@@ -680,6 +789,40 @@ All agent profiles should explicitly list their available tools:
 - Check `.mcp-status.md` for connection report
 - Verify API keys in `.env.mcp` are correct
 - Run `grep "mcp__"` to see available MCP tools
+
+## MCP Context Optimization (Sprint 5)
+
+### Overview
+MCP tools consume significant context (~50-60K tokens). Use lean profiles for better efficiency.
+
+### Token Targets by Profile
+
+| Profile | Tokens | Use When |
+|---------|--------|----------|
+| **minimal-core** | ~5K | File operations only |
+| **research-only** | ~15K | Documentation lookup |
+| **frontend-deploy** | ~15K | Netlify deployments |
+| **backend-deploy** | ~15K | Railway deployments |
+| **db-read/db-write** | ~15-18K | Database operations |
+| **core** | ~50K | Standard development |
+| **testing** | ~62K | Playwright automation |
+
+### Profile Switching
+
+```bash
+# Switch to minimal profile (fastest startup)
+ln -sf .mcp-profiles/minimal-core.json .mcp.json
+
+# Switch to research profile
+ln -sf .mcp-profiles/research-only.json .mcp.json
+
+# Restart Claude Code after switching
+```
+
+### Reference Documentation
+- **Complete Guide**: `/project/field-manual/mcp-optimization-guide.md`
+- **Consolidated Tools Spec**: `/project/mcp/mcp-agent11-optimized.md`
+- **Profile Directory**: `/.mcp-profiles/`
 
 ## Available Commands
 

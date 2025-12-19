@@ -1,5 +1,5 @@
 import Stripe from 'stripe'
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 
 const stripeKey = process.env.STRIPE_SECRET_KEY
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
   }
 
   const stripe = new Stripe(stripeKey, {
-    apiVersion: '2024-11-20.acacia',
+    apiVersion: '2025-02-24.acacia',
   })
 
   // Get the raw body for signature verification
@@ -121,7 +121,7 @@ export async function POST(request: Request) {
  * Handle successful checkout - create or update subscription
  */
 async function handleCheckoutComplete(
-  supabase: ReturnType<typeof createClient>,
+  supabase: SupabaseClient,
   stripe: Stripe,
   session: Stripe.Checkout.Session
 ) {
@@ -189,7 +189,7 @@ async function handleCheckoutComplete(
  * Handle subscription updates (plan changes, renewals)
  */
 async function handleSubscriptionUpdate(
-  supabase: ReturnType<typeof createClient>,
+  supabase: SupabaseClient,
   subscription: Stripe.Subscription
 ) {
   const priceId = subscription.items.data[0]?.price.id
@@ -257,7 +257,7 @@ async function handleSubscriptionUpdate(
  * Handle subscription cancellation - downgrade to guest
  */
 async function handleSubscriptionDeleted(
-  supabase: ReturnType<typeof createClient>,
+  supabase: SupabaseClient,
   subscription: Stripe.Subscription
 ) {
   const customerId = subscription.customer as string
@@ -286,7 +286,7 @@ async function handleSubscriptionDeleted(
  * Handle failed payment - mark as past_due
  */
 async function handlePaymentFailed(
-  supabase: ReturnType<typeof createClient>,
+  supabase: SupabaseClient,
   invoice: Stripe.Invoice
 ) {
   const customerId = invoice.customer as string

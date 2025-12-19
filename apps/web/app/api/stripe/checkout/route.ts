@@ -15,7 +15,7 @@ export async function POST(request: Request) {
   // Initialize Stripe inside the function to avoid build-time errors
   console.log('[2] Initializing Stripe...')
   const stripe = new Stripe(stripeKey, {
-    apiVersion: '2024-11-20.acacia',
+    apiVersion: '2025-02-24.acacia',
   })
   console.log('[2] Stripe initialized successfully')
 
