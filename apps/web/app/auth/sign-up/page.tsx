@@ -49,9 +49,8 @@ function SignUpForm() {
         },
       })
       if (error) throw error
-      // Redirect immediately (email verification happens in background)
-      router.push(redirectTo)
-      router.refresh()
+      // Full page redirect to ensure server sees the new auth cookies
+      window.location.href = redirectTo
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : 'An error occurred')
     } finally {
