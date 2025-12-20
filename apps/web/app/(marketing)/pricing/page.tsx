@@ -226,8 +226,8 @@ function PricingPageContent() {
             priceId,
             tierName: currentTier.name,
           }))
-          // Redirect to sign-in with resume flag
-          router.push('/auth/sign-in?redirect=' + encodeURIComponent('/pricing?resume=true'))
+          // Redirect to sign-up with resume flag (new users need to create account first)
+          router.push('/auth/sign-up?redirect=' + encodeURIComponent('/pricing?resume=true'))
           return
         }
         throw new Error(data.error || 'Something went wrong')

@@ -11,6 +11,7 @@ function SignUpForm() {
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [showEmailForm, setShowEmailForm] = useState(false)
+  const [emailSent, setEmailSent] = useState(false)
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirectTo = searchParams.get('redirect') || '/dashboard'
@@ -41,7 +42,7 @@ function SignUpForm() {
     setError(null)
 
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -49,8 +50,19 @@ function SignUpForm() {
         },
       })
       if (error) throw error
-      // Full page redirect to ensure server sees the new auth cookies
-      window.location.href = redirectTo
+
+      // Check if email confirmation is required
+      // If user.identities is empty, email confirmation is needed
+      if (data.user && data.user.identities && data.user.identities.length === 0) {
+        // User already exists - show error
+        setError('An account with this email already exists. Please sign in instead.')
+      } else if (data.user && !data.session) {
+        // Email confirmation required
+        setEmailSent(true)
+      } else if (data.session) {
+        // Email confirmation disabled - user is logged in immediately
+        window.location.href = redirectTo
+      }
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : 'An error occurred')
     } finally {
@@ -62,6 +74,33 @@ function SignUpForm() {
   const signInLink = redirectTo !== '/dashboard'
     ? `/auth/sign-in?redirect=${encodeURIComponent(redirectTo)}`
     : '/auth/sign-in'
+
+  // Show email confirmation message
+  if (emailSent) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
+        <div className="max-w-md w-full space-y-8 text-center">
+          <div className="rounded-full bg-green-100 w-16 h-16 flex items-center justify-center mx-auto">
+            <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <h2 className="text-3xl font-extrabold text-gray-900">Check your email</h2>
+          <p className="text-gray-600">
+            We sent a confirmation link to <span className="font-semibold">{email}</span>
+          </p>
+          <p className="text-sm text-gray-500">
+            Click the link in your email to activate your account and start tracking interstellar objects.
+          </p>
+          <div className="pt-4">
+            <Link href="/auth/sign-in" className="text-indigo-600 hover:text-indigo-500 font-medium">
+              Back to sign in
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
