@@ -148,7 +148,10 @@ function SignInForm() {
           </button>
 
           <div className="text-sm text-center">
-            <Link href="/auth/sign-up" className="font-medium text-indigo-600 hover:text-indigo-500">
+            <Link
+              href={redirectTo !== '/dashboard' ? `/auth/sign-up?redirect=${encodeURIComponent(redirectTo)}` : '/auth/sign-up'}
+              className="font-medium text-indigo-600 hover:text-indigo-500"
+            >
               Don't have an account? Sign up
             </Link>
           </div>
