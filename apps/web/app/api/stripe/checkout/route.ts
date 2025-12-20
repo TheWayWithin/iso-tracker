@@ -20,7 +20,7 @@ export async function POST(request: Request) {
   console.log('[2] Stripe initialized successfully')
 
   try {
-    // 1. Check authentication (OPTIONAL - allow unauthenticated checkout)
+    // 1. Check authentication - REQUIRED for checkout
     console.log('[3] Checking authentication...')
     const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
@@ -31,15 +31,32 @@ export async function POST(request: Request) {
       authError: authError?.message || null
     })
 
+    // Require authentication for checkout
+    if (authError || !user) {
+      console.log('[3] User not authenticated - returning 401')
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      )
+    }
+
+    const customerEmail = user.email
+    if (!customerEmail) {
+      console.log('[3] User has no email - returning 400')
+      return NextResponse.json(
+        { error: 'User email is required' },
+        { status: 400 }
+      )
+    }
+
     // 2. Parse and validate request
     console.log('[4] Parsing request body...')
     const body = await request.json()
     console.log('[4] RAW BODY RECEIVED:', JSON.stringify(body, null, 2))
 
-    const { priceId, email } = body
+    const { priceId } = body
     console.log('[4] Extracted priceId:', priceId)
-    console.log('[4] Extracted email:', email)
-    console.log('[4] User email:', user?.email || 'NO USER')
+    console.log('[4] User email:', customerEmail)
 
     if (!priceId) {
       console.log('[4] VALIDATION FAILED: No price ID provided')
@@ -48,26 +65,6 @@ export async function POST(request: Request) {
         { status: 400 }
       )
     }
-
-    // Validate email for unauthenticated users
-    const customerEmail = user?.email || email
-    console.log('[4] Determined customer email:', customerEmail)
-    console.log('[4] Email validation:', {
-      hasUser: !!user,
-      userEmail: user?.email || null,
-      requestEmail: email || null,
-      finalEmail: customerEmail || null
-    })
-
-    if (!customerEmail) {
-      console.log('[4] VALIDATION FAILED: No email available for checkout')
-      console.log('[4] Returning 400 error: Email is required')
-      return NextResponse.json(
-        { error: 'Email is required' },
-        { status: 400 }
-      )
-    }
-    console.log('[4] Email validation PASSED, using:', customerEmail)
 
     // 3. Verify price ID is valid (security: whitelist only our price IDs)
     console.log('[5] Validating price ID...')
@@ -100,8 +97,9 @@ export async function POST(request: Request) {
       isAuthenticated: !!user,
     })
 
-    // Build session config based on authentication state
-    const sessionConfig: any = {
+    // Build session config
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+    const sessionConfig: Stripe.Checkout.SessionCreateParams = {
       mode: 'subscription',
       line_items: [
         {
@@ -109,26 +107,16 @@ export async function POST(request: Request) {
           quantity: 1,
         },
       ],
-      success_url: `http://localhost:3000/upgrade/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `http://localhost:3000/pricing`,
+      success_url: `${siteUrl}/upgrade/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${siteUrl}/pricing`,
       customer_email: customerEmail,
       allow_promotion_codes: true,
       billing_address_collection: 'auto',
-    }
-
-    // Add user metadata only if authenticated
-    if (user) {
-      sessionConfig.client_reference_id = user.id
-      sessionConfig.metadata = { user_id: user.id }
-      sessionConfig.subscription_data = {
+      client_reference_id: user.id,
+      metadata: { user_id: user.id },
+      subscription_data: {
         metadata: { user_id: user.id },
-      }
-    } else {
-      // For unauthenticated users, mark as pending signup
-      sessionConfig.metadata = { pending_signup: 'true' }
-      sessionConfig.subscription_data = {
-        metadata: { pending_signup: 'true' },
-      }
+      },
     }
 
     const session = await stripe.checkout.sessions.create(sessionConfig)
