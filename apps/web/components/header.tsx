@@ -32,10 +32,10 @@ export function Header() {
               ISO Objects
             </Link>
             <Link
-              href="/evidence"
+              href="/dashboard"
               className="text-sm font-medium text-gray-700 hover:text-gray-900"
             >
-              Evidence
+              Dashboard
             </Link>
           </nav>
         </div>
