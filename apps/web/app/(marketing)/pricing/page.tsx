@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Check, X, Clock, ChevronDown } from 'lucide-react'
 
 type Tier = 'free' | 'event-pass' | 'evidence-analyst'
@@ -18,12 +18,55 @@ const colors = {
   errorRed: '#EF4444',
 }
 
-export default function PricingPage() {
+function PricingPageContent() {
   const [selectedTier, setSelectedTier] = useState<Tier>('evidence-analyst')
   const [billingPeriod, setBillingPeriod] = useState<BillingPeriod>('annual')
   const [loading, setLoading] = useState(false)
   const [showTierDropdown, setShowTierDropdown] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
+
+  // Auto-resume checkout after authentication
+  useEffect(() => {
+    const resumeCheckout = searchParams.get('resume')
+    if (resumeCheckout === 'true') {
+      const pendingCheckout = localStorage.getItem('pendingCheckout')
+      if (pendingCheckout) {
+        const { priceId } = JSON.parse(pendingCheckout)
+        localStorage.removeItem('pendingCheckout')
+        // Remove the resume param from URL
+        router.replace('/pricing')
+        // Trigger checkout
+        performCheckout(priceId)
+      }
+    }
+  }, [searchParams])
+
+  const performCheckout = async (priceId: string) => {
+    setLoading(true)
+    try {
+      const response = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ priceId }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Something went wrong')
+      }
+
+      if (data.url) {
+        window.location.href = data.url
+      }
+    } catch (error) {
+      console.error('Checkout error:', error)
+      alert('Something went wrong. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   // Tier configurations
   const tiers = {
@@ -164,9 +207,13 @@ export default function PricingPage() {
 
       if (!response.ok) {
         if (response.status === 401) {
-          router.push(
-            `/auth/sign-in?redirect=/pricing&plan=${encodeURIComponent(currentTier.name)}`
-          )
+          // Store pending checkout info for after authentication
+          localStorage.setItem('pendingCheckout', JSON.stringify({
+            priceId,
+            tierName: currentTier.name,
+          }))
+          // Redirect to sign-in with resume flag
+          router.push('/auth/sign-in?redirect=' + encodeURIComponent('/pricing?resume=true'))
           return
         }
         throw new Error(data.error || 'Something went wrong')
@@ -668,5 +715,13 @@ export default function PricingPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function PricingPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <PricingPageContent />
+    </Suspense>
   )
 }

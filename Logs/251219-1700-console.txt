@@ -1,0 +1,4 @@
+ailed to load resource: the server responded with a status of 404 ()
+/api/stripe/checkout:1  Failed to load resource: the server responded with a status of 500 ()
+782-6f14d4b22533b4b8.js:1 Checkout error: Error: Payment system not configured
+    at u (page-95d421b331e28a3d.js:1:7294)
