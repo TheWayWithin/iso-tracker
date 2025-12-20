@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Check, X, Clock, ChevronDown } from 'lucide-react'
+import { createClient } from '@/lib/supabase/client'
 
 type Tier = 'free' | 'event-pass' | 'evidence-analyst'
 type BillingPeriod = 'monthly' | 'annual'
@@ -33,11 +34,24 @@ function PricingPageContent() {
       const pendingCheckout = localStorage.getItem('pendingCheckout')
       if (pendingCheckout) {
         const { priceId } = JSON.parse(pendingCheckout)
-        localStorage.removeItem('pendingCheckout')
-        // Remove the resume param from URL
-        router.replace('/pricing')
-        // Trigger checkout
-        performCheckout(priceId)
+
+        // Check if user is authenticated before resuming
+        const checkAuthAndResume = async () => {
+          const supabase = createClient()
+          const { data: { user } } = await supabase.auth.getUser()
+
+          if (user) {
+            localStorage.removeItem('pendingCheckout')
+            router.replace('/pricing')
+            performCheckout(priceId)
+          } else {
+            // Not authenticated yet - wait and retry
+            console.log('Waiting for auth session...')
+            setTimeout(checkAuthAndResume, 500)
+          }
+        }
+
+        checkAuthAndResume()
       }
     }
   }, [searchParams])
