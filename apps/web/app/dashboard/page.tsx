@@ -29,7 +29,7 @@ export default async function DashboardPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <h1 className="text-xl font-bold">ISO Tracker</h1>
+              <h1 className="text-xl font-bold text-gray-900">ISO Tracker</h1>
             </div>
             <div className="flex items-center">
               <form action={signOut}>
@@ -44,7 +44,7 @@ export default async function DashboardPage() {
 
       <main className="max-w-7xl mx-auto py-6 px-4">
         <div className="bg-white shadow rounded-lg p-6">
-          <h2 className="text-lg font-medium mb-4">Welcome to ISO Tracker</h2>
+          <h2 className="text-lg font-medium mb-4 text-gray-900">Welcome to ISO Tracker</h2>
 
           <dl className="space-y-4">
             <div>

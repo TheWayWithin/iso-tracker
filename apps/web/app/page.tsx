@@ -116,7 +116,7 @@ export default function Home() {
                 Sign In
               </Link>
               <Link
-                href="/auth/sign-up"
+                href="/pricing"
                 className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
               >
                 Sign Up
@@ -140,7 +140,7 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/auth/sign-up"
+              href="/pricing"
               className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
             >
               Start Free - View Evidence
@@ -493,7 +493,7 @@ export default function Home() {
                 </li>
               </ul>
               <Link
-                href="/auth/sign-up"
+                href="/pricing"
                 className="block text-center w-full py-2 border border-slate-600 rounded text-slate-300 hover:bg-slate-800 transition-colors"
               >
                 Get Started
@@ -627,7 +627,7 @@ export default function Home() {
             Join thousands of evidence-based analysts tracking interstellar objects.
           </p>
           <Link
-            href="/auth/sign-up"
+            href="/pricing"
             className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
           >
             Create Free Account
