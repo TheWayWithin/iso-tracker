@@ -68,15 +68,14 @@ export async function POST(request: Request) {
 
     // 3. Verify price ID is valid (security: whitelist only our price IDs)
     console.log('[5] Validating price ID...')
-    // TEMPORARY WORKAROUND: Hardcoded TEST mode price IDs since env vars not loading correctly
-    // TODO: Fix environment variable loading before production deployment
+    // Price IDs from environment variables (ISO Tracker Stripe Account)
     const validPriceIds = [
-      'price_1SXqsOIiC84gpR8HysaVrxgV', // Event Pass Monthly (TEST)
-      'price_1SXqsOIiC84gpR8HovvfZEQ5', // Event Pass Annual (TEST)
-      'price_1SXqxFIiC84gpR8H7Woz8a48', // Evidence Analyst Monthly (TEST)
-      'price_1SXqxFIiC84gpR8HRZivV2bA', // Evidence Analyst Annual (TEST)
-    ]
-    console.log('[5] Valid price IDs (hardcoded TEST):', validPriceIds)
+      process.env.NEXT_PUBLIC_STRIPE_EVENT_PASS_MONTHLY_PRICE_ID,
+      process.env.NEXT_PUBLIC_STRIPE_EVENT_PASS_ANNUAL_PRICE_ID,
+      process.env.NEXT_PUBLIC_STRIPE_EVIDENCE_ANALYST_MONTHLY_PRICE_ID,
+      process.env.NEXT_PUBLIC_STRIPE_EVIDENCE_ANALYST_ANNUAL_PRICE_ID,
+    ].filter(Boolean) as string[]
+    console.log('[5] Valid price IDs from env:', validPriceIds)
 
     if (!validPriceIds.includes(priceId)) {
       console.log('[5] Invalid price ID - not in whitelist')

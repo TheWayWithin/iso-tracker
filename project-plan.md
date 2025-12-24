@@ -2,18 +2,46 @@
 
 **Mission**: ISO Tracker Development - Evidence-Based Analysis Platform
 **Started**: 2025-11-09
-**Status**: 🟢 Active - Sprint 14 COMPLETE, Sprint 15 NEXT
-**Last Updated**: 2025-12-19
+**Status**: 🔴 BLOCKED - Auth not working
+**Last Updated**: 2025-12-20
+
+---
+
+## 🚨 CRITICAL BLOCKER: User Signup Broken
+
+**Status**: ❌ Users cannot sign up - this blocks EVERYTHING
+**Priority**: P0 - Fix before any other work
+**See**: `progress.md` for detailed investigation notes
+
+### The Problem
+User signup does not work. Neither email/password nor Google OAuth results in functional accounts.
+
+### Key Finding (Dec 20, 2025)
+**Two implementations exist, neither works correctly**:
+
+1. `apps/web/app/auth/sign-up/page.tsx` - Client-side signup
+   - Calls Supabase directly, does NOT create profile/subscription records
+   - This is what users actually use
+
+2. `apps/web/app/auth/actions.ts` - Server action (unused)
+   - Has the correct logic but ISN'T CALLED from the sign-up page
+
+### To Fix This
+- [ ] Debug the actual error (open console, try signup, see what fails)
+- [ ] Either: Wire sign-up page to use server action
+- [ ] Or: Add profile/subscription creation to client-side flow
+- [ ] Test Google OAuth (may need enabling in Supabase)
+- [ ] Test email signup (may need email confirmation disabled)
 
 ---
 
 ## 🚀 CURRENT STATUS
 
 **Site URL**: https://www.isotracker.org
-**Current Sprint**: Sprint 14 COMPLETE - Sprint 15 NEXT
-**MVP Status**: Stripe integration complete in TEST mode, ready for production setup
+**Current Sprint**: Sprint 14b - FIX AUTH (BLOCKER)
+**MVP Status**: ⚠️ UI complete but users cannot sign up!
 
-### What's Done (Sprint 14):
+### What's Done (Sprint 14a):
 - ✅ Stripe TEST products created (4 price IDs)
 - ✅ Checkout session API working
 - ✅ Success/cancel pages functional
@@ -24,14 +52,18 @@
 - ✅ Post-auth redirect to Stripe checkout
 - ✅ Webhook handler for subscription events
 - ✅ Subscription management page with Stripe Portal
+- ✅ Landing page nav bar with Sign In/Sign Up buttons
 
-### Before Production Launch:
+### BLOCKER - Must Fix First:
+- ❌ **USER SIGNUP BROKEN** - See blocker section above
+
+### Before Production Launch (after fixing auth):
 - ⚠️ **Enable Google OAuth** in Supabase dashboard (user action)
 - ⚠️ **Fix env vars** - Remove hardcoded Stripe keys, fix Next.js env loading
 - ⚠️ **Create LIVE Stripe products** - Switch from TEST to LIVE mode
 - ⚠️ **Configure webhook URL** in Stripe dashboard
 
-### What's Next:
+### What's Next (after fixing auth):
 - ⏳ **Sprint 15**: User Profile & Polish
 - ⏳ **Sprint 16**: Loeb Scale Content & Evidence Population
 
@@ -295,6 +327,7 @@ Create user profile pages, implement 3i-atlas.live email capture backend, and fi
 | **14** | **Stripe Payments + Auth Modal** | ⏳ IN PROGRESS | **CRITICAL** |
 | 15 | User Profile & Polish | 🔲 Planned | MEDIUM |
 | **16** | **Loeb Scale Content & Evidence** | 🔲 Planned | **P1 - CRITICAL** |
+| **17** | **Stripe Account Migration** | 🔲 Planned | **HIGH** |
 
 **Current Focus**: Sprint 14 Phase 14.2 - Auth Modal before Stripe checkout
 
@@ -708,3 +741,99 @@ The Loeb Scale components and Evidence framework exist but contain minimal seed 
 
 **Last Updated**: 2025-12-01
 **Next Review**: After Sprint 14 Auth Modal complete, then begin Sprint 16
+
+---
+
+## 📋 SPRINT 17: Stripe Account Migration
+
+**Detailed Plan**: See `sprints/stripe-migration-sprint.md`
+**Status**: 🔲 PLANNED
+**Dependencies**: None (can run independently)
+**Priority**: HIGH - Required before accepting real payments
+**Estimated Time**: 1-2 hours (mostly manual Stripe setup)
+
+### Mission Objective
+
+Migrate Stripe integration from shared aisearchmastery account to dedicated ISO Tracker Stripe account. This ensures clean separation, proper business identity, and independent payment processing.
+
+### Background
+
+Current setup uses aisearchmastery Stripe account with:
+- 4 products (Event Pass Monthly/Annual, Evidence Analyst Monthly/Annual)
+- TEST + LIVE webhooks pointing to isotracker.org
+- Keys stored in .env.local and Vercel
+
+### Phase 17.1: Create New Stripe Account (Manual - Jamie/Comet)
+
+- [ ] Create new Stripe account with ISO Tracker business email
+- [ ] Complete business verification
+- [ ] Set up bank account for payouts
+
+### Phase 17.2: Create Products in New Account (Manual - Jamie/Comet)
+
+**TEST Mode Products:**
+- [ ] Event Pass Monthly ($4.99/mo) - record price ID
+- [ ] Event Pass Annual ($49.95/year) - record price ID
+- [ ] Evidence Analyst Monthly ($9.95/mo) - record price ID
+- [ ] Evidence Analyst Annual ($79.95/year) - record price ID
+
+**LIVE Mode Products:**
+- [ ] Recreate all 4 products in LIVE mode - record price IDs
+
+### Phase 17.3: Create Webhooks (Manual - Jamie/Comet)
+
+- [ ] Create TEST webhook → `https://www.isotracker.org/api/stripe/webhook`
+  - Events: checkout.session.completed, customer.subscription.updated, customer.subscription.deleted, invoice.payment_failed
+  - Record whsec_ signing secret
+- [ ] Create LIVE webhook → same URL
+  - Same 4 events
+  - Record whsec_ signing secret
+
+### Phase 17.4: Get & Record API Keys (Manual - Jamie/Comet)
+
+- [ ] Get TEST keys (pk_test_, sk_test_) - record securely
+- [ ] Get LIVE keys (pk_live_, sk_live_) - record securely
+- [ ] Create master key record with all 12 values (4 API keys + 2 webhook secrets + 8 price IDs)
+
+### Phase 17.5: Update Environment Variables (Claude Code)
+
+**Local (.env.local):**
+- [ ] Update NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY (TEST)
+- [ ] Update STRIPE_SECRET_KEY (TEST)
+- [ ] Update STRIPE_WEBHOOK_SECRET (TEST)
+
+**Vercel (Production only):**
+- [ ] Update NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY (LIVE)
+- [ ] Update STRIPE_SECRET_KEY (LIVE)
+- [ ] Update STRIPE_WEBHOOK_SECRET (LIVE)
+
+### Phase 17.6: Update Hardcoded Price IDs (Claude Code)
+
+Files requiring price ID updates:
+- [ ] `apps/web/app/page.tsx` (lines 12-17)
+- [ ] `apps/web/app/api/stripe/checkout/route.ts` (lines 74-77)
+- [ ] `apps/web/app/api/stripe/webhook/route.ts` (lines 16-24)
+- [ ] `apps/web/app/(marketing)/pricing/page.tsx` (lines 131-170)
+
+### Phase 17.7: Test & Verify
+
+- [ ] Test checkout flow with TEST card (4242 4242 4242 4242)
+- [ ] Verify webhook received in Stripe dashboard
+- [ ] Verify subscription tier updated in database
+- [ ] Deploy and verify production with LIVE mode
+
+### Database Note
+
+Existing `stripe_customer_id` and `stripe_subscription_id` values will be orphaned (they reference old account). Options:
+- Clear test data from subscriptions table before going live
+- Leave orphaned (won't cause errors, just won't validate)
+
+### Success Criteria
+
+- [ ] New Stripe account created and verified
+- [ ] All 4 products exist in both TEST and LIVE modes
+- [ ] Webhooks configured for both modes
+- [ ] Environment variables updated (local + Vercel)
+- [ ] Code updated with new price IDs
+- [ ] Test purchase successful
+- [ ] Ready for real customer payments

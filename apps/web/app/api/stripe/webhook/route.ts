@@ -9,20 +9,25 @@ const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || ''
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
 
-// Map Stripe price IDs to subscription tiers
-// TEMPORARY: Hardcoded TEST mode price IDs
-const PRICE_TO_TIER: Record<string, 'event_pass' | 'evidence_analyst'> = {
-  // TEST mode prices
-  'price_1SXqsOIiC84gpR8HysaVrxgV': 'event_pass',      // Event Pass Monthly
-  'price_1SXqsOIiC84gpR8HovvfZEQ5': 'event_pass',      // Event Pass Annual
-  'price_1SXqxFIiC84gpR8H7Woz8a48': 'evidence_analyst', // Evidence Analyst Monthly
-  'price_1SXqxFIiC84gpR8HRZivV2bA': 'evidence_analyst', // Evidence Analyst Annual
-  // LIVE mode prices (add before production)
-  // 'price_1SXKwiIiC84gpR8HwTjbwBct': 'event_pass',
-  // 'price_1SXKwiIiC84gpR8HOdkFFchm': 'event_pass',
-  // 'price_1SXKzxIiC84gpR8HYQXRjUZp': 'evidence_analyst',
-  // 'price_1SXKzxIiC84gpR8H5dJFNv7p': 'evidence_analyst',
+// Map Stripe price IDs to subscription tiers (ISO Tracker Stripe Account)
+// Dynamically built from environment variables - works for both TEST and LIVE modes
+function buildPriceToTierMap(): Record<string, 'event_pass' | 'evidence_analyst'> {
+  const map: Record<string, 'event_pass' | 'evidence_analyst'> = {}
+
+  const eventPassMonthly = process.env.NEXT_PUBLIC_STRIPE_EVENT_PASS_MONTHLY_PRICE_ID
+  const eventPassAnnual = process.env.NEXT_PUBLIC_STRIPE_EVENT_PASS_ANNUAL_PRICE_ID
+  const evidenceAnalystMonthly = process.env.NEXT_PUBLIC_STRIPE_EVIDENCE_ANALYST_MONTHLY_PRICE_ID
+  const evidenceAnalystAnnual = process.env.NEXT_PUBLIC_STRIPE_EVIDENCE_ANALYST_ANNUAL_PRICE_ID
+
+  if (eventPassMonthly) map[eventPassMonthly] = 'event_pass'
+  if (eventPassAnnual) map[eventPassAnnual] = 'event_pass'
+  if (evidenceAnalystMonthly) map[evidenceAnalystMonthly] = 'evidence_analyst'
+  if (evidenceAnalystAnnual) map[evidenceAnalystAnnual] = 'evidence_analyst'
+
+  return map
 }
+
+const PRICE_TO_TIER = buildPriceToTierMap()
 
 export async function POST(request: Request) {
   console.log('========== STRIPE WEBHOOK START ==========')

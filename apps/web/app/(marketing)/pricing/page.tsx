@@ -126,10 +126,10 @@ function PricingPageContent() {
       savingsPercent: 17,
       recommended: false,
       missingVsEventPass: [] as string[],
-      // TEMPORARY WORKAROUND: Hardcoded TEST mode price IDs since env vars not loading correctly
+      // Price IDs from environment variables (ISO Tracker Stripe Account)
       priceId: {
-        monthly: 'price_1SXqsOIiC84gpR8HysaVrxgV', // Event Pass Monthly (TEST)
-        annual: 'price_1SXqsOIiC84gpR8HovvfZEQ5',  // Event Pass Annual (TEST)
+        monthly: process.env.NEXT_PUBLIC_STRIPE_EVENT_PASS_MONTHLY_PRICE_ID || '',
+        annual: process.env.NEXT_PUBLIC_STRIPE_EVENT_PASS_ANNUAL_PRICE_ID || '',
       },
       features: [
         'Everything in Free, plus:',
@@ -164,10 +164,10 @@ function PricingPageContent() {
       savingsPercent: 33,
       missingVsEventPass: [] as string[],
       missingVsAnalyst: [] as string[],
-      // TEMPORARY WORKAROUND: Hardcoded TEST mode price IDs since env vars not loading correctly
+      // Price IDs from environment variables (ISO Tracker Stripe Account)
       priceId: {
-        monthly: 'price_1SXqxFIiC84gpR8H7Woz8a48', // Evidence Analyst Monthly (TEST)
-        annual: 'price_1SXqxFIiC84gpR8HRZivV2bA',  // Evidence Analyst Annual (TEST)
+        monthly: process.env.NEXT_PUBLIC_STRIPE_EVIDENCE_ANALYST_MONTHLY_PRICE_ID || '',
+        annual: process.env.NEXT_PUBLIC_STRIPE_EVIDENCE_ANALYST_ANNUAL_PRICE_ID || '',
       },
       features: [
         'Everything in Event Pass, plus:',
