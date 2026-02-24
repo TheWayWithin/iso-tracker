@@ -1,0 +1,33 @@
+# isotracker.org
+
+> ISO Tracker is an evidence-based analysis platform for interstellar objects. Track objects like 1I/'Oumuamua, 2I/Borisov, and 3I/ATLAS with real-time sky positions, observation planning, and structured evidence evaluation. Community-driven with 12,000+ observers.
+
+## What ISO Tracker Does
+
+- Live sky tracking of interstellar objects with positions updated every minute
+- Observation planning with custom alerts for optimal viewing from your location
+- Evidence framework for scientifically evaluating claims about interstellar objects
+- Community voting and debate on evidence quality and interpretation
+- Tracks chain of custody, witness credibility, and technical analysis for each piece of evidence
+
+## Key Features
+
+### Live Sky Tracking
+Real-time positions of known interstellar objects crossing the solar system.
+
+### Evidence Framework
+A structured three-step approach: assess evidence quality, cast your verdict, track evolving consensus vs scientific consensus over time.
+
+### Community
+12,000+ observers analysing evidence together. Cast your vote: natural or anomalous?
+
+## Key Pages
+
+- [Home](https://isotracker.org/): Overview and latest data
+- [Dashboard](https://isotracker.org/dashboard): Live tracking dashboard
+- [ISO Objects](https://isotracker.org/iso-objects): Catalogue of interstellar objects
+
+## Built By
+
+Jamie Watters. Open source project.
+- Source: https://github.com/TheWayWithin/iso-tracker
