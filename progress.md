@@ -2,15 +2,204 @@
 
 **Mission**: MVP-ISO-TRACKER-001 - Evidence-Based Analysis Platform
 **Started**: 2025-11-09
-**Last Updated**: 2025-12-19
+**Last Updated**: 2025-12-24
 **Archive**: See `progress-archive-2025-11-21.md` for detailed Sprint 1-9 history
+
+---
+
+## ✅ Sprint 17: Stripe Account Migration (2025-12-24)
+
+**Status**: ✅ COMPLETE - Stripe migrated to dedicated ISO Tracker account
+**Duration**: ~2 hours
+
+### What Was Done
+- Created new Stripe account for ISO Tracker (separate from aisearchmastery)
+- Created 4 products in both TEST and LIVE modes:
+  - Event Pass Monthly ($4.99/mo)
+  - Event Pass Annual ($49.95/year)
+  - Evidence Analyst Monthly ($9.95/mo)
+  - Evidence Analyst Annual ($79.95/year)
+- Created webhooks for both TEST and LIVE modes
+- Updated code to use environment variables instead of hardcoded price IDs
+- Updated `apps/web/.env.local` with TEST keys
+- Updated Vercel with LIVE keys
+- Pushed changes to production
+
+### Test Results
+- ✅ Dev checkout flow works with new ISO Tracker TEST account
+- ✅ Payment completes successfully in Stripe
+- ⚠️ Webhook verification pending
+- ⚠️ Success page redirect has bug (see Dev Bugs below)
+
+### Files Changed
+- `apps/web/app/page.tsx` - Use env vars for price IDs
+- `apps/web/app/api/stripe/checkout/route.ts` - Use env vars for price validation
+- `apps/web/app/api/stripe/webhook/route.ts` - Dynamic price-to-tier mapping
+- `apps/web/app/(marketing)/pricing/page.tsx` - Use env vars for price IDs
+- `apps/web/.env.local` - New ISO Tracker TEST keys
+- `.env.local` (root) - New ISO Tracker TEST keys
+- Vercel env vars - New ISO Tracker LIVE keys
+
+### Key Reference: ISO Tracker Stripe Keys
+
+**TEST Mode Price IDs**:
+- Event Pass Monthly: `price_1ShsQyRTkoqWvZAk7sS7UsGS`
+- Event Pass Annual: `price_1ShsRsRTkoqWvZAkRYR410mW`
+- Evidence Analyst Monthly: `price_1ShsWPRTkoqWvZAkdcjFZPEl`
+- Evidence Analyst Annual: `price_1ShsXNRTkoqWvZAksfLjycQB`
+
+**LIVE Mode Price IDs**:
+- Event Pass Monthly: `price_1Shsc0RTkoqWvZAks1OksDBB`
+- Event Pass Annual: `price_1ShsdWRTkoqWvZAkimtMkYKM`
+- Evidence Analyst Monthly: `price_1ShseVRTkoqWvZAkdTc1Xrmf`
+- Evidence Analyst Annual: `price_1ShsfXRTkoqWvZAkZjoE7k30`
+
+---
+
+## ✅ Stripe CLI Webhook Testing Setup (2025-12-24)
+
+**Status**: ✅ COMPLETE - Local webhook testing now works
+**Problem Solved**: TEST webhooks couldn't reach localhost, causing 400 errors
+
+### Solution Implemented
+
+**Why webhooks failed in dev**:
+- Stripe TEST webhook was configured to hit `isotracker.org` (production)
+- Production has LIVE keys, but TEST payments need TEST webhook secret
+- Stripe can't reach localhost directly from the internet
+
+**The Fix**: Use Stripe CLI to forward webhooks to localhost
+
+**What Was Set Up**:
+1. Installed Stripe CLI via Homebrew
+2. Configured CLI with TEST API key
+3. Created helper script: `apps/web/scripts/stripe-dev.sh`
+4. Updated `.env.local` with usage instructions
+
+### How to Test Webhooks Locally
+
+**Step 1**: Start dev server in Terminal 1:
+```bash
+cd apps/web && npm run dev
+```
+
+**Step 2**: Start webhook forwarder in Terminal 2:
+```bash
+cd apps/web && ./scripts/stripe-dev.sh
+```
+
+**Step 3**: Copy the webhook secret shown by CLI (e.g., `whsec_REPLACE_ME_local_stripe_cli_secret...`)
+
+**Step 4**: Update `apps/web/.env.local`:
+```
+STRIPE_WEBHOOK_SECRET=whsec_REPLACE_ME_local_stripe_cli_secret...  # CLI secret
+```
+
+**Step 5**: Restart dev server to pick up new secret
+
+**Step 6**: Test a payment - webhooks now go to localhost!
+
+### Files Created/Changed
+- `apps/web/scripts/stripe-dev.sh` - Helper script for webhook forwarding
+- `apps/web/.env.local` - Added usage instructions in comments
+- `~/.config/stripe/config.toml` - CLI configuration with TEST API key
+
+---
+
+## 🐛 Dev Environment Bugs (Discovered 2025-12-24)
+
+### Bug #1: Success Page Redirect Returns JSON Error
+**Status**: 🔴 Open
+**Severity**: Medium
+**Environment**: Dev (localhost:3005)
+
+**Symptom**: After successful Stripe checkout, redirect to `/upgrade/success` returns:
+```json
+{"success":false,"message":"Route /upgrade/success?session_id=cs_test_... not found"}
+```
+
+**Expected**: Should render the success page at `app/(marketing)/upgrade/success/page.tsx`
+
+**Notes**:
+- Page file exists at correct location
+- Route group `(marketing)` should not affect URL path
+- May be middleware issue or Next.js routing bug
+- Payment still completes successfully in Stripe
+
+---
+
+### Bug #2: Google OAuth 404 in Dev
+**Status**: 🔴 Open
+**Severity**: Low (dev only)
+**Environment**: Dev (localhost:3005)
+
+**Symptom**: Google OAuth returns 404 after authentication
+
+**Cause**: OAuth redirect URL is configured for a different port (likely localhost:3001 or 3003)
+
+**Workaround**: Use email/password auth in dev instead of Google OAuth
+
+---
+
+### Bug #3: Sign-In 400 Bad Request
+**Status**: 🔴 Open (existing blocker)
+**Severity**: High
+**Environment**: Dev
+
+**Symptom**: `POST /auth/v1/token?grant_type=password` returns 400 Bad Request
+
+**Notes**: This is part of the existing auth blocker documented below.
+
+---
+
+## 🚨 CURRENT BLOCKER: User Signup Not Working
+
+**Status**: ❌ CRITICAL - Signup flow is broken, root cause unknown
+**Impact**: Users cannot create accounts, blocking all user growth
+**Priority**: P0 - Must fix before any other work
+
+### What's Broken
+- User signup (both email/password and Google OAuth) does not result in working accounts
+- Exact failure mode unclear - needs systematic debugging
+
+### What Exists (Code Review Dec 20, 2025)
+
+**Two separate implementations found**:
+
+1. **Client-side signup** (`apps/web/app/auth/sign-up/page.tsx`):
+   - Calls `supabase.auth.signUp()` directly from browser
+   - Does NOT create profile/subscription/notification_preferences records
+   - Redirects to dashboard after signup
+   - ⚠️ Missing: Profile creation logic
+
+2. **Server action signup** (`apps/web/app/auth/actions.ts`):
+   - Has full logic: signUp + create profile + subscription + notification_preferences
+   - ⚠️ Problem: NOT being called from the sign-up page!
+
+**Potential Issues Identified**:
+- [ ] Sign-up page uses client-side only, skipping server action that creates records
+- [ ] Email confirmation may be required in Supabase but not handled in UI
+- [ ] `NEXT_PUBLIC_SITE_URL` may be incorrect in production
+- [ ] Auth cookies may not be syncing between client/server
+- [ ] Google OAuth provider may not be enabled in Supabase dashboard
+- [ ] RLS policies may be blocking profile/subscription creation
+
+### What Needs Investigation
+1. Check Supabase Auth settings (email confirmation on/off?)
+2. Check if Google OAuth is enabled in Supabase dashboard
+3. Test signup flow with console open to see exact error
+4. Verify NEXT_PUBLIC_SITE_URL is set correctly
+5. Decide: Use server action or fix client-side to create records?
+
+### Attempts Made
+- (None documented yet - this is where debugging should be logged)
 
 ---
 
 ## 📊 Current Status
 
-**Active Sprint**: Sprint 15 ⏳ (User Profile & Polish)
-**Last Completed**: Sprint 14 ✅ (Stripe Payments - Complete)
+**Active Sprint**: Sprint 14b ⏳ (Fix Auth - BLOCKER)
+**Last Completed**: Sprint 14a ✅ (Stripe Payments - UI Complete, untested with real users)
 **Production Site**: https://www.isotracker.org
 **Last Deployment**: Pending (Sprint 14 - Stripe Integration)
 
@@ -28,6 +217,7 @@
 | 11 | Community Arguments & Voting | ✅ Complete | Nov 23 |
 | 12 | Evidence Tab & Comments | ✅ Complete | Nov 23 |
 | 13 | ISO Following & Notifications | ✅ Complete | Nov 23 |
+| 17 | Stripe Account Migration | ✅ Complete | Dec 24 |
 
 **Full details**: See `progress-archive-2025-11-21.md`
 

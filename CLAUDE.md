@@ -1,5 +1,7 @@
 # CLAUDE.md
 
+Framework rules (Karpathy constitution, mission routing, tracking-file protocols, MCP, hooks, security) live in `.claude/CLAUDE.md`. Read both. This file is the product layer.
+
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Communication Needs (CRITICAL - READ FIRST)
@@ -194,6 +196,67 @@ Includes the core squad plus:
 - The Analyst (data insights)
 - The Marketer (growth)
 - The Coordinator (mission orchestration)
+
+## Development Environments
+
+### Overview
+
+| Environment | Stripe Mode | Keys Location | Webhook Handling |
+|-------------|-------------|---------------|------------------|
+| **Dev** (localhost) | TEST | `apps/web/.env.local` | Stripe CLI (when needed) |
+| **Production** (isotracker.org) | LIVE | Vercel env vars | Stripe Dashboard webhook |
+
+### Running Dev Server
+
+**For normal development** (no payment testing):
+```bash
+cd apps/web && npm run dev
+```
+That's it. No extra steps needed.
+
+### Testing Payments in Dev
+
+**Only do this when you need to test checkout/subscriptions:**
+
+1. **Terminal 1** - Start dev server:
+   ```bash
+   cd apps/web && npm run dev
+   ```
+
+2. **Terminal 2** - Start Stripe webhook forwarder:
+   ```bash
+   cd apps/web && ./scripts/stripe-dev.sh
+   ```
+
+3. **Copy the webhook secret** shown by CLI (starts with `whsec_`)
+
+4. **Update** `apps/web/.env.local`:
+   ```
+   STRIPE_WEBHOOK_SECRET=whsec_xxxxx  # paste CLI secret here
+   ```
+
+5. **Restart dev server** (Ctrl+C, then `npm run dev` again)
+
+6. **Test payment** - webhooks now work locally!
+
+**Why this is needed**: Stripe can't reach localhost from the internet. The CLI creates a secure tunnel.
+
+### Environment Files
+
+- **`apps/web/.env.local`** - Dev environment (TEST keys, localhost URLs)
+- **Vercel Dashboard** - Production environment (LIVE keys, isotracker.org URLs)
+- **`apps/web/.env.example`** - Template showing required variables
+
+### Key Differences: TEST vs LIVE
+
+| Aspect | TEST (Dev) | LIVE (Production) |
+|--------|------------|-------------------|
+| Stripe keys | `pk_test_`, `sk_test_` | `pk_live_`, `sk_live_` |
+| Credit cards | Use `4242 4242 4242 4242` | Real cards |
+| Webhooks | Via Stripe CLI | Via Stripe Dashboard |
+| Money | No real charges | Real money |
+
+---
 
 ## Development Guidelines
 
