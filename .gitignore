@@ -54,6 +54,17 @@ Thumbs.db
 # Supabase
 .supabase/
 
+# SQLite runtime databases (data/approvals.db, data/audit.db and friends).
+# Written by the running app, not source. The -wal and -shm sidecars are only
+# meaningful alongside the exact db file that produced them, so committing the
+# set captures one machine's mid-transaction state and conflicts on every pull.
+# These two in particular hold approval and audit records, which are live data.
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+
 # MCP (keep template, ignore actual config)
 .mcp.json
 .env.mcp
