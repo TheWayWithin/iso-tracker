@@ -1,3 +1,21 @@
+> ## Killed: ISO Tracker, September 2026
+>
+> This was an evidence-based tracker for interstellar objects, built around the
+> 3I/ATLAS event in seventeen sprints between 9 November and 24 December 2025:
+> Next.js on Vercel, Supabase for the database and auth, Stripe for two paid
+> tiers. The last product change was the Stripe account migration of
+> 24 December 2025. Sign-up was recorded as broken in the May 2026 review, with
+> two auth implementations and neither wired correctly, and the object that
+> justified the product had passed. It was parked in May 2026.
+>
+> I decided to kill it on 13 September 2026. The app was still serving at
+> isotracker.org that day. The Vercel project was deleted on 13 September 2026;
+> the Supabase production project had already been removed before then, so no
+> database export exists. The domain isotracker.org is being allowed to lapse.
+>
+> The repo stays public and read-only, under its MIT licence, as the record of
+> what was built.
+
 # ISO Tracker
 
 **Evidence-based analysis platform for interstellar objects**
