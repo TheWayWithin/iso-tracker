@@ -11,7 +11,7 @@
 > I decided to kill it on 13 September 2026. The app was still serving at
 > isotracker.org that day. The Vercel project was deleted on 13 September 2026;
 > the Supabase production project had already been removed before then, so no
-> database export exists. The domain isotracker.org is being allowed to lapse.
+> database export exists.
 >
 > The repo stays public and read-only, under its MIT licence, as the record of
 > what was built.
